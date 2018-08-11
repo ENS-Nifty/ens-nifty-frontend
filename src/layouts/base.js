@@ -6,9 +6,10 @@ import Link from '../components/Link';
 import Wrapper from '../components/Wrapper';
 import Column from '../components/Column';
 import Notification from '../components/Notification';
+import Blockie from '../components/Blockie';
 import Warning from '../components/Warning';
-import logo from '../assets/logo.png';
-import { responsive } from '../styles';
+import { ellipseAddress } from '../helpers/utilities';
+import branding from '../assets/ens-nifty-branding.png';
 
 const StyledLayout = styled.div`
   position: relative;
@@ -34,18 +35,24 @@ const StyledHeader = styled.div`
   padding: 0 16px;
 `;
 
-const StyledBranding = styled.div`
+const StyledBrandingWrapper = styled.div`
   display: flex;
   align-items: center;
   position: relative;
 `;
 
-const StyledLogo = styled.div`
-  width: 198px;
-  height: 23px;
-  background: url(${logo}) no-repeat;
-  @media screen and (${responsive.sm.max}) {
-  }
+const StyledBranding = styled.div`
+  width: 200px;
+  height: 50px;
+  background: url(${branding}) no-repeat;
+  background-size: cover;
+  background-position: center;
+`;
+
+const StyledActiveAccount = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
 `;
 
 const BaseLayout = ({
@@ -73,10 +80,16 @@ const BaseLayout = ({
       <Column maxWidth={1000}>
         <StyledHeader>
           <Link to="/">
-            <StyledBranding>
-              <StyledLogo alt="Balance" />
-            </StyledBranding>
+            <StyledBrandingWrapper>
+              <StyledBranding alt="ENS Nifty" />
+            </StyledBrandingWrapper>
           </Link>
+          {accountAddress && (
+            <StyledActiveAccount>
+              <Blockie seed={accountAddress} />
+              <p>{ellipseAddress(accountAddress)}</p>
+            </StyledActiveAccount>
+          )}
         </StyledHeader>
         <StyledContent>{children}</StyledContent>
       </Column>
@@ -89,19 +102,12 @@ const BaseLayout = ({
 BaseLayout.propTypes = {
   children: PropTypes.node.isRequired,
   metamaskFetching: PropTypes.bool.isRequired,
-  ledgerFetching: PropTypes.bool.isRequired,
-  ledgerUpdateNetwork: PropTypes.func.isRequired,
-  trezorFetching: PropTypes.bool.isRequired,
-  trezorUpdateNetwork: PropTypes.func.isRequired,
-  accountChangeNativeCurrency: PropTypes.func.isRequired,
-  accountUpdateAccountAddress: PropTypes.func.isRequired,
   accountType: PropTypes.string.isRequired,
   accountAddress: PropTypes.string.isRequired,
   nativeCurrency: PropTypes.string.isRequired,
   network: PropTypes.string.isRequired,
   web3Available: PropTypes.bool.isRequired,
-  online: PropTypes.bool.isRequired,
-  modalOpen: PropTypes.func.isRequired
+  online: PropTypes.bool.isRequired
 };
 
 const reduxProps = ({ account, ledger, trezor, metamask, warning }) => ({

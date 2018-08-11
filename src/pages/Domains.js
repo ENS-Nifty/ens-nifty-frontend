@@ -7,7 +7,6 @@ const StyledWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
   padding: 20px;
   text-transform: uppercase;
   text-align: center;

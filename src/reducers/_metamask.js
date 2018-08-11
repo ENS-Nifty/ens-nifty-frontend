@@ -24,8 +24,10 @@ export const metamaskUpdateMetamaskAccount = () => (dispatch, getState) => {
       type: METAMASK_UPDATE_METAMASK_ACCOUNT,
       payload: accountAddress
     });
-    if (accountAddress)
+    if (accountAddress) {
       dispatch(accountUpdateAccountAddress(accountAddress, 'METAMASK'));
+      window.browserHistory.push('/domains');
+    }
   }
 };
 

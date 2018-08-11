@@ -1,51 +1,147 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { colors, fonts, transitions } from '../styles';
+import Loader from './Loader';
+import { colors, fonts, shadows, transitions } from '../styles';
+
+const StyledIcon = styled.div`
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  margin: 0 8px;
+  top: calc((100% - 15px) / 2);
+`;
 
 const StyledButton = styled.button`
-  transition: ${transitions.base};
+  transition: ${transitions.button};
+  position: relative;
   border: none;
   border-style: none;
   box-sizing: border-box;
-  border: ${({ outline }) => (outline) ? `1px solid rgb(${colors.blue})` : 'none'};
-  background-color: ${({ outline, white }) => (outline || white) ? `rgb(${colors.white})` : `rgb(${colors.blue})`};
-  color: ${({ outline, white }) => (outline || white) ? `rgb(${colors.blue})` : `rgb(${colors.white})`};
-  border-radius: ${({ round }) => round ? '24px' : '2px'};
-  font-size: ${fonts.medium};
-  font-weight: 400;
-  padding: 10px;
-  margin: 5px auto;
-  width: 150px;
-  height: 36px;
-  cursor: pointer;
+  background-color: ${({ outline, color }) =>
+    outline ? 'transparent' : `rgb(${colors[color]})`};
+  border: ${({ outline, color }) =>
+    outline ? `1px solid rgb(${colors[color]})` : 'none'};
+  color: ${({ outline, color }) =>
+    outline ? `rgb(${colors[color]})` : `rgb(${colors.white})`};
+  box-shadow: ${({ outline }) => (outline ? 'none' : `${shadows.soft}`)};
+  border-radius: 8px;
+  font-size: ${fonts.size.h6};
+  font-weight: ${fonts.weight.semibold};
+  padding: ${({ icon, left }) =>
+    icon ? (left ? '7px 12px 8px 28px' : '7px 28px 8px 12px') : '8px 12px'};
+  height: 32px;
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
   will-change: transform;
+
+  &:disabled {
+    opacity: 0.6;
+    box-shadow: ${({ outline }) => (outline ? 'none' : `${shadows.soft}`)};
+  }
 
   @media (hover: hover) {
     &:hover {
-      opacity: 0.6;
+      transform: ${({ disabled }) => (!disabled ? 'translateY(-1px)' : 'none')};
+      background-color: ${({ disabled, hoverColor, color }) =>
+        !disabled
+          ? hoverColor
+            ? `rgb(${colors[hoverColor]})`
+            : `rgb(${colors[color]})`
+          : `rgb(${colors[color]})`};
+      box-shadow: ${({ disabled, outline }) =>
+        !disabled
+          ? outline
+            ? 'none'
+            : `${shadows.hover}`
+          : `${shadows.soft}`};
     }
+  }
+
+  &:active {
+    transform: ${({ disabled }) => (!disabled ? 'translateY(1px)' : 'none')};
+    background-color: ${({ disabled, activeColor, color }) =>
+      !disabled
+        ? activeColor
+          ? `rgb(${colors[activeColor]})`
+          : `rgb(${colors[color]})`
+        : `rgb(${colors[color]})`};
+    box-shadow: ${({ outline }) => (outline ? 'none' : `${shadows.soft}`)};
+    color: ${({ outline, color }) =>
+      outline ? `rgb(${colors[color]})` : `rgba(${colors.whiteTransparent})`};
+
+    & ${StyledIcon} {
+      opacity: 0.8;
+    }
+  }
+
+  & ${StyledIcon} {
+    right: ${({ left }) => (left ? 'auto' : '0')};
+    left: ${({ left }) => (left ? '0' : 'auto')};
+    display: ${({ icon }) => (icon ? 'block' : 'none')};
+    mask: ${({ icon }) => (icon ? `url(${icon}) center no-repeat` : 'none')};
+    background-color: ${({ outline, color }) =>
+      outline ? `rgb(${colors[color]})` : `rgb(${colors.white})`};
+    transition: 0.15s ease;
   }
 `;
 
-const Button = ({ text, outline, white, round, ...otherProps }) => (
-  <StyledButton outline={outline} white={white} round={round} {...otherProps}>
-    {text}
+const Button = ({
+  children,
+  fetching,
+  outline,
+  type,
+  color,
+  hoverColor,
+  activeColor,
+  disabled,
+  icon,
+  left,
+  round,
+  ...props
+}) => (
+  <StyledButton
+    type={type}
+    outline={outline}
+    color={color}
+    hoverColor={hoverColor}
+    activeColor={activeColor}
+    disabled={disabled}
+    icon={icon}
+    left={left}
+    {...props}
+  >
+    <StyledIcon />
+    {fetching ? (
+      <Loader size={20} color="white" background={color} />
+    ) : (
+      children
+    )}
   </StyledButton>
 );
 
 Button.propTypes = {
-  text: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  fetching: PropTypes.bool,
   outline: PropTypes.bool,
-  white: PropTypes.bool,
-  round: PropTypes.bool
+  type: PropTypes.string,
+  color: PropTypes.string,
+  hoverColor: PropTypes.string,
+  activeColor: PropTypes.string,
+  disabled: PropTypes.bool,
+  icon: PropTypes.any,
+  left: PropTypes.bool
 };
 
 Button.defaultProps = {
-  text: '',
+  fetching: false,
   outline: false,
-  white: false,
-  round: false
+  type: 'button',
+  color: 'darkGrey',
+  hoverColor: 'darkGrey',
+  activeColor: 'darkGrey',
+  disabled: false,
+  icon: null,
+  left: false
 };
 
 export default Button;

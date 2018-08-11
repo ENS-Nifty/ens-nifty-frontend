@@ -8,41 +8,41 @@ import Button from '../components/Button';
 import { metamaskConnectInit } from '../reducers/_metamask';
 import { fonts } from '../styles';
 
+const StyledLanding = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ConnectButton = styled(Button)`
   border-radius: 8px;
   font-size: ${fonts.size.medium};
   height: 44px;
-  padding: 0 15px 2px 15px;
-  position: absolute;
-  right: 29px;
-  top: 29px;
-`;
-
-const MetamaskButton = ConnectButton.extend`
-  &:hover {
-    background: #ff932e;
-  }
-  &:active {
-    background: #f07f16;
-  }
+  margin: 50px 0;
 `;
 
 class Home extends Component {
   render = () => (
     <BaseLayout>
-      <MetamaskButton
-        left
-        color="orange"
-        onClick={this.props.metamaskConnectInit}
-      >
-        {'Connect to Metamask'}
-      </MetamaskButton>
+      <StyledLanding>
+        <h1>Register your ENS domain to an NFT and trade it on marketplaces</h1>
+        <ConnectButton
+          left
+          color="orange"
+          onClick={this.props.metamaskConnectInit}
+        >
+          {'Connect to Metamask'}
+        </ConnectButton>
+      </StyledLanding>
     </BaseLayout>
   );
 }
 
 Home.propTypes = {
-  modalOpen: PropTypes.func.isRequired,
   metamaskConnectInit: PropTypes.func.isRequired
 };
 

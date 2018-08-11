@@ -33,7 +33,7 @@ export const capitalize = string =>
  * @desc ellipse text to max maxLength
  * @param  {String}  [text = '']
  * @param  {Number}  [maxLength = 9999]
- * @return {Intercom}
+ * @return {String}
  */
 export const ellipseText = (text = '', maxLength = 9999) => {
   if (text.length <= maxLength) return text;
@@ -55,6 +55,14 @@ export const ellipseText = (text = '', maxLength = 9999) => {
       .join(' ') + '...';
   return result;
 };
+
+/**
+ * @desc ellipse public address
+ * @param  {String}  [address = '']
+ * @return {String}
+ */
+export const ellipseAddress = (address = '') =>
+  `${address.slice(0, 10)}...${address.slice(-10)}`;
 
 /**
  * @desc pad string to specific width and padding
