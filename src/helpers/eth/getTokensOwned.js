@@ -2,6 +2,7 @@ import beth from './beth';
 
 export async function getTokensOwned(owner) {
   const tokens = [];
+  console.log('beth', beth);
   const nbTokens = await beth.c.nft.f.balanceOf(owner).call();
   for (let i = 0; i < nbTokens; i++) {
     const tokenId = await beth.c.nft.f.tokenOfOwnerByIndex(owner, i).call();

@@ -28,7 +28,8 @@ export const colors = {
   ledger: '47, 49, 55',
   bodyBackground: '44,47,56',
   darkText: '43,45,51',
-  rowDivider: '224,224,224,0.24'
+  rowDivider: '224,224,224,0.24',
+  background: '25, 45, 74'
 };
 
 export const fonts = {

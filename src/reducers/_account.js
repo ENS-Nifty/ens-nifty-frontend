@@ -1,8 +1,9 @@
-import {apiGetTransaction} from '../helpers/api';
-import {parseError} from '../helpers/utilities';
-import {web3SetHttpProvider} from '../helpers/web3';
-import {notificationShow} from './_notification';
-import {bethConnectWeb3} from '../helpers/eth/beth';
+import { apiGetTransaction } from '../helpers/api';
+import { parseError } from '../helpers/utilities';
+import { web3SetHttpProvider } from '../helpers/web3';
+import { notificationShow } from './_notification';
+import { bethConnectWeb3 } from '../helpers/eth/beth';
+import { getTokensOwned } from '../helpers/eth';
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -12,6 +13,13 @@ const ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS =
   'account/ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS';
 const ACCOUNT_CHECK_TRANSACTION_STATUS_FAILURE =
   'account/ACCOUNT_CHECK_TRANSACTION_STATUS_FAILURE';
+
+const ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST =
+  'account/ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST';
+const ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS =
+  'account/ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS';
+const ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE =
+  'account/ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE';
 
 const ACCOUNT_UPDATE_ACCOUNT_ADDRESS = 'account/ACCOUNT_UPDATE_ACCOUNT_ADDRESS';
 
@@ -25,9 +33,9 @@ const ACCOUNT_CLEAR_STATE = 'account/ACCOUNT_CLEAR_STATE';
 
 export const accountCheckTransactionStatus = (txHash, network) => (
   dispatch,
-  getState,
+  getState
 ) => {
-  dispatch({type: ACCOUNT_CHECK_TRANSACTION_STATUS_REQUEST});
+  dispatch({ type: ACCOUNT_CHECK_TRANSACTION_STATUS_REQUEST });
   const network = getState().account.network;
 
   apiGetTransaction(txHash, network)
@@ -40,81 +48,112 @@ export const accountCheckTransactionStatus = (txHash, network) => (
           (data.input !== '0x' && data.operations && data.operations.length))
       ) {
         dispatch({
-          type: ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS,
+          type: ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS
         });
       } else {
         setTimeout(
           () => dispatch(accountCheckTransactionStatus(txHash, network)),
-          1000,
+          1000
         );
       }
     })
     .catch(error => {
       setTimeout(
         () => dispatch(accountCheckTransactionStatus(txHash, network)),
-        1000,
+        1000
       );
-      dispatch({type: ACCOUNT_CHECK_TRANSACTION_STATUS_FAILURE});
+      dispatch({ type: ACCOUNT_CHECK_TRANSACTION_STATUS_FAILURE });
       const message = parseError(error);
       dispatch(notificationShow(message, true));
     });
 };
 
-export const accountUpdateProvider = provider => dispatch => {
-  // web3SetHttpProvider(`https://${network}.infura.io/`);
-  bethConnectWeb3(provider);
-  dispatch({type: ACCOUNT_UPDATE_PROVIDER, payload: provider});
+export const accountUpdateNetwork = network => dispatch => {
+  web3SetHttpProvider(`https://${network}.infura.io/`);
+  dispatch({ type: ACCOUNT_UPDATE_NETWORK, payload: network });
 };
 
-export const accountUpdateAccountAddress = (accountAddress, accountType) => (
+export const accountUpdateProvider = provider => dispatch => {
+  bethConnectWeb3(provider);
+  dispatch({ type: ACCOUNT_UPDATE_PROVIDER, payload: provider });
+};
+
+export const accountUpdateAccountAddress = (address, type) => (
   dispatch,
-  getState,
+  getState
 ) => {
-  if (!accountAddress || !accountType) return;
-  if (getState().account.accountType !== accountType)
-    dispatch(accountClearState());
+  if (!address || !type) return;
+  if (getState().account.type !== type) dispatch(accountClearState());
   dispatch({
     type: ACCOUNT_UPDATE_ACCOUNT_ADDRESS,
-    payload: {accountAddress, accountType},
+    payload: { address, type }
   });
 };
 
 export const accountClearState = () => dispatch => {
-  dispatch({type: ACCOUNT_CLEAR_STATE});
+  dispatch({ type: ACCOUNT_CLEAR_STATE });
+};
+
+export const accountGetTokenizedDomains = () => (dispatch, getState) => {
+  dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST });
+  getTokensOwned()
+    .then(tokens => {
+      dispatch({
+        type: ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS,
+        payload: tokens
+      });
+    })
+    .catch(error => {
+      dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE });
+      const message = parseError(error);
+      dispatch(notificationShow(message, true));
+    });
 };
 
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
   network: 'mainnet',
-
-  accountType: '',
-  accountAddress: '',
-  fetching: false,
+  provider: null,
+  type: '',
+  address: '',
+  domains: [],
+  fetching: false
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST:
+      return { ...state, fetching: true };
+    case ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS:
+      return { ...state, fetching: false, domains: action.payload };
+    case ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE:
+      return { ...state, fetching: false };
     case ACCOUNT_UPDATE_ACCOUNT_ADDRESS:
       return {
         ...state,
-        accountType: action.payload.accountType,
-        accountAddress: action.payload.accountAddress,
-        transactions: [],
+        type: action.payload.type,
+        address: action.payload.address,
+        transactions: []
       };
     case ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS:
       return {
         ...state,
-        transactions: action.payload,
+        transactions: action.payload
       };
     case ACCOUNT_UPDATE_NETWORK:
       return {
         ...state,
-        network: action.payload,
+        network: action.payload
+      };
+    case ACCOUNT_UPDATE_PROVIDER:
+      return {
+        ...state,
+        provider: action.payload
       };
     case ACCOUNT_CLEAR_STATE:
       return {
         ...state,
-        ...INITIAL_STATE,
+        ...INITIAL_STATE
       };
     default:
       return state;

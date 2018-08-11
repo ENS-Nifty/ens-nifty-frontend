@@ -58,17 +58,8 @@ const StyledActiveAccount = styled.div`
 const BaseLayout = ({
   children,
   metamaskFetching,
-  ledgerFetching,
-  trezorFetching,
   accountType,
   accountAddress,
-  ledgerAccounts,
-  ledgerUpdateNetwork,
-  trezorAccounts,
-  trezorUpdateNetwork,
-  accountChangeNativeCurrency,
-  accountUpdateAccountAddress,
-  nativeCurrency,
   network,
   web3Available,
   online,
@@ -110,8 +101,8 @@ BaseLayout.propTypes = {
 };
 
 const reduxProps = ({ account, ledger, trezor, metamask, warning }) => ({
-  accountType: account.accountType,
-  accountAddress: account.accountAddress,
+  accountType: account.type,
+  accountAddress: account.address,
   nativeCurrency: account.nativeCurrency,
   metamaskFetching: metamask.fetching,
   network: account.network,
