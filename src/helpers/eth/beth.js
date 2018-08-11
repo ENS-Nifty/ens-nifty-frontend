@@ -1,6 +1,7 @@
 import Browseth from 'browseth';
-// import addresses from './config/addresses';
-// import ensJson from './contracts/build/ens';
+import addresses from './config/addresses';
+import ensJson from './contracts/build/ens';
+import registrarJson from './contracts/build/registrar';
 
 const ETHEREUM_RPC_URL = 'https://mainnet.infura.io/mew';
 
@@ -9,10 +10,13 @@ const fallbackRpc = new Browseth.Rpcs.Default(
   ETHEREUM_RPC_URL,
 );
 
-const beth = new Browseth(fallbackRpc);
-// .addContract('ens', ensJson, {
-//   address: addresses.ens,
-// });
+const beth = new Browseth(fallbackRpc)
+  .addContract('ens', ensJson, {
+    address: addresses.ens,
+  })
+  .addContract('registrar', registrarJson, {
+    address: addresses.registrar,
+  });
 
 beth.wallet = new Browseth.Wallets.Offline(
   beth.rpc,

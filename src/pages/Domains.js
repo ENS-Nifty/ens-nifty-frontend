@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import BaseLayout from '../layouts/base';
-import beth from '../helpers/eth/beth';
+import {beth, getTokensOwned} from '../helpers/eth';
+
 import {connect} from 'react-redux';
 
 const StyledWrapper = styled.div`
@@ -14,8 +15,11 @@ const StyledWrapper = styled.div`
 `;
 
 class Domains extends Component {
+  
   componentDidMount() {
-    beth.wallet.account().then(console.log);
+    if (this.props.address) {
+      getTokensOwned().then(console.log);
+    }
   }
 
   render() {
@@ -29,4 +33,11 @@ class Domains extends Component {
   }
 }
 
-export default connect(null)(Domains);
+const reduxProps = ({account}) => ({
+  address: account.accountAddress,
+});
+
+export default connect(
+  reduxProps,
+  null,
+)(Domains);
