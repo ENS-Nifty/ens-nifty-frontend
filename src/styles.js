@@ -3,31 +3,26 @@ export const colors = {
   black: '0, 0, 0',
   dark: '34, 34, 34',
   grey: '221, 221, 221',
-  blue: '64, 109, 187',
-  yellow: '246, 203, 71',
+  lightGrey: '238, 238, 238',
+  darkGrey: '128, 128, 128',
+  blue: '97, 218, 251',
+  lightBlue: '197, 242, 255',
+  gold: '246, 203, 71',
   green: '79, 180, 128',
   red: '221, 69, 65'
 };
 
 export const fonts = {
-  size: {
-    small: '12px',
-    medium: '16px',
-    large: '18px',
-    big: '22px',
-    h1: '42px',
-    h2: '32px',
-    h3: '24px',
-    h4: '20px',
-    h5: '17px',
-    h6: '14px'
-  },
-  weight: {
-    thin: 300,
-    normal: 400,
-    semibold: 500,
-    bold: 700
-  }
+  small: '12px',
+  medium: '16px',
+  large: '18px',
+  big: '22px',
+  h1: '42px',
+  h2: '32px',
+  h3: '24px',
+  h4: '20px',
+  h5: '17px',
+  h6: '14px'
 };
 
 export const transitions = {
@@ -66,12 +61,12 @@ export const globalStyles = `
   }
 
   body {
-    background: rgb(${colors.lightGrey});
+    background: rgb(${colors.dark});
     font-family: Roboto, sans-serif;
-    font-weight: ${fonts.weight.normal};
+    font-weight: 400;
     font-style: normal;
   	font-stretch: normal;
-    font-size: ${fonts.size.medium};
+    font-size: ${fonts.medium};
     color: rgb(${colors.dark});
     overflow-y:auto;
     text-rendering: optimizeLegibility;
@@ -103,22 +98,22 @@ export const globalStyles = `
   }
 
   h1 {
-    font-size: ${fonts.size.h1}
+    font-size: ${fonts.h1}
   }
   h2 {
-    font-size: ${fonts.size.h2}
+    font-size: ${fonts.h2}
   }
   h3 {
-    font-size: ${fonts.size.h3}
+    font-size: ${fonts.h3}
   }
   h4 {
-    font-size: ${fonts.size.h4}
+    font-size: ${fonts.h4}
   }
   h5 {
-    font-size: ${fonts.size.h5}
+    font-size: ${fonts.h5}
   }
   h6 {
-    font-size: ${fonts.size.h6}
+    font-size: ${fonts.h6}
   }
 
   a {
@@ -140,28 +135,5 @@ export const globalStyles = `
   button {
     border-style: none;
     line-height: 1em;
-  }
-
-  input {
-    -webkit-appearance: none;
-  }
-
-  input[type="color"],
-  input[type="date"],
-  input[type="datetime"],
-  input[type="datetime-local"],
-  input[type="email"],
-  input[type="month"],
-  input[type="number"],
-  input[type="password"],
-  input[type="search"],
-  input[type="tel"],
-  input[type="text"],
-  input[type="time"],
-  input[type="url"],
-  input[type="week"],
-  select:focus,
-  textarea {
-    font-size: 16px;
   }
 `;
