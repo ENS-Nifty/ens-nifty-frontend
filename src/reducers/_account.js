@@ -1,7 +1,8 @@
-import { apiGetTransaction } from '../helpers/api';
-import { parseError } from '../helpers/utilities';
-import { web3SetHttpProvider } from '../helpers/web3';
-import { notificationShow } from './_notification';
+import {apiGetTransaction} from '../helpers/api';
+import {parseError} from '../helpers/utilities';
+import {web3SetHttpProvider} from '../helpers/web3';
+import {notificationShow} from './_notification';
+import {bethConnectWeb3} from '../helpers/eth/beth';
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -16,15 +17,17 @@ const ACCOUNT_UPDATE_ACCOUNT_ADDRESS = 'account/ACCOUNT_UPDATE_ACCOUNT_ADDRESS';
 
 const ACCOUNT_UPDATE_NETWORK = 'account/ACCOUNT_UPDATE_NETWORK';
 
+const ACCOUNT_UPDATE_PROVIDER = 'account/ACCOUNT_UPDATE_PROVIDER';
+
 const ACCOUNT_CLEAR_STATE = 'account/ACCOUNT_CLEAR_STATE';
 
 // -- Actions --------------------------------------------------------------- //
 
 export const accountCheckTransactionStatus = (txHash, network) => (
   dispatch,
-  getState
+  getState,
 ) => {
-  dispatch({ type: ACCOUNT_CHECK_TRANSACTION_STATUS_REQUEST });
+  dispatch({type: ACCOUNT_CHECK_TRANSACTION_STATUS_REQUEST});
   const network = getState().account.network;
 
   apiGetTransaction(txHash, network)
@@ -37,56 +40,56 @@ export const accountCheckTransactionStatus = (txHash, network) => (
           (data.input !== '0x' && data.operations && data.operations.length))
       ) {
         dispatch({
-          type: ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS
+          type: ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS,
         });
       } else {
         setTimeout(
           () => dispatch(accountCheckTransactionStatus(txHash, network)),
-          1000
+          1000,
         );
       }
     })
     .catch(error => {
       setTimeout(
         () => dispatch(accountCheckTransactionStatus(txHash, network)),
-        1000
+        1000,
       );
-      dispatch({ type: ACCOUNT_CHECK_TRANSACTION_STATUS_FAILURE });
+      dispatch({type: ACCOUNT_CHECK_TRANSACTION_STATUS_FAILURE});
       const message = parseError(error);
       dispatch(notificationShow(message, true));
     });
 };
 
-export const accountUpdateNetwork = network => dispatch => {
-  web3SetHttpProvider(`https://${network}.infura.io/`);
-  dispatch({ type: ACCOUNT_UPDATE_NETWORK, payload: network });
+export const accountUpdateProvider = provider => dispatch => {
+  // web3SetHttpProvider(`https://${network}.infura.io/`);
+  bethConnectWeb3(provider);
+  dispatch({type: ACCOUNT_UPDATE_PROVIDER, payload: provider});
 };
 
 export const accountUpdateAccountAddress = (accountAddress, accountType) => (
   dispatch,
-  getState
+  getState,
 ) => {
   if (!accountAddress || !accountType) return;
-  const { network } = getState().account;
   if (getState().account.accountType !== accountType)
     dispatch(accountClearState());
   dispatch({
     type: ACCOUNT_UPDATE_ACCOUNT_ADDRESS,
-    payload: { accountAddress, accountType }
+    payload: {accountAddress, accountType},
   });
-  dispatch(accountUpdateNetwork(network));
 };
 
 export const accountClearState = () => dispatch => {
-  dispatch({ type: ACCOUNT_CLEAR_STATE });
+  dispatch({type: ACCOUNT_CLEAR_STATE});
 };
 
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
   network: 'mainnet',
+
   accountType: '',
   accountAddress: '',
-  fetching: false
+  fetching: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -96,22 +99,22 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         accountType: action.payload.accountType,
         accountAddress: action.payload.accountAddress,
-        transactions: []
+        transactions: [],
       };
     case ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS:
       return {
         ...state,
-        transactions: action.payload
+        transactions: action.payload,
       };
     case ACCOUNT_UPDATE_NETWORK:
       return {
         ...state,
-        network: action.payload
+        network: action.payload,
       };
     case ACCOUNT_CLEAR_STATE:
       return {
         ...state,
-        ...INITIAL_STATE
+        ...INITIAL_STATE,
       };
     default:
       return state;
