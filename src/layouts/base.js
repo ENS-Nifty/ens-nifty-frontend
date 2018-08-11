@@ -104,7 +104,6 @@ BaseLayout.propTypes = {
   metamaskFetching: PropTypes.bool.isRequired,
   accountType: PropTypes.string.isRequired,
   accountAddress: PropTypes.string.isRequired,
-  nativeCurrency: PropTypes.string.isRequired,
   network: PropTypes.string.isRequired,
   web3Available: PropTypes.bool.isRequired,
   online: PropTypes.bool.isRequired

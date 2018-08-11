@@ -17,6 +17,13 @@ const METAMASK_UPDATE_METAMASK_ACCOUNT =
 
 let accountInterval = null;
 
+export const updateAccountAddress = accountAddress => dispatch => {
+  if (accountAddress) {
+    dispatch(accountUpdateAccountAddress(accountAddress, 'METAMASK'));
+    window.browserHistory.push('/domains');
+  }
+};
+
 export const metamaskUpdateMetamaskAccount = () => (dispatch, getState) => {
   if (window.web3.eth.defaultAccount !== getState().metamask.accountAddress) {
     const accountAddress = window.web3.eth.defaultAccount;
@@ -24,17 +31,13 @@ export const metamaskUpdateMetamaskAccount = () => (dispatch, getState) => {
       type: METAMASK_UPDATE_METAMASK_ACCOUNT,
       payload: accountAddress
     });
-    if (accountAddress) {
-      dispatch(accountUpdateAccountAddress(accountAddress, 'METAMASK'));
-      window.browserHistory.push('/domains');
-    }
+    dispatch(updateAccountAddress(accountAddress));
   }
 };
 
 export const metamaskConnectInit = () => (dispatch, getState) => {
   const accountAddress = getState().metamask.accountAddress;
-  if (accountAddress)
-    dispatch(accountUpdateAccountAddress(accountAddress, 'METAMASK'));
+  dispatch(updateAccountAddress(accountAddress));
   dispatch({ type: METAMASK_CONNECT_REQUEST });
   if (typeof window.web3 !== 'undefined') {
     apiGetMetamaskNetwork()
