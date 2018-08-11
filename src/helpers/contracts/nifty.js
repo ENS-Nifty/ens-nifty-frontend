@@ -1,6 +1,6 @@
 import {web3MetamaskSendTransaction, web3Instance} from '../web3';
 import niftyJson from './abi/nifty.json';
-import registrarContract from './abi/registrar.json';
+import registrarJson from './abi/registrar.json';
 import addresses from './config/addresses';
 
 const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses.nifty);
@@ -71,7 +71,7 @@ export async function getNextRegisterStep(labelHash) {
   if (currentOwner === addresses.nifty && !tokenExists) {
     return 'mint';
   }
-  if (currentOwner === address.nifty && tokenExists) {
+  if (currentOwner === addresses.nifty && tokenExists) {
     return 'done';
   }
   return 'error';
