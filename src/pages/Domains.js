@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import BaseLayout from '../layouts/base';
 import Loader from '../components/Loader';
@@ -6,7 +7,9 @@ import Link from '../components/Link';
 import Button from '../components/Button';
 import { accountGetTokenizedDomains } from '../reducers/_account';
 
-import { connect } from 'react-redux';
+const StyledTitle = styled.h3`
+  margin-bottom: 50px;
+`;
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -14,7 +17,27 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   padding: 20px;
   text-align: center;
-  height: 360px;
+  height: 100%;
+`;
+
+const StyledDomains = styled.div`
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledDomainsList = styled.div`
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledNoDomainsMessage = styled.p`
+  margin: 20px auto;
 `;
 
 class Domains extends Component {
@@ -27,30 +50,34 @@ class Domains extends Component {
     return (
       <BaseLayout>
         <StyledWrapper>
-          <h3>{'Registered Domains'}</h3>
-          {!fetching ? (
-            !!domains.length ? (
-              <div>
-                {domains.map(domain => (
-                  <div>
-                    <p>{domain}</p>
-                    <Link to="/deregister-ens">
-                      <Button>Deregister</Button>
-                    </Link>
-                  </div>
-                ))}
-              </div>
+          <StyledTitle>{'Registered Domains'}</StyledTitle>
+          <StyledDomains>
+            {!fetching ? (
+              !!domains.length ? (
+                <StyledDomainsList>
+                  {domains.map(domain => (
+                    <div>
+                      <p>{domain}</p>
+                      <Link to="/deregister-ens">
+                        <Button>Deregister</Button>
+                      </Link>
+                    </div>
+                  ))}
+                </StyledDomainsList>
+              ) : (
+                <div>
+                  <StyledNoDomainsMessage>
+                    You haven't registered any domains as NFTs
+                  </StyledNoDomainsMessage>
+                  <Link to="/register-ens">
+                    <Button>Register Domain</Button>
+                  </Link>
+                </div>
+              )
             ) : (
-              <div>
-                <p>You haven't registered any domains as NFTs</p>
-                <Link to="/register-ens">
-                  <Button>Register Domain</Button>
-                </Link>
-              </div>
-            )
-          ) : (
-            <Loader />
-          )}
+              <Loader />
+            )}
+          </StyledDomains>
         </StyledWrapper>
       </BaseLayout>
     );

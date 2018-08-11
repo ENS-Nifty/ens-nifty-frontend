@@ -21,6 +21,7 @@ const StyledLayout = styled.div`
 
 const StyledContent = styled(Wrapper)`
   width: 100%;
+  height: 100%;
   padding: 0 16px;
 `;
 
@@ -68,7 +69,7 @@ const BaseLayout = ({
 }) => {
   return (
     <StyledLayout>
-      <Column maxWidth={1000}>
+      <Column maxWidth={1000} spanHeight>
         <StyledHeader>
           <Link to="/">
             <StyledBrandingWrapper>

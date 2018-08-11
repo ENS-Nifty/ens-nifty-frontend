@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Home from './pages/Home';
@@ -15,27 +15,61 @@ class Router extends Component {
     window.onoffline = () => this.props.warningOffline();
     window.ononline = () => this.props.warningOnline();
   }
-  render = () => (
-    <Switch>
-      <Route exact path="/" component={Home} />
-      <Route path="/domains" component={Domains} />
-      <Route path="/register-ens" component={RegisterENS} />
-      <Route path="/deregister-ens" component={DeregisterENS} />
-      <Route component={NotFound} />
-    </Switch>
-  );
+
+  render = () => {
+    console.log(this.props);
+    const address = this.props.address;
+    console.log(address);
+    return (
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route
+          exact
+          path="/domains"
+          render={routerProps => {
+            if (!address) {
+              return <Redirect to="/" />;
+            }
+            return <Domains {...routerProps} />;
+          }}
+        />
+        <Route
+          exact
+          path="/register-ens"
+          render={routerProps => {
+            if (!address) {
+              return <Redirect to="/" />;
+            }
+            return <RegisterENS {...routerProps} />;
+          }}
+        />
+        <Route
+          exact
+          path="/deregister-ens"
+          render={routerProps => {
+            if (!address) {
+              return <Redirect to="/" />;
+            }
+            return <DeregisterENS {...routerProps} />;
+          }}
+        />
+        <Route component={NotFound} />
+      </Switch>
+    );
+  };
 }
 
 Router.contextTypes = {
-  router: PropTypes.object.isRequired,
-  store: PropTypes.object.isRequired,
-  email: PropTypes.string,
-  signup: PropTypes.any
+  router: PropTypes.object.isRequired
 };
+
+const reduxProps = ({ account }) => ({
+  address: account.address
+});
 
 export default withRouter(
   connect(
-    null,
+    reduxProps,
     {
       warningOffline,
       warningOnline
