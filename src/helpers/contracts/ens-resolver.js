@@ -1,4 +1,4 @@
-import web from 'web3';
+import web3 from 'web3';
 import ensResolverJson from './abi/ens-resolver.json';
 
 export const ENS_RESOLVER_ADDRESS =
@@ -12,9 +12,9 @@ export const ensResolverContract = new web3.eth.Contract().addContract(
   }
 );
 export async function getResolverAddress(node) {
-  return await beth.c.ens.f.resolver(node).call();
+  return await web3.c.ens.f.resolver(node).call();
 }
 
 export async function supportsNameInterface(resolverAddress) {
-  return await beth.c.ens.f.supportsInterface('0x691f3431').call();
+  return await web3.c.ens.f.supportsInterface('0x691f3431').call();
 }

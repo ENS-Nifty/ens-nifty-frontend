@@ -13,8 +13,8 @@ export const ensRegistrarContract = new web3.eth.Contract().addContract(
 );
 
 export async function transferName(labelHash) {
-  return await beth.c.registrar.f
-    .transfer(labelHash, beth.c.nft.options.address)
+  return await web3.c.registrar.f
+    .transfer(labelHash, web3.c.nft.options.address)
     .send();
 }
 
@@ -26,5 +26,5 @@ export async function nodeToName(node) {
   if (!(await supportsNameInterface(resolverAddress))) {
     return '';
   }
-  return await beth.c.resolver.f.name(node).call();
+  return await web3.c.resolver.f.name(node).call();
 }
