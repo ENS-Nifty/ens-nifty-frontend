@@ -1,16 +1,27 @@
+import Web3 from 'web3';
+import {transferName} from '../helpers/contracts/registrar';
 // -- Constants ------------------------------------------------------------- //
 const REGISTER_UPDATE_INPUT = 'notification/REGISTER_UPDATE_INPUT';
 
 // -- Actions --------------------------------------------------------------- //
 export const registerUpdateInput = (input = '') => dispatch => {
-  dispatch({ type: REGISTER_UPDATE_INPUT, payload: input });
+  dispatch({type: REGISTER_UPDATE_INPUT, payload: input});
 };
 
-export const registerSubmitTransactions = () => dispatch => {};
+function formatDomain(name) {
+  if (name.endsWith('.eth')) {
+    return name;
+  } else return name + '.eth';
+}
+
+export const registerSubmitTransaction = name => async dispatch => {
+  const label = formatDomain(name).match(/(.*)\.eth/)[1];
+  return await transferName(Web3.utils.keccak256(label));
+};
 
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
-  input: ''
+  input: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -18,7 +29,7 @@ export default (state = INITIAL_STATE, action) => {
     case REGISTER_UPDATE_INPUT:
       return {
         ...state,
-        input: action.payload
+        input: action.payload,
       };
     default:
       return state;
