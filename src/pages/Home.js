@@ -29,7 +29,9 @@ class Home extends Component {
   render = () => (
     <BaseLayout>
       <StyledLanding>
-        <h1>Register your ENS domain to an NFT and trade it on marketplaces</h1>
+        <h1>
+          Register your ENS domain to an NFT<br />and trade it on marketplaces
+        </h1>
         <ConnectButton
           left
           color="orange"

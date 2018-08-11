@@ -17,7 +17,7 @@ const Domains = () => (
   <BaseLayout>
     <StyledWrapper>
       <Link to="/">
-        <h3>{'Domains'}</h3>
+        <h3>{'Your Registered Domains'}</h3>
       </Link>
     </StyledWrapper>
   </BaseLayout>

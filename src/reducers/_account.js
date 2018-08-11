@@ -83,38 +83,10 @@ export const accountClearState = () => dispatch => {
 
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
-  nativePriceRequest: 'USD',
-  nativeCurrency: 'USD',
-  prices: {},
   network: 'mainnet',
   accountType: '',
   accountAddress: '',
-  accountInfo: {
-    address: '',
-    accountType: '',
-    assets: [
-      {
-        name: 'Ethereum',
-        symbol: 'ETH',
-        address: null,
-        decimals: 18,
-        balance: {
-          amount: '',
-          display: '0.00 ETH'
-        },
-        native: null
-      }
-    ],
-    total: '———'
-  },
-  transactions: [],
-  uniqueTokens: [],
-  shapeshiftAvailable: true,
-  fetchingShapeshift: false,
-  fetchingTransactions: false,
-  fetchingUniqueTokens: false,
-  fetching: false,
-  hasPendingTransaction: false
+  fetching: false
 };
 
 export default (state = INITIAL_STATE, action) => {
