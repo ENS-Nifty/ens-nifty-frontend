@@ -2,8 +2,7 @@ import { apiGetTransaction } from '../helpers/api';
 import { parseError } from '../helpers/utilities';
 import { web3SetHttpProvider } from '../helpers/web3';
 import { notificationShow } from './_notification';
-import { bethConnectWeb3 } from '../helpers/eth/beth';
-import { getTokensOwned } from '../helpers/eth';
+import { getTokensOwned } from '../helpers/contracts/ens-nifty';
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -74,7 +73,7 @@ export const accountUpdateNetwork = network => dispatch => {
 };
 
 export const accountUpdateProvider = provider => dispatch => {
-  bethConnectWeb3(provider);
+  // bethConnectWeb3(provider);
   dispatch({ type: ACCOUNT_UPDATE_PROVIDER, payload: provider });
 };
 
