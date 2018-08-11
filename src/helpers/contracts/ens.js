@@ -1,4 +1,4 @@
-import {web3MetamaskSendTransaction, web3Instance} from '../web3';
+import {web3Instance} from '../web3';
 import ensJson from './abi/ens.json';
 import addresses from './config/addresses';
 
