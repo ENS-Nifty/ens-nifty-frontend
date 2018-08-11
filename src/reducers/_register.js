@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import {transferName} from '../helpers/contracts/registrar';
+import {mintToken} from '../helpers/contracts/nifty';
 // -- Constants ------------------------------------------------------------- //
 const REGISTER_UPDATE_INPUT = 'notification/REGISTER_UPDATE_INPUT';
 
@@ -16,7 +17,8 @@ function formatDomain(name) {
 
 export const registerSubmitTransaction = name => async dispatch => {
   const label = formatDomain(name).match(/(.*)\.eth/)[1];
-  return await transferName(Web3.utils.keccak256(label));
+  // return await transferName(Web3.utils.keccak256(label));
+  return await mintToken(Web3.utils.keccak256(label));
 };
 
 // -- Reducer --------------------------------------------------------------- //
