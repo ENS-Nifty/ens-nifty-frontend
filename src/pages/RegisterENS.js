@@ -81,12 +81,12 @@ class RegisterENS extends Component {
           </StyledForm>
           <StyledTransactionList valid={validDomain}>
             <StyledTransaction>
-              <TransactionStatus status={''} />
+              <TransactionStatus status={this.props.transferNameStatus} />
               <p>1. Transfer Domain Ownership</p>
             </StyledTransaction>
             <LineBreak />
             <StyledTransaction>
-              <TransactionStatus status={''} />
+              <TransactionStatus status={this.props.mintTokenStatus} />
               <p>2. Mint ENS wrapper NFT token</p>
             </StyledTransaction>
           </StyledTransactionList>
@@ -98,6 +98,8 @@ class RegisterENS extends Component {
 
 const reduxProps = ({register}) => ({
   input: register.input,
+  transferNameStatus: register.transferNameStatus,
+  mintTokenStatus: register.mintTokenStatus,
 });
 
 export default connect(

@@ -10,7 +10,7 @@ const registrarContract = new web3Instance.eth.Contract(
 );
 const resolverContract = new web3Instance.eth.Contract(resolverJson);
 
-export async function transferName(labelHash) {
+export async function transferName(labelHash, cb) {
   const address = window.web3.eth.defaultAccount;
   const data = registrarContract.methods
     .transfer(labelHash, addresses.nifty)
@@ -26,7 +26,11 @@ export async function transferName(labelHash) {
     value: '0',
     gasPrice,
     gasLimit,
-  });
+  })
+    .then(txHash => {
+      return web3Instance.eth.getTransactionReceiptMined(txHash);
+    })
+    .then(cb);
 }
 
 export async function nodeToName(node) {
