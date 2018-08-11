@@ -9,7 +9,7 @@ const StyledWrapper = styled.div`
   align-items: center;
   padding: 20px;
   text-align: center;
-  height: 360px;
+  height: 100%;
 `;
 
 const DeregisterENS = () => (

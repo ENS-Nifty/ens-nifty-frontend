@@ -2,6 +2,8 @@ import { apiGetTransaction } from '../helpers/api';
 import { parseError } from '../helpers/utilities';
 import { web3SetHttpProvider } from '../helpers/web3';
 import { notificationShow } from './_notification';
+import { bethConnectWeb3 } from '../helpers/eth/beth';
+import { getTokensOwned } from '../helpers/eth';
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -12,9 +14,18 @@ const ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS =
 const ACCOUNT_CHECK_TRANSACTION_STATUS_FAILURE =
   'account/ACCOUNT_CHECK_TRANSACTION_STATUS_FAILURE';
 
+const ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST =
+  'account/ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST';
+const ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS =
+  'account/ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS';
+const ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE =
+  'account/ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE';
+
 const ACCOUNT_UPDATE_ACCOUNT_ADDRESS = 'account/ACCOUNT_UPDATE_ACCOUNT_ADDRESS';
 
 const ACCOUNT_UPDATE_NETWORK = 'account/ACCOUNT_UPDATE_NETWORK';
+
+const ACCOUNT_UPDATE_PROVIDER = 'account/ACCOUNT_UPDATE_PROVIDER';
 
 const ACCOUNT_CLEAR_STATE = 'account/ACCOUNT_CLEAR_STATE';
 
@@ -62,40 +73,66 @@ export const accountUpdateNetwork = network => dispatch => {
   dispatch({ type: ACCOUNT_UPDATE_NETWORK, payload: network });
 };
 
-export const accountUpdateAccountAddress = (accountAddress, accountType) => (
+export const accountUpdateProvider = provider => dispatch => {
+  bethConnectWeb3(provider);
+  dispatch({ type: ACCOUNT_UPDATE_PROVIDER, payload: provider });
+};
+
+export const accountUpdateAccountAddress = (address, type) => (
   dispatch,
   getState
 ) => {
-  if (!accountAddress || !accountType) return;
-  const { network } = getState().account;
-  if (getState().account.accountType !== accountType)
-    dispatch(accountClearState());
+  if (!address || !type) return;
+  if (getState().account.type !== type) dispatch(accountClearState());
   dispatch({
     type: ACCOUNT_UPDATE_ACCOUNT_ADDRESS,
-    payload: { accountAddress, accountType }
+    payload: { address, type }
   });
-  dispatch(accountUpdateNetwork(network));
 };
 
 export const accountClearState = () => dispatch => {
   dispatch({ type: ACCOUNT_CLEAR_STATE });
 };
 
+export const accountGetTokenizedDomains = () => (dispatch, getState) => {
+  dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST });
+  getTokensOwned()
+    .then(tokens => {
+      dispatch({
+        type: ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS,
+        payload: tokens
+      });
+    })
+    .catch(error => {
+      dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE });
+      const message = parseError(error);
+      dispatch(notificationShow(message, true));
+    });
+};
+
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
   network: 'mainnet',
-  accountType: '',
-  accountAddress: '',
+  provider: null,
+  type: '',
+  address: '',
+  domains: [],
   fetching: false
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST:
+      return { ...state, fetching: true };
+    case ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS:
+      return { ...state, fetching: false, domains: action.payload };
+    case ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE:
+      return { ...state, fetching: false };
     case ACCOUNT_UPDATE_ACCOUNT_ADDRESS:
       return {
         ...state,
-        accountType: action.payload.accountType,
-        accountAddress: action.payload.accountAddress,
+        type: action.payload.type,
+        address: action.payload.address,
         transactions: []
       };
     case ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS:
@@ -107,6 +144,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         network: action.payload
+      };
+    case ACCOUNT_UPDATE_PROVIDER:
+      return {
+        ...state,
+        provider: action.payload
       };
     case ACCOUNT_CLEAR_STATE:
       return {

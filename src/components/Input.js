@@ -1,126 +1,140 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { colors, transitions, fonts } from '../styles';
+import styled, { keyframes } from 'styled-components';
+import { colors, fonts, shadows, responsive } from '../styles';
 
-const StyledContainer = styled.div`
-  border-bottom: 1px solid rgb(${colors.blue});
-  position: relative;
-  margin-bottom: 25px;
-  transition: ${transitions.base};
+const shimmer = keyframes`
+0% {
+  background-position: -468px 0
+}
 
-  &::after {
-    content: '';
-    display: block;
-    height: 2px;
-    transition: ${transitions.base};
-    left: ${({ focus }) => focus ? '0%' : '50%'};
-    width: ${({ focus }) => focus ? '100%' : 0};
-    position: absolute;
-    background-color: rgb(${colors.blue});
-    bottom: -1;
-    will-change: width, left;
-  }
+100% {
+  background-position: 468px 0
+}
+
 `;
 
-const StyledInputContainer = styled.div`
+const StyledInputWrapper = styled.div`
   width: 100%;
-
-  & input {
-    background: transparent;
-    border-radius: 0;
-    border: none;
-    transition: ${transitions.base};
-    opacity: ${({ focus, content }) => (focus || content) ? 1 : 0};
-    width: 100%;
-
-    &:focus {
-      transition-delay: 0.1s;
-      border-radius: 0;
-      box-shadow: none;
-      outline: none;
-    }
-  }
+  opacity: ${({ fetching, disabled }) => (disabled && !fetching ? '0.5' : '1')};
 `;
 
 const StyledLabel = styled.label`
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  color: rgb(${({ focus }) => focus ? colors.blue : colors.lightBlue});
-  transition: ${transitions.base};
-  transform-origin: left;
-  transform: ${({ focus, content }) => (focus || content) ? 'translateY(-8px) scale(0.7)' : 'translateY(8px) scale(1)'};
-  will-change: transform;
-  font-weight: 400;
-  font-size: ${fonts.medium};
+  color: rgb(${colors.grey});
+  font-size: 13px;
+  font-weight: ${fonts.weight.semibold};
+  width: 100%;
+  opacity: ${({ hide }) => (hide ? 0 : 1)};
 `;
 
 const StyledInput = styled.input`
+  width: 100%;
+  margin-top: 8px;
+  background: rgb(${colors.white});
+  padding: 12px;
   border: none;
   border-style: none;
-  box-sizing: border-box;
-  border-radius: 2px;
-  margin: 6px 0;
-  width: 100%;
-  color: rgb(${colors.lightBlue});
-  font-weight: 400;
-  font-size: ${fonts.medium};
+  font-family: ${({ monospace }) =>
+    monospace ? `${fonts.family.SFMono}` : `inherit`};
+  font-size: ${fonts.size.h6};
+  font-weight: ${fonts.weight.semibold};
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  border-radius: 8px;
+  -webkit-box-shadow: ${shadows.medium};
+  box-shadow: ${shadows.medium};
+  outline: none;
+  ${({ fetching }) =>
+    fetching &&
+    `
+    color: rgba(${colors.dark}, 0.7);
+    -webkit-animation-duration: 1s;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: ${shimmer};
+    -webkit-animation-timing-function: linear;
+    background: #f6f7f8;
+    background-image: -webkit-gradient(linear, left center, right center, from(#f6f7f8), color-stop(.2, #edeef1), color-stop(.4, #f6f7f8), to(#f6f7f8));
+    background-image: -webkit-linear-gradient(left, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+    background-repeat: no-repeat;
+    background-size: 800px 104px;
+  `};
   &::placeholder {
-    color: rgb(${colors.lightBlue});
+    color: rgba(${colors.grey}, 0.8);
+    font-weight: ${fonts.weight.medium};
+    opacity: 1;
+  }
+  @media screen and (${responsive.sm.max}) {
+    padding: 8px 10px;
   }
 `;
 
-class FloatInput extends Component {
-  state = {
-    value: '',
-    focus: false,
-    content: false
+const Input = ({
+  fetching,
+  label,
+  type,
+  disabled,
+  value,
+  placeholder,
+  monospace,
+  ...props
+}) => {
+  let _label = label;
+  let _placeholder = placeholder;
+  if (!label) {
+    if (type === 'email') {
+      _label = 'Email';
+      _placeholder = 'youremail@address.com';
+    } else if (type === 'password') {
+      _label = 'Password';
+      _placeholder = '*********';
+    } else if (type === 'text') {
+      _label = '';
+    }
   }
-
-  _onChange = ({ target }) => {
-    this.setState({ value: target.value });
-    this.props.onValueChange(target.value);
-  };
-
-  _onFocus = () => this.setState({ focus: true });
-
-  _onBlur = () => {
-    if (!this.state.value) {
-      this.setState({ focus: false, content: false });
-    } else this.setState({ focus: false, content: true });
+  if (!placeholder) {
+    if (type === 'email') {
+      _placeholder = 'youremail@address.com';
+    } else if (type === 'password') {
+      _placeholder = '*********';
+    } else if (type === 'text') {
+      _placeholder = '';
+    }
   }
-
-  render() {
-    const { label, ...props } = this.props;
-    return (
-      <StyledContainer focus={this.state.focus} {...props}>
-        <StyledLabel content={this.state.content} focus={this.state.focus}>
-          {label}
-        </StyledLabel>
-        <StyledInputContainer content={this.state.content} focus={this.state.focus}>
-          <StyledInput
-            placholder={label}
-            onChange={this._onChange}
-            onFocus={this._onFocus}
-            onBlur={this._onBlur}
-            {...props}
-          />
-        </StyledInputContainer>
-      </StyledContainer>
-    );
-  }
-}
-
-FloatInput.propTypes = {
-  label: PropTypes.string.isRequired,
-  onValueChange: PropTypes.func
+  return (
+    <StyledInputWrapper disabled={fetching || disabled}>
+      <StyledLabel hide={_label === 'Input'}>{_label}</StyledLabel>
+      <StyledInput
+        fetching={fetching}
+        disabled={fetching || disabled}
+        type={type}
+        value={!disabled ? value : ''}
+        placeholder={_placeholder}
+        monospace={monospace}
+        {...props}
+      />
+    </StyledInputWrapper>
+  );
 };
 
-FloatInput.defaultProps = {
-  onValueChange: () => {}
+Input.propTypes = {
+  type: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  fetching: PropTypes.bool,
+  monospace: PropTypes.bool,
+  disabled: PropTypes.bool
 };
 
-export default FloatInput;
+Input.defaultProps = {
+  label: '',
+  placeholder: '',
+  fetching: false,
+  monospace: false,
+  disabled: false
+};
+
+export default Input;

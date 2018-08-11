@@ -29,13 +29,13 @@ Column.propTypes = {
   children: PropTypes.node.isRequired,
   spanHeight: PropTypes.bool,
   maxWidth: PropTypes.number,
-  center: PropTypes.bool,
+  center: PropTypes.bool
 };
 
 Column.defaultProps = {
-  spanHeightL: false,
+  spanHeight: false,
   maxWidth: 600,
-  center: false,
+  center: false
 };
 
 export default Column;

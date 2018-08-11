@@ -21,6 +21,7 @@ const StyledLayout = styled.div`
 
 const StyledContent = styled(Wrapper)`
   width: 100%;
+  height: 100%;
   padding: 0 16px;
 `;
 
@@ -53,22 +54,14 @@ const StyledActiveAccount = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  font-weight: 500;
 `;
 
 const BaseLayout = ({
   children,
   metamaskFetching,
-  ledgerFetching,
-  trezorFetching,
   accountType,
   accountAddress,
-  ledgerAccounts,
-  ledgerUpdateNetwork,
-  trezorAccounts,
-  trezorUpdateNetwork,
-  accountChangeNativeCurrency,
-  accountUpdateAccountAddress,
-  nativeCurrency,
   network,
   web3Available,
   online,
@@ -77,7 +70,7 @@ const BaseLayout = ({
 }) => {
   return (
     <StyledLayout>
-      <Column maxWidth={1000}>
+      <Column maxWidth={1000} spanHeight>
         <StyledHeader>
           <Link to="/">
             <StyledBrandingWrapper>
@@ -85,10 +78,12 @@ const BaseLayout = ({
             </StyledBrandingWrapper>
           </Link>
           {accountAddress && (
-            <StyledActiveAccount>
-              <Blockie seed={accountAddress} />
-              <p>{ellipseAddress(accountAddress)}</p>
-            </StyledActiveAccount>
+            <Link to="/domains">
+              <StyledActiveAccount>
+                <Blockie seed={accountAddress} />
+                <p>{ellipseAddress(accountAddress)}</p>
+              </StyledActiveAccount>
+            </Link>
           )}
         </StyledHeader>
         <StyledContent>{children}</StyledContent>
@@ -110,8 +105,8 @@ BaseLayout.propTypes = {
 };
 
 const reduxProps = ({ account, ledger, trezor, metamask, warning }) => ({
-  accountType: account.accountType,
-  accountAddress: account.accountAddress,
+  accountType: account.type,
+  accountAddress: account.address,
   nativeCurrency: account.nativeCurrency,
   metamaskFetching: metamask.fetching,
   network: account.network,
