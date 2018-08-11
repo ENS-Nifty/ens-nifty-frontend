@@ -35,7 +35,7 @@ export async function unmintToken(labelHash) {
     .estimateGas({from: address, value: '0'});
   web3MetamaskSendTransaction({
     from: address,
-    to: addresses.registrar,
+    to: addresses.nifty,
     data,
     value: '0',
     gasPrice,
