@@ -14,13 +14,13 @@ const StyledWrapper = styled.div`
   height: 360px;
 `;
 
-const NotFound = () => (
+const DeregisterENS = () => (
   <BaseLayout>
     <StyledWrapper>
       <Link to="/">
-        <h3>{'Not Found'}</h3>
+        <h3>{'Deregister ENS'}</h3>
       </Link>
     </StyledWrapper>
   </BaseLayout>
 );
-export default NotFound;
+export default DeregisterENS;

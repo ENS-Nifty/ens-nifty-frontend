@@ -10,10 +10,8 @@ const SLink = styled(Link)`
   padding: 0;
 `;
 
-const LinkWrapper = ({ children, ...otherProps }) => (
-  <SLink {...otherProps}>
-    {children}
-  </SLink>
+const LinkWrapper = ({ children, ...props }) => (
+  <SLink {...props}>{children}</SLink>
 );
 
 LinkWrapper.propTypes = {

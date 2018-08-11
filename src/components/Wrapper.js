@@ -1,24 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import Loader from './Loader';
+import styled, { keyframes } from 'styled-components';
 
-const StyledWrapper = styled.div`
-  width: 100%;
-  min-height: 210px;
-  display: flex;
-  align-items: center;
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 `;
 
-const Wrapper = ({ children, fetching }) => <StyledWrapper>{fetching ? <Loader /> : children} </StyledWrapper>;
+const StyledWrapper = styled.div`
+  will-change: transform, opacity;
+  animation: ${fadeIn} 0.7s ease 0s normal 1;
+  min-height: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: ${({ center }) => (center ? `center` : `flex-start`)};
+`;
+
+const Wrapper = ({ children, center, ...props }) => (
+  <StyledWrapper center={center} {...props}>
+    {children}
+  </StyledWrapper>
+);
 
 Wrapper.propTypes = {
   children: PropTypes.node.isRequired,
-  fetching: PropTypes.bool
+  center: PropTypes.bool,
 };
 
 Wrapper.defaultProps = {
-  fetching: false
+  center: false,
 };
 
 export default Wrapper;

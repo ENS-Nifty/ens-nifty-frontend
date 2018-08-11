@@ -1,39 +1,44 @@
 import React, { Component } from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import Column from './components/Column';
-import Login from './pages/Login';
-import Logout from './pages/Logout';
+import Home from './pages/Home';
+import Domains from './pages/Domains';
+import RegisterENS from './pages/RegisterENS';
+import DeregisterENS from './pages/DeregisterENS';
 import NotFound from './pages/NotFound';
-
-const StyledWrapper = styled.div`
-  height: 100vh;
-  width: 100vw;
-  text-align: center;
-`;
+import { warningOnline, warningOffline } from './reducers/_warning';
 
 class Router extends Component {
   componentDidMount() {
     window.browserHistory = this.context.router.history;
+    window.onoffline = () => this.props.warningOffline();
+    window.ononline = () => this.props.warningOnline();
   }
   render = () => (
-    <StyledWrapper>
-      <Column>
-        <Switch>
-          <Route exact path="/" render={() => <Redirect to="/login" />} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/logout" component={Logout} />
-          <Route component={NotFound} />
-        </Switch>
-      </Column>
-    </StyledWrapper>
+    <Switch>
+      <Route exact path="/" component={Home} />
+      <Route path="/domains" component={Domains} />
+      <Route path="/register-ens" component={RegisterENS} />
+      <Route path="/deregister-ens" component={DeregisterENS} />
+      <Route component={NotFound} />
+    </Switch>
   );
 }
 
 Router.contextTypes = {
   router: PropTypes.object.isRequired,
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
+  email: PropTypes.string,
+  signup: PropTypes.any
 };
 
-export default Router;
+export default withRouter(
+  connect(
+    null,
+    {
+      warningOffline,
+      warningOnline
+    }
+  )(Router)
+);
