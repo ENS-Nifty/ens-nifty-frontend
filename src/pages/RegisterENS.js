@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import BaseLayout from '../layouts/base';
+import TransactionStatus from '../components/TransactionStatus';
+import LineBreak from '../components/LineBreak';
 import Form from '../components/Form';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { isValidENSDomain } from '../helpers/validators';
 import {
   registerUpdateInput,
   registerSubmitTransactions
@@ -38,16 +41,24 @@ const StyledTransactionList = styled.div`
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  opacity: ${({ valid }) => (valid ? '1' : '0.5')};
 `;
 
 const StyledTransaction = styled.div`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   margin: 60px auto;
   font-size: 28px;
+  & p {
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 class RegisterENS extends Component {
   render = () => {
+    const validDomain = isValidENSDomain(this.props.input);
     return (
       <BaseLayout>
         <StyledWrapper>
@@ -64,9 +75,16 @@ class RegisterENS extends Component {
             />
             <StyledButton type="submit">Submit</StyledButton>
           </StyledForm>
-          <StyledTransactionList>
-            <StyledTransaction>1. Transfer Domain Ownership</StyledTransaction>
-            <StyledTransaction>2. Mint ENS wrapper NFT token</StyledTransaction>
+          <StyledTransactionList valid={validDomain}>
+            <StyledTransaction>
+              <TransactionStatus status={''} />
+              <p>1. Transfer Domain Ownership</p>
+            </StyledTransaction>
+            <LineBreak />
+            <StyledTransaction>
+              <TransactionStatus status={''} />
+              <p>2. Mint ENS wrapper NFT token</p>
+            </StyledTransaction>
           </StyledTransactionList>
         </StyledWrapper>
       </BaseLayout>

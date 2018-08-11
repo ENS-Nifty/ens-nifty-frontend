@@ -54,6 +54,7 @@ const StyledActiveAccount = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  font-weight: 500;
 `;
 
 const BaseLayout = ({
@@ -77,10 +78,12 @@ const BaseLayout = ({
             </StyledBrandingWrapper>
           </Link>
           {accountAddress && (
-            <StyledActiveAccount>
-              <Blockie seed={accountAddress} />
-              <p>{ellipseAddress(accountAddress)}</p>
-            </StyledActiveAccount>
+            <Link to="/domains">
+              <StyledActiveAccount>
+                <Blockie seed={accountAddress} />
+                <p>{ellipseAddress(accountAddress)}</p>
+              </StyledActiveAccount>
+            </Link>
           )}
         </StyledHeader>
         <StyledContent>{children}</StyledContent>

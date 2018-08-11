@@ -38,6 +38,8 @@ const StyledDomainsList = styled.div`
 
 const StyledNoDomainsMessage = styled.p`
   margin: 20px auto;
+  font-size: 28px;
+  opacity: 0.7;
 `;
 
 class Domains extends Component {

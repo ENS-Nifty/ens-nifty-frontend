@@ -17,9 +17,7 @@ class Router extends Component {
   }
 
   render = () => {
-    console.log(this.props);
     const address = this.props.address;
-    console.log(address);
     return (
       <Switch>
         <Route exact path="/" component={Home} />

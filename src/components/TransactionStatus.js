@@ -5,36 +5,37 @@ import successState from '../assets/success-state.svg';
 import defaultState from '../assets/default-state.svg';
 
 const StyledTransactionStatus = styled.div`
-  width: 100%;
+  display: flex;
 `;
 
 const StyledAsset = styled.div`
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
+  background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 `;
 
 const StyledSuccess = styled(StyledAsset)`
-  background: url(${successState}) no-repeat;
+  background-image: url(${successState});
 `;
 
 const StyledDefault = styled(StyledAsset)`
-  background: url(${defaultState}) no-repeat;
+  background-image: url(${defaultState});
 `;
 
 const TransactionStatus = ({ status, ...props }) => (
   <StyledTransactionStatus {...props}>
-    {() => {
+    {(() => {
       switch (status) {
         case 'pending':
-          return <Loader />;
+          return <Loader size={34} />;
         case 'success':
           return <StyledSuccess />;
         default:
           return <StyledDefault />;
       }
-    }}
+    })()}
   </StyledTransactionStatus>
 );
 

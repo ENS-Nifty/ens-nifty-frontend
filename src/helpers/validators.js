@@ -13,7 +13,7 @@ export const isValidEmail = email =>
 /**
  * @desc validate ethereum address
  * @param  {Number} wei
- * @return {String}
+ * @return {Boolean}
  */
 export const isValidAddress = address => {
   if (address.substring(0, 2) !== '0x') return false;
@@ -25,3 +25,10 @@ export const isValidAddress = address => {
     return true;
   else return address === toChecksumAddress(address);
 };
+
+/**
+ * @desc validate ens domain
+ * @param  {String} domain
+ * @return {Boolean}
+ */
+export const isValidENSDomain = domain => !!domain.match(/[A-Z]+.eth/gi);
