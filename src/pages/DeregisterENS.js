@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import BaseLayout from '../layouts/base';
-import Link from '../components/Link';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -9,7 +8,6 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   padding: 20px;
-  text-transform: uppercase;
   text-align: center;
   height: 360px;
 `;
@@ -17,9 +15,7 @@ const StyledWrapper = styled.div`
 const DeregisterENS = () => (
   <BaseLayout>
     <StyledWrapper>
-      <Link to="/">
-        <h3>{'Deregister ENS'}</h3>
-      </Link>
+      <h3>{'Deregister ENS'}</h3>
     </StyledWrapper>
   </BaseLayout>
 );

@@ -1,14 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import BaseLayout from '../layouts/base';
-import Link from '../components/Link';
 
 const StyledWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
   padding: 20px;
-  text-transform: uppercase;
   text-align: center;
   height: 360px;
 `;
@@ -16,9 +14,7 @@ const StyledWrapper = styled.div`
 const Domains = () => (
   <BaseLayout>
     <StyledWrapper>
-      <Link to="/">
-        <h3>{'Your Registered Domains'}</h3>
-      </Link>
+      <h3>{'Your Registered Domains'}</h3>
     </StyledWrapper>
   </BaseLayout>
 );
