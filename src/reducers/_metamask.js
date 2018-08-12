@@ -37,7 +37,9 @@ export const metamaskUpdateMetamaskAccount = () => (dispatch, getState) => {
 
 export const metamaskConnectInit = () => (dispatch, getState) => {
   const accountAddress =
-    getState().metamask.accountAddress || window.web3.eth.defaultAccount;
+    getState().metamask.accountAddress || typeof window.web3 !== 'undefined'
+      ? window.web3.eth.defaultAccount
+      : '';
   if (typeof window.web3 !== 'undefined') {
     if (!accountAddress) {
       dispatch(notificationShow('Unlock your Metamask', false));
