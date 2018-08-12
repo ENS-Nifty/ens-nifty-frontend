@@ -6,7 +6,11 @@ import TransactionStatus from '../components/TransactionStatus';
 import Form from '../components/Form';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { transferSubmitTransaction } from '../reducers/_tokenize';
+import {
+  tokenizeClearState,
+  transferSubmitTransaction,
+  transferUpdateRecipient
+} from '../reducers/_tokenize';
 
 const StyledForm = styled(Form)`
   width: 100%;
@@ -61,6 +65,9 @@ const StyledTransaction = styled.div`
 `;
 
 class TransferDomain extends Component {
+  componentWillUnmount() {
+    this.props.tokenizeClearState();
+  }
   render = () => {
     const { domain, labelHash } = this.props;
     return (
@@ -70,16 +77,16 @@ class TransferDomain extends Component {
           <StyledSubHeader>
             <StyledForm
               onSubmit={() =>
-                this.props.tokenizeSubmitTransaction(this.props.domain)
+                this.props.transferSubmitTransaction(this.props.domain)
               }
             >
               <Input
                 label=""
-                placeholder="ensdomain.eth"
+                placeholder="Recipient"
                 type="text"
-                value={this.props.domain}
+                value={this.props.recipient}
                 onChange={({ target }) =>
-                  this.props.tokenizeUpdateDomain(target.value)
+                  this.props.transferUpdateRecipient(target.value)
                 }
               />
               <StyledButton type="submit">Submit</StyledButton>
@@ -87,7 +94,7 @@ class TransferDomain extends Component {
           </StyledSubHeader>
           <StyledTransactionList>
             <StyledTransaction>
-              <TransactionStatus status={this.props.burnTokenStatus} />
+              <TransactionStatus status={this.props.transferTokenStatus} />
               <p>Transfer ENS Domain token</p>
             </StyledTransaction>
           </StyledTransactionList>
@@ -100,10 +107,11 @@ class TransferDomain extends Component {
 const reduxProps = ({ tokenize }) => ({
   labelHash: tokenize.labelHash,
   domain: tokenize.domain,
+  recipient: tokenize.recipient,
   burnTokenStatus: tokenize.burnTokenStatus
 });
 
 export default connect(
   reduxProps,
-  { transferSubmitTransaction }
+  { transferSubmitTransaction, transferUpdateRecipient, tokenizeClearState }
 )(TransferDomain);
