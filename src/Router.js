@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Domains from './pages/Domains';
 import TokenizeDomain from './pages/TokenizeDomain';
 import UntokenizeDomain from './pages/UntokenizeDomain';
+import TransferDomain from './pages/TransferDomain';
 import NotFound from './pages/NotFound';
 import { warningOnline, warningOffline } from './reducers/_warning';
 
@@ -49,6 +50,16 @@ class Router extends Component {
               return <Redirect to="/" />;
             }
             return <UntokenizeDomain {...routerProps} />;
+          }}
+        />
+        <Route
+          exact
+          path="/transfer-domain"
+          render={routerProps => {
+            if (!address) {
+              return <Redirect to="/" />;
+            }
+            return <TransferDomain {...routerProps} />;
           }}
         />
         <Route component={NotFound} />
