@@ -7,6 +7,7 @@ import {
   getNextTokenizeStep,
   unmintToken
 } from '../helpers/contracts/nifty';
+import { notificationShow } from './_notification';
 
 // -- Constants ------------------------------------------------------------- //
 const TOKENIZE_UPDATE_INPUT = 'tokenize/TOKENIZE_UPDATE_INPUT';
@@ -25,6 +26,18 @@ export const tokenizeUpdateInput = (input = '') => dispatch => {
 };
 
 export const tokenizeSubmitTransaction = name => async dispatch => {
+  if (!name.trim()) return;
+  let hasEth =
+    name
+      .split('.')
+      .pop()
+      .toLowerCase() === 'eth';
+  if (!hasEth) {
+    dispatch(
+      notificationShow("Sorry, only available for names ending in 'eth'", true)
+    );
+    return;
+  }
   const domain = formatENSDomain(name);
   const label = domain.match(/(.*)\.eth/)[1];
   const labelHash = sha3(label);
@@ -67,7 +80,18 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
       });
       dispatch({ type: MINT_TOKEN_STATUS, payload: 'success' });
       break;
+    case 'error-not-owned':
+      dispatch(notificationShow("Looks like you don't own that domain.", true));
+      break;
+    case 'error-not-registered':
+      dispatch(notificationShow('Looks like no one owns that domain.', true));
+      break;
+    case 'error':
+      dispatch(notificationShow("Sorry, something's gone wrong", true));
+      break;
     default:
+      dispatch(notificationShow("Sorry, something's gone wrong", true));
+      console.error(step);
       break;
   }
 };
