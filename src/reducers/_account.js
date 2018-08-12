@@ -104,7 +104,9 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
             token.domain = getLocalDomainFromLabelHash(token.labelHash);
             if (!token.domain) {
               const name = await labelHashToName(token.labelHash);
-              token.domain = `${name}.eth`;
+              if (name) {
+                token.domain = `${name}.eth`;
+              }
               return token;
             }
             return token;

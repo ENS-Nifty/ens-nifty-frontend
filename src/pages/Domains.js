@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/base';
 import Loader from '../components/Loader';
 import Link from '../components/Link';
 import Button from '../components/Button';
+import AddButton from '../components/AddButton';
 import { untokenizeUpdateDomain } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
 
@@ -43,6 +44,16 @@ const StyledNoDomainsMessage = styled.p`
   opacity: 0.7;
 `;
 
+const StyledAddButtonWrapper = styled.div`
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center
+  width: 100%;
+  max-width: 600px;
+  height: 60px;
+`;
+
 class Domains extends Component {
   componentDidMount() {
     this.props.accountGetTokenizedDomains();
@@ -73,11 +84,11 @@ class Domains extends Component {
                           Untokenize
                         </Button>
                       </div>
-                      {/* <div>
+                      <StyledAddButtonWrapper>
                         <Link to="/tokenize-domain">
-                          <Button>Tokenize Domain</Button>
+                          <AddButton />
                         </Link>
-                      </div> */}
+                      </StyledAddButtonWrapper>
                     </div>
                   ))}
                 </StyledDomainsList>
