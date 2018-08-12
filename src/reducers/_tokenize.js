@@ -168,9 +168,8 @@ export const transferUpdateRecipient = (recipient = '') => ({
 
 export const transferSubmitTransaction = (
   labelHashOrDomain = '',
-  recipient = '',
 ) => async (dispatch, getState) => {
-  if (recipient.startsWith('0x') && !isValidAddress(recipient)) {
+  if (labelHashOrDomain.startsWith('0x') && !isValidAddress(labelHashOrDomain)) {
     dispatch(notificationShow(`Address is invalid`, true));
     return;
   }
@@ -178,8 +177,7 @@ export const transferSubmitTransaction = (
   const labelHash = labelHashOrDomain.startsWith('0x')
     ? labelHashOrDomain
     : Web3.utils.keccak256(labelHashOrDomain.replace('.eth', ''));
-  recipient = await resolveNameOrAddr(recipient);
-  console.log(recipient);
+  const recipient = await resolveNameOrAddr(labelHashOrDomain, network);
   if (!recipient) {
     dispatch(notificationShow(`Couldn't resolve ENS domain`, true));
     return;

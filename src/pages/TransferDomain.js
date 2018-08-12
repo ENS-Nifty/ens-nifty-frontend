@@ -78,7 +78,7 @@ class TransferDomain extends Component {
             <StyledForm
               onSubmit={() =>
                 this.props.transferSubmitTransaction(this.props.domain)
-              }
+            }
             >
               <Input
                 label=""
