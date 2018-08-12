@@ -48,7 +48,7 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
   const labelHash = sha3(label);
   updateLocal('domains', [{domain, label, labelHash}]);
   await addNameToLabelHash(label);
-  const step = await getNextTokenizeStep(labelHash);
+  const step = await getNextTokenizeStep(labelHash, network);
   switch (step) {
     case 'transfer':
       dispatch({type: TRANSFER_NAME_STATUS, payload: 'pending'});
