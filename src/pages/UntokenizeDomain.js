@@ -53,7 +53,7 @@ class TokenizeENS extends Component {
         <StyledWrapper>
           <h3>{'Untokenize ENS Domain'}</h3>
           <StyledSubHeader>
-            <h1>{input || labelHash || 'pedrouid.eth'}</h1>
+            <h1>{input || labelHash}</h1>
             <Button>Untokenize</Button>
           </StyledSubHeader>
           <StyledTransactionList>

@@ -45,9 +45,9 @@ class Router extends Component {
           exact
           path="/untokenize-domain"
           render={routerProps => {
-            // if (!address) {
-            //   return <Redirect to="/" />;
-            // }
+            if (!address) {
+              return <Redirect to="/" />;
+            }
             return <UntokenizeDomain {...routerProps} />;
           }}
         />
