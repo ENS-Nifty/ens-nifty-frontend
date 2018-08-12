@@ -1,7 +1,10 @@
 import { sha3 } from '../helpers/web3';
 import { formatENSDomain } from '../helpers/utilities';
 import { updateLocal } from '../helpers/localstorage';
-import { transferName } from '../helpers/contracts/registrar';
+import {
+  transferName,
+  addNameToLabelHash
+} from '../helpers/contracts/registrar';
 import {
   mintToken,
   getNextTokenizeStep,
@@ -10,9 +13,9 @@ import {
 import { notificationShow } from './_notification';
 
 // -- Constants ------------------------------------------------------------- //
-const TOKENIZE_UPDATE_INPUT = 'tokenize/TOKENIZE_UPDATE_INPUT';
+const TOKENIZE_UPDATE_DOMAIN = 'tokenize/TOKENIZE_UPDATE_DOMAIN';
 
-const UNTTOKENIZE_UPDATE_INPUT = 'tokenize/UNTTOKENIZE_UPDATE_INPUT';
+const UNTTOKENIZE_UPDATE_DOMAIN = 'tokenize/UNTTOKENIZE_UPDATE_DOMAIN';
 
 const MINT_TOKEN_STATUS = 'tokenize/MINT_TOKEN_STATUS';
 
@@ -21,8 +24,8 @@ const TRANSFER_NAME_STATUS = 'tokenize/TRANSFER_NAME_STATUS';
 const BURN_TOKEN_STATUS = 'tokenize/BURN_TOKEN_STATUS';
 
 // -- Actions --------------------------------------------------------------- //
-export const tokenizeUpdateInput = (input = '') => dispatch => {
-  dispatch({ type: TOKENIZE_UPDATE_INPUT, payload: input });
+export const tokenizeUpdateInput = (domain = '') => dispatch => {
+  dispatch({ type: TOKENIZE_UPDATE_DOMAIN, payload: domain });
 };
 
 export const tokenizeSubmitTransaction = name => async dispatch => {
@@ -42,6 +45,7 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
   const label = domain.match(/(.*)\.eth/)[1];
   const labelHash = sha3(label);
   updateLocal('domains', [{ domain, label, labelHash }]);
+  await addNameToLabelHash(label);
   const step = await getNextTokenizeStep(labelHash);
   switch (step) {
     case 'transfer':
@@ -96,9 +100,11 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
   }
 };
 
-export const untokenizeUpdateInput = (labelHash = '') => dispatch => {
-  const input = '';
-  dispatch({ type: UNTTOKENIZE_UPDATE_INPUT, payload: { labelHash, input } });
+export const untokenizeUpdateDomain = (
+  domain = '',
+  labelHash = ''
+) => dispatch => {
+  dispatch({ type: UNTTOKENIZE_UPDATE_DOMAIN, payload: { labelHash, domain } });
   window.browserHistory.push('/untokenize-domain');
 };
 
@@ -119,7 +125,7 @@ export const untokenizeSubmitTransaction = (labelHash = '') => async (
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
   labelHash: '',
-  input: '',
+  domain: '',
   transferNameStatus: '',
   mintTokenStatus: '',
   burnTokenStatus: ''
@@ -127,16 +133,16 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case TOKENIZE_UPDATE_INPUT:
+    case TOKENIZE_UPDATE_DOMAIN:
       return {
         ...state,
-        input: action.payload
+        domain: action.payload
       };
-    case UNTTOKENIZE_UPDATE_INPUT:
+    case UNTTOKENIZE_UPDATE_DOMAIN:
       return {
         ...state,
         labelHash: action.payload.labelHash,
-        input: action.payload.input
+        domain: action.payload.domain
       };
     case TRANSFER_NAME_STATUS:
       return {

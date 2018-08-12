@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/base';
 import Loader from '../components/Loader';
 import Link from '../components/Link';
 import Button from '../components/Button';
-import { untokenizeUpdateInput } from '../reducers/_tokenize';
+import { untokenizeUpdateDomain } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
 
 const StyledTitle = styled.h3`
@@ -49,22 +49,25 @@ class Domains extends Component {
   }
 
   render() {
-    const { fetching, domains } = this.props;
+    const { fetching, tokens } = this.props;
     return (
       <BaseLayout>
         <StyledWrapper>
           <StyledTitle>{'Tokenized Domains'}</StyledTitle>
           <StyledDomains>
             {!fetching ? (
-              !!domains.length ? (
+              !!tokens.length ? (
                 <StyledDomainsList>
-                  {domains.map(domain => (
+                  {tokens.map(token => (
                     <div>
                       <div>
-                        <p>{domain}</p>
+                        <p>{token.domain || token.labelHash}</p>
                         <Button
                           onClick={() =>
-                            this.props.untokenizeUpdateInput(domain)
+                            this.props.untokenizeUpdateDomain(
+                              token.domain,
+                              token.labelHash
+                            )
                           }
                         >
                           Untokenize
@@ -100,11 +103,11 @@ class Domains extends Component {
 
 const reduxProps = ({ account }) => ({
   fetching: account.fetching,
-  domains: account.domains,
+  tokens: account.tokens,
   address: account.address
 });
 
 export default connect(
   reduxProps,
-  { accountGetTokenizedDomains, untokenizeUpdateInput }
+  { accountGetTokenizedDomains, untokenizeUpdateDomain }
 )(Domains);

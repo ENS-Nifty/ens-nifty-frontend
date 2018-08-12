@@ -47,13 +47,13 @@ const StyledTransaction = styled.div`
 
 class TokenizeENS extends Component {
   render = () => {
-    const { input, labelHash } = this.props;
+    const { domain, labelHash } = this.props;
     return (
       <BaseLayout>
         <StyledWrapper>
           <h3>{'Untokenize ENS Domain'}</h3>
           <StyledSubHeader>
-            <h1>{input || labelHash}</h1>
+            <h1>{domain || labelHash}</h1>
             <Button onClick={this.props.untokenizeSubmitTransaction}>
               Untokenize
             </Button>
@@ -72,7 +72,7 @@ class TokenizeENS extends Component {
 
 const reduxProps = ({ tokenize }) => ({
   labelHash: tokenize.labelHash,
-  input: tokenize.input,
+  domain: tokenize.domain,
   burnTokenStatus: tokenize.burnTokenStatus
 });
 

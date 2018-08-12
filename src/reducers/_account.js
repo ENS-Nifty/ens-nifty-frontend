@@ -2,6 +2,7 @@ import { apiGetTransaction } from '../helpers/api';
 import { parseError, getLocalDomainFromLabelHash } from '../helpers/utilities';
 import { web3SetHttpProvider } from '../helpers/web3';
 import { notificationShow } from './_notification';
+import { labelHashToName } from '../helpers/contracts/registrar';
 import { getTokensOwned } from '../helpers/contracts/nifty';
 
 // -- Constants ------------------------------------------------------------- //
@@ -92,11 +93,20 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
   dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST });
   getTokensOwned(getState().account.address)
     .then(async tokens => {
-      if (tokens) {
+      if (tokens.length) {
+        tokens = tokens.map(token => ({ domain: '', labelHash: token }));
         tokens = await Promise.all(
-          tokens.map(async token => getLocalDomainFromLabelHash(token))
+          tokens.map(async token => {
+            const name = await labelHashToName(token.labelHash);
+            if (name) {
+              token.domain = `${name}.eth`;
+              return token;
+            } else {
+              token.domain = getLocalDomainFromLabelHash(token);
+              return token;
+            }
+          })
         );
-        console.log(tokens);
       }
       dispatch({
         type: ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS,
@@ -116,7 +126,7 @@ const INITIAL_STATE = {
   provider: null,
   type: '',
   address: '',
-  domains: [],
+  tokens: [],
   fetching: false
 };
 
@@ -125,7 +135,7 @@ export default (state = INITIAL_STATE, action) => {
     case ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST:
       return { ...state, fetching: true };
     case ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS:
-      return { ...state, fetching: false, domains: action.payload };
+      return { ...state, fetching: false, tokens: action.payload };
     case ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE:
       return { ...state, fetching: false };
     case ACCOUNT_UPDATE_ACCOUNT_ADDRESS:
