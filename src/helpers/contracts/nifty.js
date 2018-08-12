@@ -4,14 +4,18 @@ import registrarJson from './abi/registrar.json';
 import deedJson from './abi/deed.json';
 import addresses from './config/addresses';
 
-const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses.nifty);
-const registrarContract = new web3Instance.eth.Contract(
-  registrarJson,
-  addresses.registrar
-);
 const deedContract = new web3Instance.eth.Contract(deedJson);
 
-export async function mintToken(labelHash, cb) {
+export async function mintToken(labelHash, network, cb) {
+  if (!addresses[network]) {
+    throw new Error('bad-network')
+  }
+  const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
+  const registrarContract = new web3Instance.eth.Contract(
+    registrarJson,
+    addresses[network].registrar,
+  );
+
   const address = window.web3.eth.defaultAccount;
   const data = niftyContract.methods.mint(labelHash).encodeABI();
   const gasPrice = web3Instance.utils.toWei('10', 'gwei');
@@ -20,7 +24,7 @@ export async function mintToken(labelHash, cb) {
     .estimateGas({ from: address, value: '0' });
   web3MetamaskSendTransaction({
     from: address,
-    to: addresses.nifty,
+    to: addresses[network].nifty,
     data,
     value: '0',
     gasPrice,
@@ -32,7 +36,12 @@ export async function mintToken(labelHash, cb) {
     .then(cb);
 }
 
-export async function unmintToken(labelHash, cb) {
+export async function unmintToken(labelHash, network, cb) {
+  const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
+  const registrarContract = new web3Instance.eth.Contract(
+    registrarJson,
+    addresses[network].registrar,
+  );
   const address = window.web3.eth.defaultAccount;
   const data = niftyContract.methods.burn(labelHash).encodeABI();
   const gasPrice = web3Instance.utils.toWei('10', 'gwei');
@@ -41,7 +50,7 @@ export async function unmintToken(labelHash, cb) {
     .estimateGas({ from: address, value: '0' });
   web3MetamaskSendTransaction({
     from: address,
-    to: addresses.nifty,
+    to: addresses[network].nifty,
     data,
     value: '0',
     gasPrice,
@@ -53,7 +62,12 @@ export async function unmintToken(labelHash, cb) {
     .then(cb);
 }
 
-export async function getTokensOwned(owner) {
+export async function getTokensOwned(owner, network) {
+  const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
+  const registrarContract = new web3Instance.eth.Contract(
+    registrarJson,
+    addresses[network].registrar,
+  );
   const tokens = [];
 
   const nbTokens = await niftyContract.methods.balanceOf(owner).call();
@@ -66,14 +80,27 @@ export async function getTokensOwned(owner) {
   return tokens;
 }
 
-export async function getNextTokenizeStep(labelHash) {
+export async function getNextTokenizeStep(labelHash, network) {
   try {
+<<<<<<< HEAD
+=======
+    const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
+    const registrarContract = new web3Instance.eth.Contract(
+      registrarJson,
+      addresses[network].registrar,
+    );
+>>>>>>> 5caf54d5425f041281481c1c26b4d3aa124922c5
     const deedAddress = (await registrarContract.methods
       .entries(labelHash)
       .call())[1];
     if (deedAddress === '0x' + '0'.repeat(40)) {
+<<<<<<< HEAD
       return 'error-not-registered';
+=======
+      return 'error-not-registered'
+>>>>>>> 5caf54d5425f041281481c1c26b4d3aa124922c5
     }
+    console.log('deedAddress', deedAddress)
     deedContract.options.address = deedAddress;
     const currentOwner = (await deedContract.methods
       .owner()
@@ -85,10 +112,10 @@ export async function getNextTokenizeStep(labelHash) {
     ) {
       return 'transfer';
     }
-    if (currentOwner === addresses.nifty.toLowerCase() && !tokenExists) {
+    if (currentOwner === addresses[network].nifty.toLowerCase() && !tokenExists) {
       return 'mint';
     }
-    if (currentOwner === addresses.nifty.toLowerCase() && tokenExists) {
+    if (currentOwner === addresses[network].nifty.toLowerCase() && tokenExists) {
       return 'done';
     }
     return 'error-not-owned';
