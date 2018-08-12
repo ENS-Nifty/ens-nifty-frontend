@@ -10,7 +10,8 @@ import Input from '../components/Input';
 import { isValidENSDomain } from '../helpers/validators';
 import {
   tokenizeUpdateDomain,
-  tokenizeSubmitTransaction
+  tokenizeSubmitTransaction,
+  tokenizeClearState
 } from '../reducers/_tokenize';
 
 const StyledWrapper = styled.div`
@@ -57,6 +58,9 @@ const StyledTransaction = styled.div`
 `;
 
 class TokenizeENS extends Component {
+  componentWillUnmount() {
+    this.props.tokenizeClearState();
+  }
   render = () => {
     const validDomain = isValidENSDomain(this.props.domain);
     return (
@@ -104,5 +108,5 @@ const reduxProps = ({ tokenize }) => ({
 
 export default connect(
   reduxProps,
-  { tokenizeUpdateDomain, tokenizeSubmitTransaction }
+  { tokenizeUpdateDomain, tokenizeSubmitTransaction, tokenizeClearState }
 )(TokenizeENS);

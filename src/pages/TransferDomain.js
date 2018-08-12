@@ -7,6 +7,7 @@ import Form from '../components/Form';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import {
+  tokenizeClearState,
   transferSubmitTransaction,
   transferUpdateRecipient
 } from '../reducers/_tokenize';
@@ -64,6 +65,9 @@ const StyledTransaction = styled.div`
 `;
 
 class TransferDomain extends Component {
+  componentWillUnmount() {
+    this.props.tokenizeClearState();
+  }
   render = () => {
     const { domain, labelHash } = this.props;
     return (
@@ -109,5 +113,5 @@ const reduxProps = ({ tokenize }) => ({
 
 export default connect(
   reduxProps,
-  { transferSubmitTransaction, transferUpdateRecipient }
+  { transferSubmitTransaction, transferUpdateRecipient, tokenizeClearState }
 )(TransferDomain);
