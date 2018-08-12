@@ -49,11 +49,23 @@ const StyledNoDomainsMessage = styled.p`
 const StyledToken = styled.div`
   width: 50px;
   height: 50px;
+  margin-right: 12px;
   background: url(${tokenImg}) no-repeat;
   background-size: cover;
   background-position: center;
 `;
+ const StyledCompomentToken = styled.div`
 
+ display: flex;
+ justify-content: space-around;
+ align-items: center;
+ margin: 5px;
+ `;
+
+ const StyledTokenWrapper = styled.div`
+ display: flex;
+ align-items: center;
+ `
 
 function hashToStyle(hash) {
   const modulos = mod(hash, 360)
@@ -86,9 +98,11 @@ class Domains extends Component {
                 <StyledDomainsList>
                   {domains.map(token => (
                     <div>
-                      <div>
-                        <StyledToken style={hashToStyle(token)}></StyledToken>
-                        <p>{token.domain || token.labelHash}</p>
+                      <StyledCompomentToken>
+                        <StyledTokenWrapper>
+                          <StyledToken style={hashToStyle(token)}></StyledToken>
+                          <p>{token.domain || token.labelHash}</p>
+                        </StyledTokenWrapper>
                         <Button
                           onClick={() =>
                             this.props.untokenizeUpdateDomain(
@@ -99,7 +113,7 @@ class Domains extends Component {
                         >
                           Untokenize
                         </Button>
-                      </div>
+                      </StyledCompomentToken>
                       <StyledAddButtonWrapper>
                         <Link to="/tokenize-domain">
                           <AddButton />
