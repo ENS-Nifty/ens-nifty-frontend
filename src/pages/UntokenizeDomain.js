@@ -12,11 +12,11 @@ const StyledWrapper = styled.div`
   height: 100%;
 `;
 
-const DeregisterENS = () => (
+const UnwrapENS = () => (
   <BaseLayout>
     <StyledWrapper>
-      <h3>{'Deregister ENS'}</h3>
+      <h3>{'Unwrap ENS'}</h3>
     </StyledWrapper>
   </BaseLayout>
 );
-export default DeregisterENS;
+export default UnwrapENS;
