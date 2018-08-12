@@ -33,6 +33,8 @@ const BURN_TOKEN_STATUS = 'tokenize/BURN_TOKEN_STATUS';
 
 const TRANSFER_TOKEN_STATUS = 'tokenize/TRANSFER_TOKEN_STATUS';
 
+const TOKENIZE_CLEAR_STATE = 'tokenize/TOKENIZE_CLEAR_STATE';
+
 // -- Actions --------------------------------------------------------------- //
 export const tokenizeUpdateDomain = (domain = '') => ({
   type: TOKENIZE_UPDATE_DOMAIN,
@@ -190,6 +192,10 @@ export const transferSubmitTransaction = (
     .catch(() => dispatch({ type: TRANSFER_TOKEN_STATUS, payload: '' }));
 };
 
+export const tokenizeClearState = (recipient = '') => ({
+  type: TOKENIZE_CLEAR_STATE
+});
+
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
   labelHash: '',
@@ -238,6 +244,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         burnTokenStatus: action.payload
+      };
+    case TOKENIZE_CLEAR_STATE:
+      return {
+        ...state,
+        ...INITIAL_STATE
       };
     default:
       return state;
