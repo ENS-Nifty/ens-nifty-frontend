@@ -1,3 +1,5 @@
+import { getLocal } from './localstorage';
+
 /**
  * @desc debounce api request
  * @param  {Function}  request
@@ -172,4 +174,18 @@ export const formatENSDomain = name => {
   if (name.endsWith('.eth')) {
     return name;
   } else return name + '.eth';
+};
+
+/**
+ * @desc converts label hash to domain
+ * @param   {String}  labelHash
+ * @return  {String}
+ */
+export const getLocalDomainFromLabelHash = (labelHash = '') => {
+  const localDomains = getLocal('domains');
+  const savedData = localDomains.filter(
+    domainData => domainData.labelHash === labelHash
+  );
+  const domain = savedData.domain;
+  return domain;
 };

@@ -102,9 +102,11 @@ export const untokenizeUpdateInput = (labelHash = '') => dispatch => {
   window.browserHistory.push('/untokenize-domain');
 };
 
-export const untokenizeSubmitTransaction = (
-  labelHash = ''
-) => async dispatch => {
+export const untokenizeSubmitTransaction = (labelHash = '') => async (
+  dispatch,
+  getState
+) => {
+  labelHash = labelHash || getState().tokenize.labelHash;
   dispatch({ type: BURN_TOKEN_STATUS, payload: 'pending' });
   unmintToken(labelHash, () =>
     dispatch({

@@ -35,7 +35,7 @@ export const removeLocal = (key = '') => localStorage.removeItem(key);
  * @return {Void}
  */
 export const updateLocal = (key = '', data = []) => {
-  const localData = getLocal(key);
+  const localData = getLocal(key) || [];
   const mergedData = [...localData, ...data];
   saveLocal(key, mergedData);
 };

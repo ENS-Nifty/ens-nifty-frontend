@@ -1,5 +1,5 @@
 import { apiGetTransaction } from '../helpers/api';
-import { parseError } from '../helpers/utilities';
+import { parseError, getLocalDomainFromLabelHash } from '../helpers/utilities';
 import { web3SetHttpProvider } from '../helpers/web3';
 import { notificationShow } from './_notification';
 import { getTokensOwned } from '../helpers/contracts/nifty';
@@ -94,7 +94,7 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
     .then(async tokens => {
       if (tokens) {
         tokens = await Promise.all(
-          tokens.map(async token => token)
+          tokens.map(async token => getLocalDomainFromLabelHash(token))
         );
         console.log(tokens);
       }
