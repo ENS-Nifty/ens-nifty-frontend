@@ -14,10 +14,6 @@ export async function mintToken(labelHash, network, cb) {
     niftyJson,
     addresses[network].nifty
   );
-  const registrarContract = new web3Instance.eth.Contract(
-    registrarJson,
-    addresses[network].registrar
-  );
 
   const address = window.web3.eth.defaultAccount;
   const data = niftyContract.methods.mint(labelHash).encodeABI();
@@ -44,10 +40,6 @@ export async function unmintToken(labelHash, network, cb) {
     niftyJson,
     addresses[network].nifty
   );
-  const registrarContract = new web3Instance.eth.Contract(
-    registrarJson,
-    addresses[network].registrar
-  );
   const address = window.web3.eth.defaultAccount;
   const data = niftyContract.methods.burn(labelHash).encodeABI();
   const gasPrice = web3Instance.utils.toWei('10', 'gwei');
@@ -72,10 +64,6 @@ export async function getTokensOwned(owner, network) {
   const niftyContract = new web3Instance.eth.Contract(
     niftyJson,
     addresses[network].nifty
-  );
-  const registrarContract = new web3Instance.eth.Contract(
-    registrarJson,
-    addresses[network].registrar
   );
   const tokens = [];
 
