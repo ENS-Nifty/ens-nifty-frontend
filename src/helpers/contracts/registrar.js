@@ -40,15 +40,13 @@ export async function transferName(labelHash, cb) {
     .then(cb);
 }
 
-export async function labelHashToName(labelHash) {
-  fetch(
+export function labelHashToName(labelHash) {
+  return fetch(
     `https://buyethdomains.com/api/reverse-lookup/label-to-name?label=${labelHash}`,
-  )
-    .then(res => res.json())
-    .then(console.log);
+  ).then(res => res.json());
 }
 
-export async function addNameToLabelHash(name) {
+export function addNameToLabelHash(name) {
   fetch(`https://buyethdomains.com/api/reverse-lookup/new`, {
     method: 'POST',
     headers: {
