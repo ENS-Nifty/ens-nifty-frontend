@@ -80,7 +80,7 @@ const StyledActionsWrapper = styled.div`
   align-items: center;
   justify-content: flex-end;
 
-  & ${Button} {
+  & button {
     margin-left: 12px;
   }
 `;
