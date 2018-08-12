@@ -1,6 +1,5 @@
 import { web3MetamaskSendTransaction, web3Instance } from '../web3';
 import registrarJson from './abi/registrar.json';
-// import resolverJson from './abi/resolver.json';
 import addresses from './config/addresses';
 
 export async function transferName(labelHash, network, cb) {
@@ -30,15 +29,13 @@ export async function transferName(labelHash, network, cb) {
     .then(cb);
 }
 
-export async function labelHashToName(labelHash) {
-  fetch(
+export function labelHashToName(labelHash) {
+  return fetch(
     `https://buyethdomains.com/api/reverse-lookup/label-to-name?label=${labelHash}`
-  )
-    .then(res => res.json())
-    .then(console.log);
+  ).then(res => res.json());
 }
 
-export async function addNameToLabelHash(name) {
+export function addNameToLabelHash(name) {
   fetch(`https://buyethdomains.com/api/reverse-lookup/new`, {
     method: 'POST',
     headers: {

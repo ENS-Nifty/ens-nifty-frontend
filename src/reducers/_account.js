@@ -90,7 +90,7 @@ export const accountClearState = () => dispatch => {
 };
 
 export const accountGetTokenizedDomains = () => (dispatch, getState) => {
-  const network = getState().account.network
+  const network = getState().account.network;
   dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST });
   getTokensOwned(getState().account.address, network)
     .then(async tokens => {
@@ -127,7 +127,7 @@ const INITIAL_STATE = {
   provider: null,
   type: '',
   address: '',
-  tokens: [],
+  domains: [],
   fetching: false
 };
 
@@ -136,7 +136,7 @@ export default (state = INITIAL_STATE, action) => {
     case ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST:
       return { ...state, fetching: true };
     case ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS:
-      return { ...state, fetching: false, tokens: action.payload };
+      return { ...state, fetching: false, domains: action.payload };
     case ACCOUNT_GET_TOKENIZED_DOMAINS_FAILURE:
       return { ...state, fetching: false };
     case ACCOUNT_UPDATE_ACCOUNT_ADDRESS:
