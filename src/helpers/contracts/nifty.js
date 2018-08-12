@@ -76,12 +76,9 @@ export async function getNextRegisterStep(labelHash) {
     .call()).toLowerCase();
   const tokenExists = await niftyContract.methods.exists(labelHash).call();
   if (
-    currentOwner !== window.web3.eth.defaultAccount.toLowerCase() &&
-    currentOwner !== addresses.nifty.toLowerCase()
+    currentOwner === window.web3.eth.defaultAccount.toLowerCase() &&
+    !tokenExists
   ) {
-    return 'error';
-  }
-  if (currentOwner === window.web3.eth.defaultAccount.toLowerCase()) {
     return 'transfer';
   }
   if (currentOwner === addresses.nifty.toLowerCase() && !tokenExists) {
