@@ -66,8 +66,9 @@ export async function getTokensOwned(owner) {
   return tokens;
 }
 
-export async function getNextRegisterStep(labelHash) {
+export async function getNextTokenizeStep(labelHash) {
   try {
+
     const deedAddress = (await registrarContract.methods
       .entries(labelHash)
       .call())[1];
@@ -80,12 +81,9 @@ export async function getNextRegisterStep(labelHash) {
       .call()).toLowerCase();
     const tokenExists = await niftyContract.methods.exists(labelHash).call();
     if (
-      currentOwner !== window.web3.eth.defaultAccount.toLowerCase() &&
-      currentOwner !== addresses.nifty.toLowerCase()
+      currentOwner === window.web3.eth.defaultAccount.toLowerCase() &&
+      !tokenExists
     ) {
-      return 'error-not-owned';
-    }
-    if (currentOwner === window.web3.eth.defaultAccount.toLowerCase()) {
       return 'transfer';
     }
     if (currentOwner === addresses.nifty.toLowerCase() && !tokenExists) {
@@ -94,7 +92,7 @@ export async function getNextRegisterStep(labelHash) {
     if (currentOwner === addresses.nifty.toLowerCase() && tokenExists) {
       return 'done';
     }
-    return 'error'
+    return 'error-not-owned';
   } catch(error) {
     return error.message;
   }

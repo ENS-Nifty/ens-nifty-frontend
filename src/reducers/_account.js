@@ -3,7 +3,6 @@ import { parseError } from '../helpers/utilities';
 import { web3SetHttpProvider } from '../helpers/web3';
 import { notificationShow } from './_notification';
 import { getTokensOwned } from '../helpers/contracts/nifty';
-import { nodeToName } from '../helpers/contracts/registrar';
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -95,7 +94,7 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
     .then(async tokens => {
       if (tokens) {
         tokens = await Promise.all(
-          tokens.map(async token => nodeToName(token))
+          tokens.map(async token => token)
         );
         console.log(tokens);
       }

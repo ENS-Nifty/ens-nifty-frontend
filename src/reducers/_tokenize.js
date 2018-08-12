@@ -1,32 +1,34 @@
 import Web3 from 'web3';
+import { formatENSDomain } from '../helpers/utilities';
 import { transferName } from '../helpers/contracts/registrar';
-import { mintToken, getNextRegisterStep } from '../helpers/contracts/nifty';
+import { mintToken, getNextTokenizeStep, unmintToken } from '../helpers/contracts/nifty';
 import { notificationShow } from './_notification';
 
 // -- Constants ------------------------------------------------------------- //
 const TOKENIZE_UPDATE_INPUT = 'tokenize/TOKENIZE_UPDATE_INPUT';
+
+const UNTTOKENIZE_UPDATE_INPUT = 'tokenize/UNTTOKENIZE_UPDATE_INPUT';
+
 const MINT_TOKEN_STATUS = 'tokenize/MINT_TOKEN_STATUS';
+
 const TRANSFER_NAME_STATUS = 'tokenize/TRANSFER_NAME_STATUS';
+
+const BURN_TOKEN_STATUS = 'tokenize/BURN_TOKEN_STATUS';
 
 // -- Actions --------------------------------------------------------------- //
 export const tokenizeUpdateInput = (input = '') => dispatch => {
   dispatch({ type: TOKENIZE_UPDATE_INPUT, payload: input });
 };
 
-function formatDomain(name) {
-  if (name.endsWith('.eth')) {
-    return name;
-  } else return name + '.eth';
-}
-
 export const tokenizeSubmitTransaction = name => async dispatch => {
+  if (!name.trim()) return
   let hasEth = name.split('.').pop().toLowerCase() === 'eth'
   if (!hasEth) {
     dispatch(notificationShow("Sorry, only available for names ending in 'eth'", true));
     return
   }
-  const label = formatDomain(name).match(/(.*)\.eth/)[1];
-  const step = await getNextRegisterStep(Web3.utils.keccak256(label));
+  const label = formatENSDomain(name).match(/(.*)\.eth/)[1];
+  const step = await getNextTokenizeStep(Web3.utils.keccak256(label));
   switch (step) {
     case 'transfer':
       dispatch({ type: TRANSFER_NAME_STATUS, payload: 'pending' });
@@ -80,11 +82,31 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
   }
 };
 
+export const untokenizeUpdateInput = (labelHash = '') => dispatch => {
+  const input = '';
+  dispatch({ type: UNTTOKENIZE_UPDATE_INPUT, payload: { labelHash, input } });
+  window.browserHistory.push('/untokenize-domain');
+};
+
+export const untokenizeSubmitTransaction = (
+  labelHash = ''
+) => async dispatch => {
+  dispatch({ type: BURN_TOKEN_STATUS, payload: 'pending' });
+  unmintToken(Web3.utils.keccak256(labelHash), () =>
+    dispatch({
+      type: BURN_TOKEN_STATUS,
+      payload: 'success'
+    })
+  );
+};
+
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
+  labelHash: '',
   input: '',
   transferNameStatus: '',
-  mintTokenStatus: ''
+  mintTokenStatus: '',
+  burnTokenStatus: ''
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -93,6 +115,12 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         input: action.payload
+      };
+    case UNTTOKENIZE_UPDATE_INPUT:
+      return {
+        ...state,
+        labelHash: action.payload.labelHash,
+        input: action.payload.input
       };
     case TRANSFER_NAME_STATUS:
       return {
@@ -103,6 +131,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         mintTokenStatus: action.payload
+      };
+    case BURN_TOKEN_STATUS:
+      return {
+        ...state,
+        burnTokenStatus: action.payload
       };
     default:
       return state;
