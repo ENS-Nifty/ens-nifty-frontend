@@ -79,12 +79,15 @@ const StyledActionsWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+
+  & ${Button} {
+    margin-left: 12px;
+  }
 `;
 
 function hashToStyle(token) {
-  const modulos = mod(token.labelHash, 360)
-  return {filter: `hue-rotate(${modulos}DEG)`}
-
+  const modulos = mod(token.labelHash, 360);
+  return { filter: `hue-rotate(${modulos}DEG)` };
 }
 const StyledAddButtonWrapper = styled.div`
   margin: 20px auto;
@@ -110,7 +113,6 @@ class Domains extends Component {
             {!fetching ? (
               !!domains.length ? (
                 <StyledDomainsList>
-
                   {domains.map(token => (
                     <StyledDomainsItem key={token.labelHash}>
                       <StyledCompomentToken>

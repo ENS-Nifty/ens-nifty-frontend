@@ -194,6 +194,7 @@ export const transferSubmitTransaction = (
 const INITIAL_STATE = {
   labelHash: '',
   domain: '',
+  recipient: '',
   transferNameStatus: '',
   mintTokenStatus: '',
   burnTokenStatus: ''
