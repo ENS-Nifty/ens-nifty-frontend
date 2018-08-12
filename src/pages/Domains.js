@@ -6,7 +6,10 @@ import Loader from '../components/Loader';
 import Link from '../components/Link';
 import Button from '../components/Button';
 import AddButton from '../components/AddButton';
-import { untokenizeUpdateDomain } from '../reducers/_tokenize';
+import {
+  untokenizeUpdateDomain,
+  transferUpdateDomain
+} from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
 import tokenImg from '../assets/token.png';
 import { mod } from '../helpers/bignumber.js';
@@ -66,6 +69,12 @@ const StyledTokenWrapper = styled.div`
   align-items: center;
 `;
 
+const StyledActionsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
 function hashToStyle(hash) {
   const modulos = mod(hash, 360);
   console.log(modulos);
@@ -102,16 +111,29 @@ class Domains extends Component {
                           <StyledToken style={hashToStyle(token)} />
                           <p>{token.domain || token.labelHash}</p>
                         </StyledTokenWrapper>
-                        <Button
-                          onClick={() =>
-                            this.props.untokenizeUpdateDomain(
-                              token.domain,
-                              token.labelHash
-                            )
-                          }
-                        >
-                          Untokenize
-                        </Button>
+                        <StyledActionsWrapper>
+                          <Button
+                            onClick={() =>
+                              this.props.transferUpdateDomain(
+                                token.domain,
+                                token.labelHash
+                              )
+                            }
+                          >
+                            Transfer
+                          </Button>
+                          <Button
+                            color="red"
+                            onClick={() =>
+                              this.props.untokenizeUpdateDomain(
+                                token.domain,
+                                token.labelHash
+                              )
+                            }
+                          >
+                            Untokenize
+                          </Button>
+                        </StyledActionsWrapper>
                       </StyledCompomentToken>
                     </div>
                   ))}
@@ -127,7 +149,7 @@ class Domains extends Component {
                     You haven't tokenized any domains
                   </StyledNoDomainsMessage>
                   <Link to="/tokenize-domain">
-                    <Button>Tokenize Domain</Button>
+                    <Button color="green">Tokenize Domain</Button>
                   </Link>
                 </div>
               )
@@ -149,5 +171,5 @@ const reduxProps = ({ account }) => ({
 
 export default connect(
   reduxProps,
-  { accountGetTokenizedDomains, untokenizeUpdateDomain }
+  { accountGetTokenizedDomains, untokenizeUpdateDomain, transferUpdateDomain }
 )(Domains);
