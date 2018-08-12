@@ -7,6 +7,8 @@ import Link from '../components/Link';
 import Button from '../components/Button';
 import { untokenizeUpdateInput } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
+import tokenImg from '../assets/token.png';
+import {mod} from '../helpers/bignumber.js'
 
 const StyledTitle = styled.h3`
   margin-bottom: 50px;
@@ -43,6 +45,20 @@ const StyledNoDomainsMessage = styled.p`
   opacity: 0.7;
 `;
 
+const StyledToken = styled.div`
+  width: 50px;
+  height: 50px;
+  background: url(${tokenImg}) no-repeat;
+  background-size: cover;
+  background-position: center;
+`;
+
+
+function hashToStyle(hash) {
+  const modulos = mod(hash, 360)
+  console.log(modulos)
+  return {filter: `hue-rotate(${modulos}DEG)`}
+}
 class Domains extends Component {
   componentDidMount() {
     this.props.accountGetTokenizedDomains();
@@ -61,6 +77,7 @@ class Domains extends Component {
                   {domains.map(domain => (
                     <div>
                       <div>
+                        <StyledToken style={hashToStyle(domain)}></StyledToken>
                         <p>{domain}</p>
                         <Button
                           onClick={() =>
