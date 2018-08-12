@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/base';
 import Loader from '../components/Loader';
 import Link from '../components/Link';
 import Button from '../components/Button';
+import AddButton from '../components/AddButton';
 import { untokenizeUpdateDomain } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
 
@@ -43,22 +44,32 @@ const StyledNoDomainsMessage = styled.p`
   opacity: 0.7;
 `;
 
+const StyledAddButtonWrapper = styled.div`
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center
+  width: 100%;
+  max-width: 600px;
+  height: 60px;
+`;
+
 class Domains extends Component {
   componentDidMount() {
     this.props.accountGetTokenizedDomains();
   }
 
   render() {
-    const { fetching, tokens } = this.props;
+    const { fetching, domains } = this.props;
     return (
       <BaseLayout>
         <StyledWrapper>
           <StyledTitle>{'Tokenized Domains'}</StyledTitle>
           <StyledDomains>
             {!fetching ? (
-              !!tokens.length ? (
+              !!domains.length ? (
                 <StyledDomainsList>
-                  {tokens.map(token => (
+                  {domains.map(token => (
                     <div>
                       <div>
                         <p>{token.domain || token.labelHash}</p>
@@ -73,11 +84,11 @@ class Domains extends Component {
                           Untokenize
                         </Button>
                       </div>
-                      {/* <div>
+                      <StyledAddButtonWrapper>
                         <Link to="/tokenize-domain">
-                          <Button>Tokenize Domain</Button>
+                          <AddButton />
                         </Link>
-                      </div> */}
+                      </StyledAddButtonWrapper>
                     </div>
                   ))}
                 </StyledDomainsList>
@@ -103,7 +114,7 @@ class Domains extends Component {
 
 const reduxProps = ({ account }) => ({
   fetching: account.fetching,
-  tokens: account.tokens,
+  domains: account.domains,
   address: account.address
 });
 
