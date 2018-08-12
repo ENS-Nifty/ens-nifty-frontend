@@ -1,19 +1,16 @@
-import { sha3 } from '../helpers/web3';
-import { formatENSDomain } from '../helpers/utilities';
-import { updateLocal } from '../helpers/localstorage';
-import { isValidAddress } from '../helpers/validators';
-import {
-  transferName,
-  addNameToLabelHash
-} from '../helpers/contracts/registrar';
+import {sha3} from '../helpers/web3';
+import {formatENSDomain} from '../helpers/utilities';
+import {updateLocal} from '../helpers/localstorage';
+import {isValidAddress} from '../helpers/validators';
+import {transferName, addNameToLabelHash} from '../helpers/contracts/registrar';
 import {
   mintToken,
   getNextTokenizeStep,
   unmintToken,
-  transferToken
+  transferToken,
 } from '../helpers/contracts/nifty';
-import { notificationShow } from './_notification';
-import { resolveNameOrAddr } from '../helpers/contracts/ens';
+import {notificationShow} from './_notification';
+import {resolveNameOrAddr} from '../helpers/contracts/ens';
 import addresses from '../helpers/contracts/config/addresses';
 import Web3 from 'web3';
 // -- Constants ------------------------------------------------------------- //
@@ -36,7 +33,7 @@ const TRANSFER_TOKEN_STATUS = 'tokenize/TRANSFER_TOKEN_STATUS';
 // -- Actions --------------------------------------------------------------- //
 export const tokenizeUpdateDomain = (domain = '') => ({
   type: TOKENIZE_UPDATE_DOMAIN,
-  payload: domain
+  payload: domain,
 });
 
 export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
@@ -53,68 +50,68 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
       .toLowerCase() === 'eth';
   if (!hasEth) {
     dispatch(
-      notificationShow("Sorry, only available for names ending in 'eth'", true)
+      notificationShow("Sorry, only available for names ending in 'eth'", true),
     );
     return;
   }
   const domain = formatENSDomain(name);
   const label = domain.match(/(.*)\.eth/)[1];
   const labelHash = sha3(label);
-  updateLocal('domains', [{ domain, label, labelHash }]);
+  updateLocal('domains', [{domain, label, labelHash}]);
   await addNameToLabelHash(label);
   const step = await getNextTokenizeStep(labelHash, network);
   switch (step) {
     case 'transfer':
-      dispatch({ type: TRANSFER_NAME_STATUS, payload: 'pending' });
+      dispatch({type: TRANSFER_NAME_STATUS, payload: 'pending'});
       transferName(labelHash, network)
         .then(() => {
           dispatch({
             type: TRANSFER_NAME_STATUS,
-            payload: 'success'
+            payload: 'success',
           });
-          dispatch({ type: MINT_TOKEN_STATUS, payload: 'pending' });
+          dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
           mintToken(labelHash, network)
             .then(() =>
               dispatch({
                 type: MINT_TOKEN_STATUS,
-                payload: 'success'
-              })
+                payload: 'success',
+              }),
             )
             .catch(() =>
               dispatch({
                 type: MINT_TOKEN_STATUS,
-                payload: ''
-              })
+                payload: '',
+              }),
             );
         })
         .catch(() =>
           dispatch({
             type: TRANSFER_NAME_STATUS,
-            payload: ''
-          })
+            payload: '',
+          }),
         );
       break;
     case 'mint':
       dispatch({
         type: TRANSFER_NAME_STATUS,
-        payload: 'success'
+        payload: 'success',
       });
-      dispatch({ type: MINT_TOKEN_STATUS, payload: 'pending' });
+      dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
       mintToken(labelHash, network)
         .then(() =>
           dispatch({
             type: MINT_TOKEN_STATUS,
-            payload: 'success'
-          })
+            payload: 'success',
+          }),
         )
-        .catch(() => dispatch({ type: MINT_TOKEN_STATUS, payload: '' }));
+        .catch(() => dispatch({type: MINT_TOKEN_STATUS, payload: ''}));
       break;
     case 'done':
       dispatch({
         type: TRANSFER_NAME_STATUS,
-        payload: 'success'
+        payload: 'success',
       });
-      dispatch({ type: MINT_TOKEN_STATUS, payload: 'success' });
+      dispatch({type: MINT_TOKEN_STATUS, payload: 'success'});
       break;
     case 'error-not-owned':
       dispatch(notificationShow("Looks like you don't own that domain.", true));
@@ -134,42 +131,42 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
 
 export const untokenizeUpdateDomain = (
   domain = '',
-  labelHash = ''
+  labelHash = '',
 ) => dispatch => {
-  dispatch({ type: UNTTOKENIZE_UPDATE_DOMAIN, payload: { labelHash, domain } });
+  dispatch({type: UNTTOKENIZE_UPDATE_DOMAIN, payload: {labelHash, domain}});
   window.browserHistory.push('/untokenize-domain');
 };
 
 export const untokenizeSubmitTransaction = (labelHashOrDomain = '') => async (
   dispatch,
-  getState
+  getState,
 ) => {
   const network = getState().account.network;
   const labelHash = labelHashOrDomain.startsWith('0x')
     ? labelHashOrDomain
     : Web3.utils.keccak256(labelHashOrDomain.replace('.eth', ''));
-  dispatch({ type: BURN_TOKEN_STATUS, payload: 'pending' });
+  dispatch({type: BURN_TOKEN_STATUS, payload: 'pending'});
   unmintToken(labelHash, network)
-    .then(() => dispatch({ type: BURN_TOKEN_STATUS, payload: 'success' }))
-    .catch(() => dispatch({ type: BURN_TOKEN_STATUS, payload: '' }));
+    .then(() => dispatch({type: BURN_TOKEN_STATUS, payload: 'success'}))
+    .catch(() => dispatch({type: BURN_TOKEN_STATUS, payload: ''}));
 };
 
 export const transferUpdateDomain = (
   domain = '',
-  labelHash = ''
+  labelHash = '',
 ) => dispatch => {
-  dispatch({ type: TRANSFER_UPDATE_DOMAIN, payload: { labelHash, domain } });
+  dispatch({type: TRANSFER_UPDATE_DOMAIN, payload: {labelHash, domain}});
   window.browserHistory.push('/transfer-domain');
 };
 
 export const transferUpdateRecipient = (recipient = '') => ({
   type: TRANSFER_UPDATE_RECIPIENT,
-  payload: recipient
+  payload: recipient,
 });
 
 export const transferSubmitTransaction = (
   labelHashOrDomain = '',
-  recipient = ''
+  recipient = '',
 ) => async (dispatch, getState) => {
   if (recipient.startsWith('0x') && !isValidAddress(recipient)) {
     dispatch(notificationShow(`Address is invalid`, true));
@@ -184,10 +181,10 @@ export const transferSubmitTransaction = (
     dispatch(notificationShow(`Couldn't resolve ENS domain`, true));
     return;
   }
-  dispatch({ type: TRANSFER_TOKEN_STATUS, payload: 'pending' });
+  dispatch({type: TRANSFER_TOKEN_STATUS, payload: 'pending'});
   transferToken(labelHash, recipient, network)
-    .then(() => dispatch({ type: TRANSFER_TOKEN_STATUS, payload: 'success' }))
-    .catch(() => dispatch({ type: TRANSFER_TOKEN_STATUS, payload: '' }));
+    .then(() => dispatch({type: TRANSFER_TOKEN_STATUS, payload: 'success'}))
+    .catch(() => dispatch({type: TRANSFER_TOKEN_STATUS, payload: ''}));
 };
 
 // -- Reducer --------------------------------------------------------------- //
@@ -197,7 +194,7 @@ const INITIAL_STATE = {
   recipient: '',
   transferNameStatus: '',
   mintTokenStatus: '',
-  burnTokenStatus: ''
+  burnTokenStatus: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -205,39 +202,39 @@ export default (state = INITIAL_STATE, action) => {
     case TOKENIZE_UPDATE_DOMAIN:
       return {
         ...state,
-        domain: action.payload
+        domain: action.payload,
       };
     case UNTTOKENIZE_UPDATE_DOMAIN:
       return {
         ...state,
         labelHash: action.payload.labelHash,
-        domain: action.payload.domain
+        domain: action.payload.domain,
       };
     case TRANSFER_UPDATE_DOMAIN:
       return {
         ...state,
         labelHash: action.payload.labelHash,
-        domain: action.payload.domain
+        domain: action.payload.domain,
       };
     case TRANSFER_UPDATE_RECIPIENT:
       return {
         ...state,
-        recipient: action.payload
+        recipient: action.payload,
       };
     case TRANSFER_NAME_STATUS:
       return {
         ...state,
-        transferNameStatus: action.payload
+        transferNameStatus: action.payload,
       };
     case MINT_TOKEN_STATUS:
       return {
         ...state,
-        mintTokenStatus: action.payload
+        mintTokenStatus: action.payload,
       };
     case BURN_TOKEN_STATUS:
       return {
         ...state,
-        burnTokenStatus: action.payload
+        burnTokenStatus: action.payload,
       };
     default:
       return state;

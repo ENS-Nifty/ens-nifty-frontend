@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import BaseLayout from '../layouts/base';
 import Button from '../components/Button';
-import { metamaskConnectInit } from '../reducers/_metamask';
-import { fonts } from '../styles';
+import {metamaskConnectInit} from '../reducers/_metamask';
+import {fonts} from '../styles';
 
 const StyledLanding = styled.div`
   width: 100%;
@@ -29,7 +29,8 @@ class Home extends Component {
       <StyledLanding>
         <h1>
           Tokenize your ENS domain
-          <br />and trade it as an NFT
+          <br />
+          and trade it as an NFT
         </h1>
         <ConnectButton
           left
@@ -44,12 +45,12 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-  metamaskConnectInit: PropTypes.func.isRequired
+  metamaskConnectInit: PropTypes.func.isRequired,
 };
 
 export default connect(
   null,
   {
-    metamaskConnectInit
-  }
+    metamaskConnectInit,
+  },
 )(Home);
