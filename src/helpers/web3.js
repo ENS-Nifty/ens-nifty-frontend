@@ -1,6 +1,6 @@
 import Web3 from 'web3';
-import { isValidAddress } from '../helpers/validators';
-import { getDataString, removeHexPrefix } from '../helpers/utilities';
+import {isValidAddress} from '../helpers/validators';
+import {getDataString, removeHexPrefix} from '../helpers/utilities';
 import {
   convertStringToNumber,
   convertNumberToString,
@@ -8,7 +8,7 @@ import {
   convertAssetAmountFromBigNumber,
   convertHexToString,
   convertStringToHex,
-  convertAmountToAssetAmount
+  convertAmountToAssetAmount,
 } from '../helpers/bignumber';
 import ethUnits from '../ref/units.json';
 import smartContractMethods from '../ref/methods.json';
@@ -17,8 +17,10 @@ import smartContractMethods from '../ref/methods.json';
  * @desc web3 http instance
  */
 export const web3Instance = new Web3(
-  new Web3.providers.HttpProvider(`https://mainnet.infura.io/`)
+  new Web3.providers.HttpProvider(`https://mainnet.infura.io/`),
 );
+
+web3Instance.eth.getTransactionReceiptMined = getTransactionReceiptMined;
 
 /**
  * @desc set a different web3 provider
@@ -31,7 +33,7 @@ export const web3SetHttpProvider = provider => {
   }
   if (!providerObj) {
     throw new Error(
-      'function web3SetHttpProvider requires provider to match a valid HTTP/HTTPS endpoint'
+      'function web3SetHttpProvider requires provider to match a valid HTTP/HTTPS endpoint',
     );
   }
   return web3Instance.setProvider(providerObj);
@@ -127,10 +129,10 @@ export const getTokenBalanceOf = (accountAddress, tokenAddress) =>
   new Promise((resolve, reject) => {
     const balanceMethodHash = smartContractMethods.token_balance.hash;
     const dataString = getDataString(balanceMethodHash, [
-      removeHexPrefix(accountAddress)
+      removeHexPrefix(accountAddress),
     ]);
     web3Instance.eth
-      .call({ to: tokenAddress, data: dataString })
+      .call({to: tokenAddress, data: dataString})
       .then(balanceHexResult => {
         const balance = convertHexToString(balanceHexResult);
         resolve(balance);
@@ -149,10 +151,10 @@ export const getTxDetails = async ({
   data,
   value,
   gasPrice,
-  gasLimit
+  gasLimit,
 }) => {
   const _gasPrice = gasPrice || (await web3Instance.eth.getGasPrice());
-  const estimateGasData = value === '0x00' ? { from, to, data } : { to, data };
+  const estimateGasData = value === '0x00' ? {from, to, data} : {to, data};
   const _gasLimit =
     gasLimit || (await web3Instance.eth.estimateGas(estimateGasData));
   const nonce = await getTransactionCount(from);
@@ -164,7 +166,7 @@ export const getTxDetails = async ({
     gasLimit: web3Instance.utils.toHex(_gasLimit),
     gas: web3Instance.utils.toHex(_gasLimit),
     value: web3Instance.utils.toHex(value),
-    data: data
+    data: data,
   };
   return tx;
 };
@@ -177,7 +179,7 @@ export const getTxDetails = async ({
 export const getTransferTokenTransaction = transaction => {
   const transferMethodHash = smartContractMethods.token_transfer.hash;
   const value = convertStringToHex(
-    convertAmountToAssetAmount(transaction.amount, transaction.asset.decimals)
+    convertAmountToAssetAmount(transaction.amount, transaction.asset.decimals),
   );
   const recipient = removeHexPrefix(transaction.to);
   const dataString = getDataString(transferMethodHash, [recipient, value]);
@@ -186,7 +188,7 @@ export const getTransferTokenTransaction = transaction => {
     to: transaction.asset.address,
     data: dataString,
     gasPrice: transaction.gasPrice,
-    gasLimit: transaction.gasLimit
+    gasLimit: transaction.gasLimit,
   };
 };
 
@@ -227,7 +229,7 @@ export const web3MetamaskSendTransaction = transaction =>
       data,
       value,
       gasPrice: transaction.gasPrice,
-      gasLimit: transaction.gasLimit
+      gasLimit: transaction.gasLimit,
     })
       .then(txDetails => {
         if (typeof window.web3 !== 'undefined') {
@@ -243,6 +245,36 @@ export const web3MetamaskSendTransaction = transaction =>
       })
       .catch(error => reject(error));
   });
+
+export function getTransactionReceiptMined(txHash, interval) {
+  const self = this;
+  const transactionReceiptAsync = function(resolve, reject) {
+    self.getTransactionReceipt(txHash, (error, receipt) => {
+      if (error) {
+        reject(error);
+      } else if (receipt == null) {
+        setTimeout(
+          () => transactionReceiptAsync(resolve, reject),
+          interval ? interval : 500,
+        );
+      } else {
+        resolve(receipt);
+      }
+    });
+  };
+
+  if (Array.isArray(txHash)) {
+    return Promise.all(
+      txHash.map(oneTxHash =>
+        self.getTransactionReceiptMined(oneTxHash, interval),
+      ),
+    );
+  } else if (typeof txHash === 'string') {
+    return new Promise(transactionReceiptAsync);
+  } else {
+    throw new Error('Invalid Type: ' + txHash);
+  }
+}
 
 /**
  * @desc send transaction controller given asset transfered and account type
@@ -271,12 +303,7 @@ export const web3SendTransactionMultiWallet = (transaction, accountType) => {
  * @param {Object} [{selected, address, recipient, amount, gasPrice}]
  * @return {String}
  */
-export const estimateGasLimit = async ({
-  asset,
-  address,
-  recipient,
-  amount
-}) => {
+export const estimateGasLimit = async ({asset, address, recipient, amount}) => {
   let gasLimit = ethUnits.basic_tx;
   let data = '0x';
   let _amount =
@@ -287,17 +314,52 @@ export const estimateGasLimit = async ({
     recipient && isValidAddress(recipient)
       ? recipient
       : '0x737e583620f4ac1842d4e354789ca0c5e0651fbb';
-  let estimateGasData = { to: _recipient, data };
+  let estimateGasData = {to: _recipient, data};
   if (asset.symbol !== 'ETH') {
     const transferMethodHash = smartContractMethods.token_transfer.hash;
     let value = convertAssetAmountFromBigNumber(_amount, asset.decimals);
     value = convertStringToHex(value);
     data = getDataString(transferMethodHash, [
       removeHexPrefix(_recipient),
-      value
+      value,
     ]);
-    estimateGasData = { from: address, to: asset.address, data, value: '0x0' };
+    estimateGasData = {from: address, to: asset.address, data, value: '0x0'};
     gasLimit = await web3Instance.eth.estimateGas(estimateGasData);
   }
   return gasLimit;
 };
+
+export function namehash(name) {
+  const labels = name.split('.');
+  if (labels[labels.length - 1] === '') {
+    labels.pop();
+  }
+  if (labels[0] === '') {
+    labels.shift();
+  }
+
+  return labels
+    .reverse()
+    .reduce(
+      (a, v) =>
+        Web3.utils.keccak256(
+          Buffer.from(
+            a.replace('0x', '') + Web3.utils.keccak256(v).replace('0x', ''),
+            'hex',
+          ),
+        ),
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+    );
+}
+
+export function subnodeHash(...labels) {
+  return labels.reduce((a, v) =>
+    Web3.utils.keccak256(
+      Buffer.from(a.replace('0x', '') + v.replace('0x', ''), 'hex'),
+    ),
+  );
+}
+
+export function nodeFromLabelHash(labelHash) {
+  return subnodeHash(namehash('.eth'), labelHash);
+}

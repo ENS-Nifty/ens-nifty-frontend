@@ -1,10 +1,6 @@
 import { apiGetMetamaskNetwork } from '../helpers/api';
 import { parseError } from '../helpers/utilities';
-import {
-  accountUpdateAccountAddress,
-  accountUpdateNetwork,
-  accountUpdateProvider
-} from './_account';
+import { accountUpdateAccountAddress, accountUpdateNetwork } from './_account';
 import { notificationShow } from './_notification';
 
 // -- Constants ------------------------------------------------------------- //
@@ -24,7 +20,6 @@ let accountInterval = null;
 export const updateAccountAddress = accountAddress => dispatch => {
   if (accountAddress) {
     dispatch(accountUpdateAccountAddress(accountAddress, 'METAMASK'));
-    dispatch(accountUpdateProvider(window.web3.currentProvider));
     window.browserHistory.push('/domains');
   }
 };
@@ -41,7 +36,8 @@ export const metamaskUpdateMetamaskAccount = () => (dispatch, getState) => {
 };
 
 export const metamaskConnectInit = () => (dispatch, getState) => {
-  const accountAddress = getState().metamask.accountAddress;
+  const accountAddress =
+    getState().metamask.accountAddress || window.web3.eth.defaultAccount;
   if (typeof window.web3 !== 'undefined') {
     if (!accountAddress) {
       dispatch(notificationShow('Unlock your Metamask', false));

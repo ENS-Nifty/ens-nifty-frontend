@@ -2,7 +2,8 @@ import { apiGetTransaction } from '../helpers/api';
 import { parseError } from '../helpers/utilities';
 import { web3SetHttpProvider } from '../helpers/web3';
 import { notificationShow } from './_notification';
-import { getTokensOwned } from '../helpers/contracts/ens-nifty';
+import { getTokensOwned } from '../helpers/contracts/nifty';
+import { nodeToName } from '../helpers/contracts/registrar';
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -72,11 +73,6 @@ export const accountUpdateNetwork = network => dispatch => {
   dispatch({ type: ACCOUNT_UPDATE_NETWORK, payload: network });
 };
 
-export const accountUpdateProvider = provider => dispatch => {
-  // bethConnectWeb3(provider);
-  dispatch({ type: ACCOUNT_UPDATE_PROVIDER, payload: provider });
-};
-
 export const accountUpdateAccountAddress = (address, type) => (
   dispatch,
   getState
@@ -95,8 +91,14 @@ export const accountClearState = () => dispatch => {
 
 export const accountGetTokenizedDomains = () => (dispatch, getState) => {
   dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST });
-  getTokensOwned()
-    .then(tokens => {
+  getTokensOwned(getState().account.address)
+    .then(async tokens => {
+      if (tokens) {
+        tokens = await Promise.all(
+          tokens.map(async token => nodeToName(token))
+        );
+        console.log(tokens);
+      }
       dispatch({
         type: ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS,
         payload: tokens
@@ -109,7 +111,7 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
     });
 };
 
-// -- Reducer --------------------------------------------------------------- //
+export // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
   network: 'mainnet',
   provider: null,

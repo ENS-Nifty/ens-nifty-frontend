@@ -9,9 +9,9 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import { isValidENSDomain } from '../helpers/validators';
 import {
-  registerUpdateInput,
-  registerSubmitTransactions
-} from '../reducers/_register';
+  tokenizeUpdateInput,
+  tokenizeSubmitTransaction
+} from '../reducers/_tokenize';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -56,33 +56,37 @@ const StyledTransaction = styled.div`
   }
 `;
 
-class RegisterENS extends Component {
+class TokenizeENS extends Component {
   render = () => {
     const validDomain = isValidENSDomain(this.props.input);
     return (
       <BaseLayout>
         <StyledWrapper>
-          <h3>{'Register ENS Domain'}</h3>
-          <StyledForm onSubmit={this.props.registerSubmitTransactions}>
+          <h3>{'Tokenize ENS Domain'}</h3>
+          <StyledForm
+            onSubmit={() =>
+              this.props.tokenizeSubmitTransaction(this.props.input)
+            }
+          >
             <Input
               label=""
               placeholder="ensdomain.eth"
               type="text"
               value={this.props.input}
               onChange={({ target }) =>
-                this.props.registerUpdateInput(target.value)
+                this.props.tokenizeUpdateInput(target.value)
               }
             />
             <StyledButton type="submit">Submit</StyledButton>
           </StyledForm>
           <StyledTransactionList valid={validDomain}>
             <StyledTransaction>
-              <TransactionStatus status={''} />
+              <TransactionStatus status={this.props.transferNameStatus} />
               <p>1. Transfer Domain Ownership</p>
             </StyledTransaction>
             <LineBreak />
             <StyledTransaction>
-              <TransactionStatus status={''} />
+              <TransactionStatus status={this.props.mintTokenStatus} />
               <p>2. Mint ENS wrapper NFT token</p>
             </StyledTransaction>
           </StyledTransactionList>
@@ -92,11 +96,13 @@ class RegisterENS extends Component {
   };
 }
 
-const reduxProps = ({ register }) => ({
-  input: register.input
+const reduxProps = ({ tokenize }) => ({
+  input: tokenize.input,
+  transferNameStatus: tokenize.transferNameStatus,
+  mintTokenStatus: tokenize.mintTokenStatus
 });
 
 export default connect(
   reduxProps,
-  { registerUpdateInput, registerSubmitTransactions }
-)(RegisterENS);
+  { tokenizeUpdateInput, tokenizeSubmitTransaction }
+)(TokenizeENS);

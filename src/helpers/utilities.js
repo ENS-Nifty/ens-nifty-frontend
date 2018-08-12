@@ -162,3 +162,14 @@ export const parseError = error => {
   }
   return generic_error;
 };
+
+/**
+ * @desc format ENS domain
+ * @param  {String}  name
+ * @return {String}
+ */
+export const formatENSDomain = name => {
+  if (name.endsWith('.eth')) {
+    return name;
+  } else return name + '.eth';
+};
