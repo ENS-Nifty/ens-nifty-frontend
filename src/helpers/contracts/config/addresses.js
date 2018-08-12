@@ -9,5 +9,4 @@ export default {
     registrar: '0xc19fd9004b5c9789391679de6d766b981db94610',
     nifty: '0xfad45989fe6a9ca7e7fe8797e0822dfbf504d19e'
   }
-
 };
