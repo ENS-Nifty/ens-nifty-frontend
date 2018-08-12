@@ -182,10 +182,13 @@ export const formatENSDomain = name => {
  * @return  {String}
  */
 export const getLocalDomainFromLabelHash = (labelHash = '') => {
-  const localDomains = getLocal('domains');
+  const localDomains = getLocal('domains') || [];
   const savedData = localDomains.filter(
     domainData => domainData.labelHash === labelHash
   );
-  const domain = savedData.domain;
+  let domain = labelHash;
+  if (savedData.length) {
+    domain = savedData[0].domain;
+  }
   return domain;
 };
