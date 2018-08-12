@@ -20,7 +20,7 @@ This step mints a new NFT token representing the ENS deed.
 
 ## Step 3: Enter the NFT Ecosystem 🌐
 
-Take advantage of marketplaces like [opensea.io](https://opensea.io) and [rarebits.io](https://rarebits.io/) or communities like [tokntalk.club](http://tokntalk.club/).
+Take advantage of marketplaces like [opensea.io](https://opensea.io) and [rarebits.io](https://rarebits.io/) or communities like [nifty.gallery](https://nifty.gallery/) or [tokntalk.club](http://tokntalk.club/).
 
 ---
 [https://ensnifty.com](https://ens-nifty.netlify.com/)
