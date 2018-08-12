@@ -43,6 +43,12 @@ const StyledDomainsList = styled.div`
   align-items: center;
 `;
 
+
+const StyledDomainsItem = styled.div`
+  max-width:600px;
+  margin:auto;
+`;
+
 const StyledNoDomainsMessage = styled.p`
   margin: 20px auto;
   font-size: 28px;
@@ -59,7 +65,7 @@ const StyledToken = styled.div`
 `;
 const StyledCompomentToken = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin: 5px;
 `;
@@ -106,7 +112,7 @@ class Domains extends Component {
                 <StyledDomainsList>
 
                   {domains.map(token => (
-                    <div key={token.labelHash}>
+                    <StyledDomainsItem key={token.labelHash}>
                       <StyledCompomentToken>
                         <StyledTokenWrapper>
                           <StyledToken style={hashToStyle(token)} />
@@ -136,7 +142,7 @@ class Domains extends Component {
                           </Button>
                         </StyledActionsWrapper>
                       </StyledCompomentToken>
-                    </div>
+                    </StyledDomainsItem>
                   ))}
                   <StyledAddButtonWrapper>
                     <Link to="/tokenize-domain">
