@@ -1,7 +1,8 @@
 import { apiGetTransaction } from '../helpers/api';
-import { parseError } from '../helpers/utilities';
-import { web3SetHttpProvider } from '../helpers/web3';
+import { parseError, getLocalDomainFromLabelHash } from '../helpers/utilities';
+import { web3SetHttpProvider, web3Instance } from '../helpers/web3';
 import { notificationShow } from './_notification';
+import { labelHashToName } from '../helpers/contracts/registrar';
 import { getTokensOwned } from '../helpers/contracts/nifty';
 
 // -- Constants ------------------------------------------------------------- //
@@ -89,14 +90,26 @@ export const accountClearState = () => dispatch => {
 };
 
 export const accountGetTokenizedDomains = () => (dispatch, getState) => {
+  const network = getState().account.network;
   dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST });
-  getTokensOwned(getState().account.address)
+  getTokensOwned(getState().account.address, network)
     .then(async tokens => {
-      if (tokens) {
+      if (tokens.length) {
+        tokens = tokens.map(token => ({
+          domain: '',
+          labelHash: web3Instance.utils.toHex(token)
+        }));
         tokens = await Promise.all(
-          tokens.map(async token => token)
+          tokens.map(async token => {
+            token.domain = getLocalDomainFromLabelHash(token.labelHash);
+            if (!token.domain) {
+              const name = await labelHashToName(token.labelHash);
+              token.domain = `${name}.eth`;
+              return token;
+            }
+            return token;
+          })
         );
-        console.log(tokens);
       }
       dispatch({
         type: ACCOUNT_GET_TOKENIZED_DOMAINS_SUCCESS,
@@ -117,6 +130,7 @@ const INITIAL_STATE = {
   type: '',
   address: '',
   domains: [],
+  tokens: [],
   fetching: false
 };
 

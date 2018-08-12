@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/base';
 import Loader from '../components/Loader';
 import Link from '../components/Link';
 import Button from '../components/Button';
-import { untokenizeUpdateInput } from '../reducers/_tokenize';
+import { untokenizeUpdateDomain } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
 import tokenImg from '../assets/token.png';
 import {mod} from '../helpers/bignumber.js'
@@ -74,14 +74,17 @@ class Domains extends Component {
             {!fetching ? (
               !!domains.length ? (
                 <StyledDomainsList>
-                  {domains.map(domain => (
+                  {domains.map(token => (
                     <div>
                       <div>
-                        <StyledToken style={hashToStyle(domain)}></StyledToken>
-                        <p>{domain}</p>
+                        <StyledToken style={hashToStyle(token)}></StyledToken>
+                        <p>{token.domain || token.labelHash}</p>
                         <Button
                           onClick={() =>
-                            this.props.untokenizeUpdateInput(domain)
+                            this.props.untokenizeUpdateDomain(
+                              token.domain,
+                              token.labelHash
+                            )
                           }
                         >
                           Untokenize
@@ -123,5 +126,5 @@ const reduxProps = ({ account }) => ({
 
 export default connect(
   reduxProps,
-  { accountGetTokenizedDomains, untokenizeUpdateInput }
+  { accountGetTokenizedDomains, untokenizeUpdateDomain }
 )(Domains);

@@ -9,7 +9,7 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import { isValidENSDomain } from '../helpers/validators';
 import {
-  tokenizeUpdateInput,
+  tokenizeUpdateDomain,
   tokenizeSubmitTransaction
 } from '../reducers/_tokenize';
 
@@ -58,23 +58,23 @@ const StyledTransaction = styled.div`
 
 class TokenizeENS extends Component {
   render = () => {
-    const validDomain = isValidENSDomain(this.props.input);
+    const validDomain = isValidENSDomain(this.props.domain);
     return (
       <BaseLayout>
         <StyledWrapper>
           <h3>{'Tokenize ENS Domain'}</h3>
           <StyledForm
             onSubmit={() =>
-              this.props.tokenizeSubmitTransaction(this.props.input)
+              this.props.tokenizeSubmitTransaction(this.props.domain)
             }
           >
             <Input
               label=""
               placeholder="ensdomain.eth"
               type="text"
-              value={this.props.input}
+              value={this.props.domain}
               onChange={({ target }) =>
-                this.props.tokenizeUpdateInput(target.value)
+                this.props.tokenizeUpdateDomain(target.value)
               }
             />
             <StyledButton type="submit">Submit</StyledButton>
@@ -97,12 +97,12 @@ class TokenizeENS extends Component {
 }
 
 const reduxProps = ({ tokenize }) => ({
-  input: tokenize.input,
+  domain: tokenize.domain,
   transferNameStatus: tokenize.transferNameStatus,
   mintTokenStatus: tokenize.mintTokenStatus
 });
 
 export default connect(
   reduxProps,
-  { tokenizeUpdateInput, tokenizeSubmitTransaction }
+  { tokenizeUpdateDomain, tokenizeSubmitTransaction }
 )(TokenizeENS);
