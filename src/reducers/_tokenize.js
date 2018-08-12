@@ -24,7 +24,7 @@ const TRANSFER_NAME_STATUS = 'tokenize/TRANSFER_NAME_STATUS';
 const BURN_TOKEN_STATUS = 'tokenize/BURN_TOKEN_STATUS';
 
 // -- Actions --------------------------------------------------------------- //
-export const tokenizeUpdateInput = (domain = '') => dispatch => {
+export const tokenizeUpdateDomain = (domain = '') => dispatch => {
   dispatch({ type: TOKENIZE_UPDATE_DOMAIN, payload: domain });
 };
 

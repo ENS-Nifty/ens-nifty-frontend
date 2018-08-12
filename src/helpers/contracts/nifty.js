@@ -1,4 +1,4 @@
-import {web3MetamaskSendTransaction, web3Instance} from '../web3';
+import { web3MetamaskSendTransaction, web3Instance } from '../web3';
 import niftyJson from './abi/nifty.json';
 import registrarJson from './abi/registrar.json';
 import deedJson from './abi/deed.json';
@@ -7,7 +7,7 @@ import addresses from './config/addresses';
 const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses.nifty);
 const registrarContract = new web3Instance.eth.Contract(
   registrarJson,
-  addresses.registrar,
+  addresses.registrar
 );
 const deedContract = new web3Instance.eth.Contract(deedJson);
 
@@ -17,14 +17,14 @@ export async function mintToken(labelHash, cb) {
   const gasPrice = web3Instance.utils.toWei('10', 'gwei');
   const gasLimit = await niftyContract.methods
     .mint(labelHash)
-    .estimateGas({from: address, value: '0'});
+    .estimateGas({ from: address, value: '0' });
   web3MetamaskSendTransaction({
     from: address,
     to: addresses.nifty,
     data,
     value: '0',
     gasPrice,
-    gasLimit,
+    gasLimit
   })
     .then(txHash => {
       return web3Instance.eth.getTransactionReceiptMined(txHash);
@@ -38,14 +38,14 @@ export async function unmintToken(labelHash, cb) {
   const gasPrice = web3Instance.utils.toWei('10', 'gwei');
   const gasLimit = await niftyContract.methods
     .burn(labelHash)
-    .estimateGas({from: address, value: '0'});
+    .estimateGas({ from: address, value: '0' });
   web3MetamaskSendTransaction({
     from: address,
     to: addresses.nifty,
     data,
     value: '0',
     gasPrice,
-    gasLimit,
+    gasLimit
   })
     .then(txHash => {
       return web3Instance.eth.getTransactionReceiptMined(txHash);
@@ -68,12 +68,11 @@ export async function getTokensOwned(owner) {
 
 export async function getNextTokenizeStep(labelHash) {
   try {
-
     const deedAddress = (await registrarContract.methods
       .entries(labelHash)
       .call())[1];
-    if (deedAddress == '0x' + '0'.repeat(40)) {
-      return 'error-not-registered'
+    if (deedAddress === '0x' + '0'.repeat(40)) {
+      return 'error-not-registered';
     }
     deedContract.options.address = deedAddress;
     const currentOwner = (await deedContract.methods
@@ -93,7 +92,7 @@ export async function getNextTokenizeStep(labelHash) {
       return 'done';
     }
     return 'error-not-owned';
-  } catch(error) {
+  } catch (error) {
     return error.message;
   }
 }
