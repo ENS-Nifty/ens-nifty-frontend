@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import BaseLayout from '../layouts/base';
 import TransactionStatus from '../components/TransactionStatus';
@@ -7,11 +7,11 @@ import LineBreak from '../components/LineBreak';
 import Form from '../components/Form';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import {isValidENSDomain} from '../helpers/validators';
+import { isValidENSDomain } from '../helpers/validators';
 import {
-  registerUpdateInput,
-  registerSubmitTransaction,
-} from '../reducers/_register';
+  tokenizeUpdateInput,
+  tokenizeSubmitTransaction
+} from '../reducers/_tokenize';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -41,7 +41,7 @@ const StyledTransactionList = styled.div`
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  opacity: ${({valid}) => (valid ? '1' : '0.5')};
+  opacity: ${({ valid }) => (valid ? '1' : '0.5')};
 `;
 
 const StyledTransaction = styled.div`
@@ -56,16 +56,16 @@ const StyledTransaction = styled.div`
   }
 `;
 
-class RegisterENS extends Component {
+class TokenizeENS extends Component {
   render = () => {
     const validDomain = isValidENSDomain(this.props.input);
     return (
       <BaseLayout>
         <StyledWrapper>
-          <h3>{'Register ENS Domain'}</h3>
+          <h3>{'Tokenize ENS Domain'}</h3>
           <StyledForm
             onSubmit={() =>
-              this.props.registerSubmitTransaction(this.props.input)
+              this.props.tokenizeSubmitTransaction(this.props.input)
             }
           >
             <Input
@@ -73,8 +73,8 @@ class RegisterENS extends Component {
               placeholder="ensdomain.eth"
               type="text"
               value={this.props.input}
-              onChange={({target}) =>
-                this.props.registerUpdateInput(target.value)
+              onChange={({ target }) =>
+                this.props.tokenizeUpdateInput(target.value)
               }
             />
             <StyledButton type="submit">Submit</StyledButton>
@@ -96,13 +96,13 @@ class RegisterENS extends Component {
   };
 }
 
-const reduxProps = ({register}) => ({
-  input: register.input,
-  transferNameStatus: register.transferNameStatus,
-  mintTokenStatus: register.mintTokenStatus,
+const reduxProps = ({ tokenize }) => ({
+  input: tokenize.input,
+  transferNameStatus: tokenize.transferNameStatus,
+  mintTokenStatus: tokenize.mintTokenStatus
 });
 
 export default connect(
   reduxProps,
-  {registerUpdateInput, registerSubmitTransaction},
-)(RegisterENS);
+  { tokenizeUpdateInput, tokenizeSubmitTransaction }
+)(TokenizeENS);

@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Home from './pages/Home';
 import Domains from './pages/Domains';
-import RegisterENS from './pages/RegisterENS';
-import DeregisterENS from './pages/DeregisterENS';
+import TokenizeDomain from './pages/TokenizeDomain';
+import UntokenizeDomain from './pages/UntokenizeDomain';
 import NotFound from './pages/NotFound';
 import { warningOnline, warningOffline } from './reducers/_warning';
 
@@ -33,22 +33,22 @@ class Router extends Component {
         />
         <Route
           exact
-          path="/register-ens"
+          path="/tokenize-domain"
           render={routerProps => {
             if (!address) {
               return <Redirect to="/" />;
             }
-            return <RegisterENS {...routerProps} />;
+            return <TokenizeDomain {...routerProps} />;
           }}
         />
         <Route
           exact
-          path="/deregister-ens"
+          path="/untokenize-domain"
           render={routerProps => {
             if (!address) {
               return <Redirect to="/" />;
             }
-            return <DeregisterENS {...routerProps} />;
+            return <UntokenizeDomain {...routerProps} />;
           }}
         />
         <Route component={NotFound} />
