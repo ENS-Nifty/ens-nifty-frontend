@@ -189,7 +189,7 @@ export const transferSubmitTransaction = (
 };
 
 export const tokenizeClearState = (recipient = '') => ({
-  type: TOKENIZE_CLEAR_STATE
+  type: TOKENIZE_CLEAR_STATE,
 });
 
 // -- Reducer --------------------------------------------------------------- //
@@ -244,7 +244,7 @@ export default (state = INITIAL_STATE, action) => {
     case TOKENIZE_CLEAR_STATE:
       return {
         ...state,
-        ...INITIAL_STATE
+        ...INITIAL_STATE,
       };
     default:
       return state;
