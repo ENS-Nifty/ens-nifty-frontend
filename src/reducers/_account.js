@@ -98,14 +98,13 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
         tokens = tokens.map(token => ({ domain: '', labelHash: sha3(token) }));
         tokens = await Promise.all(
           tokens.map(async token => {
-            const name = await labelHashToName(token.labelHash);
-            if (name) {
+            token.domain = getLocalDomainFromLabelHash(token.labelHash);
+            if (!token.domain) {
+              const name = await labelHashToName(token.labelHash);
               token.domain = `${name}.eth`;
               return token;
-            } else {
-              token.domain = getLocalDomainFromLabelHash(token);
-              return token;
             }
+            return token;
           })
         );
       }

@@ -186,7 +186,7 @@ export const getLocalDomainFromLabelHash = (labelHash = '') => {
   const savedData = localDomains.filter(
     domainData => domainData.labelHash === labelHash
   );
-  let domain = labelHash;
+  let domain = '';
   if (savedData.length) {
     domain = savedData[0].domain;
   }
