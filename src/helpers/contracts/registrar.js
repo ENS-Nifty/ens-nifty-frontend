@@ -1,4 +1,10 @@
-import { web3MetamaskSendTransaction, web3Instance } from '../web3';
+import {
+  web3MetamaskSendTransaction,
+  web3Instance,
+  subnodeHash,
+  namehash
+} from '../web3';
+import Web3 from 'web3';
 import registrarJson from './abi/registrar.json';
 import resolverJson from './abi/resolver.json';
 import addresses from './config/addresses';
