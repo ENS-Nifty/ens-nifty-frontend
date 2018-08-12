@@ -69,6 +69,29 @@ export async function getTokensOwned(owner, network) {
   return tokens;
 }
 
+export async function transferToken(to, tokenId, network) {
+  const niftyContract = new web3Instance.eth.Contract(
+    niftyJson,
+    addresses[network].nifty,
+  );
+  const address = window.web3.eth.defaultAccount;
+  const data = niftyContract.methods
+    .transferFrom(address, to, tokenId)
+    .encodeABI();
+  const gasPrice = web3Instance.utils.toWei('10', 'gwei');
+  const gasLimit = await niftyContract.methods
+    .transferFrom(address, to, tokenId)
+    .estimateGas({from: address, value: '0'});
+  return web3MetamaskSendTransaction({
+    from: address,
+    to: addresses[network].nifty,
+    data,
+    value: '0',
+    gasPrice,
+    gasLimit,
+  }).then(txHash => web3Instance.eth.getTransactionReceiptMined(txHash));
+}
+
 export async function getNextTokenizeStep(labelHash, network) {
   try {
     const niftyContract = new web3Instance.eth.Contract(

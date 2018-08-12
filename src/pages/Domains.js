@@ -9,7 +9,7 @@ import AddButton from '../components/AddButton';
 import { untokenizeUpdateDomain } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
 import tokenImg from '../assets/token.png';
-import {mod} from '../helpers/bignumber.js'
+import { mod } from '../helpers/bignumber.js';
 
 const StyledTitle = styled.h3`
   margin-bottom: 50px;
@@ -54,18 +54,17 @@ const StyledToken = styled.div`
   background-size: cover;
   background-position: center;
 `;
- const StyledCompomentToken = styled.div`
+const StyledCompomentToken = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 5px;
+`;
 
- display: flex;
- justify-content: space-around;
- align-items: center;
- margin: 5px;
- `;
-
- const StyledTokenWrapper = styled.div`
- display: flex;
- align-items: center;
- `
+const StyledTokenWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 function hashToStyle(token) {
   const modulos = mod(token.labelHash, 360)
@@ -95,11 +94,12 @@ class Domains extends Component {
             {!fetching ? (
               !!domains.length ? (
                 <StyledDomainsList>
+
                   {domains.map(token => (
                     <div key={token.labelHash}>
                       <StyledCompomentToken>
                         <StyledTokenWrapper>
-                          <StyledToken style={hashToStyle(token)}></StyledToken>
+                          <StyledToken style={hashToStyle(token)} />
                           <p>{token.domain || token.labelHash}</p>
                         </StyledTokenWrapper>
                         <Button
@@ -113,13 +113,13 @@ class Domains extends Component {
                           Untokenize
                         </Button>
                       </StyledCompomentToken>
-                      <StyledAddButtonWrapper>
-                        <Link to="/tokenize-domain">
-                          <AddButton />
-                        </Link>
-                      </StyledAddButtonWrapper>
                     </div>
                   ))}
+                  <StyledAddButtonWrapper>
+                    <Link to="/tokenize-domain">
+                      <AddButton />
+                    </Link>
+                  </StyledAddButtonWrapper>
                 </StyledDomainsList>
               ) : (
                 <div>
