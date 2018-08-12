@@ -1,5 +1,5 @@
 {
-  "name": "ens-nifty-website",
+  "name": "ens-nifty-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
