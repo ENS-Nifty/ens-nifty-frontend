@@ -66,7 +66,7 @@ export async function getTokensOwned(owner) {
   return tokens;
 }
 
-export async function getNextRegisterStep(labelHash) {
+export async function getNextTokenizeStep(labelHash) {
   const deedAddress = (await registrarContract.methods
     .entries(labelHash)
     .call())[1];

@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/base';
 import Loader from '../components/Loader';
 import Link from '../components/Link';
 import Button from '../components/Button';
+import { untokenizeUpdateInput } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
 
 const StyledTitle = styled.h3`
@@ -61,9 +62,13 @@ class Domains extends Component {
                     <div>
                       <div>
                         <p>{domain}</p>
-                        <Link to="/untokenize-domain">
-                          <Button>Tokenize</Button>
-                        </Link>
+                        <Button
+                          onClick={() =>
+                            this.props.untokenizeUpdateInput(domain)
+                          }
+                        >
+                          Untokenize
+                        </Button>
                       </div>
                       {/* <div>
                         <Link to="/tokenize-domain">
@@ -101,5 +106,5 @@ const reduxProps = ({ account }) => ({
 
 export default connect(
   reduxProps,
-  { accountGetTokenizedDomains }
+  { accountGetTokenizedDomains, untokenizeUpdateInput }
 )(Domains);
