@@ -1,5 +1,6 @@
-import Web3 from 'web3';
+import { sha3 } from '../helpers/web3';
 import { formatENSDomain } from '../helpers/utilities';
+import { updateLocal } from '../helpers/localstorage';
 import { transferName } from '../helpers/contracts/registrar';
 import {
   mintToken,
@@ -24,18 +25,21 @@ export const tokenizeUpdateInput = (input = '') => dispatch => {
 };
 
 export const tokenizeSubmitTransaction = name => async dispatch => {
-  const label = formatENSDomain(name).match(/(.*)\.eth/)[1];
-  const step = await getNextTokenizeStep(Web3.utils.keccak256(label));
+  const domain = formatENSDomain(name);
+  const label = domain.match(/(.*)\.eth/)[1];
+  const labelHash = sha3(label);
+  updateLocal('domains', [{ domain, labelHash }]);
+  const step = await getNextTokenizeStep(labelHash);
   switch (step) {
     case 'transfer':
       dispatch({ type: TRANSFER_NAME_STATUS, payload: 'pending' });
-      transferName(Web3.utils.keccak256(label), () => {
+      transferName(labelHash, () => {
         dispatch({
           type: TRANSFER_NAME_STATUS,
           payload: 'success'
         });
         dispatch({ type: MINT_TOKEN_STATUS, payload: 'pending' });
-        mintToken(Web3.utils.keccak256(label), () =>
+        mintToken(labelHash, () =>
           dispatch({
             type: MINT_TOKEN_STATUS,
             payload: 'success'
@@ -49,7 +53,7 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
         payload: 'success'
       });
       dispatch({ type: MINT_TOKEN_STATUS, payload: 'pending' });
-      mintToken(Web3.utils.keccak256(label), () =>
+      mintToken(labelHash, () =>
         dispatch({
           type: MINT_TOKEN_STATUS,
           payload: 'success'
@@ -78,7 +82,7 @@ export const untokenizeSubmitTransaction = (
   labelHash = ''
 ) => async dispatch => {
   dispatch({ type: BURN_TOKEN_STATUS, payload: 'pending' });
-  unmintToken(Web3.utils.keccak256(labelHash), () =>
+  unmintToken(labelHash, () =>
     dispatch({
       type: BURN_TOKEN_STATUS,
       payload: 'success'
