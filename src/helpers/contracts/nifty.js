@@ -52,27 +52,6 @@ export async function unmintToken(labelHash, network) {
   }).then(txHash => web3Instance.eth.getTransactionReceiptMined(txHash));
 }
 
-export async function transferToken(labelHash, recipient, network) {
-  const niftyContract = new web3Instance.eth.Contract(
-    niftyJson,
-    addresses[network].nifty
-  );
-  const address = window.web3.eth.defaultAccount;
-  const data = niftyContract.methods.burn(labelHash).encodeABI();
-  const gasPrice = web3Instance.utils.toWei('10', 'gwei');
-  const gasLimit = await niftyContract.methods
-    .burn(labelHash)
-    .estimateGas({ from: address, value: '0' });
-  return web3MetamaskSendTransaction({
-    from: address,
-    to: addresses[network].nifty,
-    data,
-    value: '0',
-    gasPrice,
-    gasLimit
-  }).then(txHash => web3Instance.eth.getTransactionReceiptMined(txHash));
-}
-
 export async function getTokensOwned(owner, network) {
   const niftyContract = new web3Instance.eth.Contract(
     niftyJson,
@@ -88,6 +67,29 @@ export async function getTokensOwned(owner, network) {
     tokens.push(tokenId);
   }
   return tokens;
+}
+
+export async function transferToken(tokenId, to, network) {
+  const niftyContract = new web3Instance.eth.Contract(
+    niftyJson,
+    addresses[network].nifty
+  );
+  const address = window.web3.eth.defaultAccount;
+  const data = niftyContract.methods
+    .transferFrom(address, to, tokenId)
+    .encodeABI();
+  const gasPrice = web3Instance.utils.toWei('10', 'gwei');
+  const gasLimit = await niftyContract.methods
+    .transferFrom(address, to, tokenId)
+    .estimateGas({ from: address, value: '0' });
+  return web3MetamaskSendTransaction({
+    from: address,
+    to: addresses[network].nifty,
+    data,
+    value: '0',
+    gasPrice,
+    gasLimit
+  }).then(txHash => web3Instance.eth.getTransactionReceiptMined(txHash));
 }
 
 export async function getNextTokenizeStep(labelHash, network) {

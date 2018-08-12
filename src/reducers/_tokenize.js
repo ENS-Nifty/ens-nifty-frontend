@@ -1,6 +1,7 @@
 import { sha3 } from '../helpers/web3';
 import { formatENSDomain } from '../helpers/utilities';
 import { updateLocal } from '../helpers/localstorage';
+import { isValidAddress } from '../helpers/validators';
 import {
   transferName,
   addNameToLabelHash
@@ -12,6 +13,7 @@ import {
   transferToken
 } from '../helpers/contracts/nifty';
 import { notificationShow } from './_notification';
+import { resolveNameOrAddr } from '../helpers/contracts/ens';
 import addresses from '../helpers/contracts/config/addresses';
 import Web3 from 'web3';
 // -- Constants ------------------------------------------------------------- //
@@ -169,10 +171,19 @@ export const transferSubmitTransaction = (
   labelHashOrDomain = '',
   recipient = ''
 ) => async (dispatch, getState) => {
+  if (recipient.startsWith('0x') && !isValidAddress(recipient)) {
+    dispatch(notificationShow(`Address is invalid`, true));
+    return;
+  }
   const network = getState().account.network;
   const labelHash = labelHashOrDomain.startsWith('0x')
     ? labelHashOrDomain
     : Web3.utils.keccak256(labelHashOrDomain.replace('.eth', ''));
+  recipient = await resolveNameOrAddr(recipient);
+  if (!recipient) {
+    dispatch(notificationShow(`Couldn't resolve ENS domain`, true));
+    return;
+  }
   dispatch({ type: TRANSFER_TOKEN_STATUS, payload: 'pending' });
   transferToken(labelHash, recipient, network)
     .then(() => dispatch({ type: TRANSFER_TOKEN_STATUS, payload: 'success' }))
