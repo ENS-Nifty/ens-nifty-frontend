@@ -3,6 +3,7 @@ import niftyJson from './abi/nifty.json';
 import registrarJson from './abi/registrar.json';
 import deedJson from './abi/deed.json';
 import addresses from './config/addresses';
+
 const deedContract = new web3Instance.eth.Contract(deedJson);
 
 export async function mintToken(labelHash, network, cb) {
