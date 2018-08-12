@@ -7,7 +7,7 @@ const deedContract = new web3Instance.eth.Contract(deedJson);
 
 export async function mintToken(labelHash, network, cb) {
   if (!addresses[network]) {
-    throw new Error('bad-network')
+    throw new Error('no-network')
   }
   const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
   const registrarContract = new web3Instance.eth.Contract(

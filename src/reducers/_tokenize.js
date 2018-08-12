@@ -3,7 +3,7 @@ import { formatENSDomain } from '../helpers/utilities';
 import { transferName } from '../helpers/contracts/registrar';
 import { mintToken, getNextTokenizeStep, unmintToken } from '../helpers/contracts/nifty';
 import { notificationShow } from './_notification';
-
+import addresses from '../helpers/contracts/config/addresses';
 // -- Constants ------------------------------------------------------------- //
 const TOKENIZE_UPDATE_INPUT = 'tokenize/TOKENIZE_UPDATE_INPUT';
 
@@ -22,6 +22,10 @@ export const tokenizeUpdateInput = (input = '') => dispatch => {
 
 export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
   const network = getState().account.network
+  if (!addresses[network]) {
+    dispatch(notificationShow("Please switch to Mainnet or Ropsten", true));
+    return
+  }
   if (!name.trim()) return
   let hasEth = name.split('.').pop().toLowerCase() === 'eth'
   if (!hasEth) {
