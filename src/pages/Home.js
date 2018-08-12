@@ -29,8 +29,8 @@ class Home extends Component {
     <BaseLayout>
       <StyledLanding>
         <h1>
-          Register your ENS domain to an NFT
-          <br />and trade it on marketplaces
+          Tokenize your ENS domain name
+          <br />and trade it on the market as an NFT
         </h1>
         <ConnectButton
           left
