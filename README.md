@@ -1,7 +1,7 @@
 # ENS Nifty Wrapper
 ---
 
-[https://ensnifty.com](https://ensnifty.com])
+[https://ensnifty.com](https://master--ens-nifty.netlify.com/)
 
 ---
 
@@ -23,7 +23,7 @@ This step mints a new NFT token representing the ENS deed.
 Take advantage of marketplaces like [opensea.io](https://opensea.io) and [rarebits.io](https://rarebits.io/) or communities like [tokntalk.club](http://tokntalk.club/).
 
 ---
-[https://ensnifty.com](https://ensnifty.com)
+[https://ensnifty.com](https://master--ens-nifty.netlify.com/)
 
 ---
 [Project](https://github.com/ensdomains/hack2018/issues/17) build by Billy Rennekamp ([@okwme](https://github.com/okwme)), Pedro Gomes ([@pedrouid](pedrouid)) & Ryan Le ([@sudoryan](https://github.com/sudoryan)) during the 2018 [ENS Hackthon](https://github.com/ensdomains/hack2018/) in London, UK.
