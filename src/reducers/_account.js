@@ -1,6 +1,6 @@
 import { apiGetTransaction } from '../helpers/api';
 import { parseError, getLocalDomainFromLabelHash } from '../helpers/utilities';
-import { web3SetHttpProvider } from '../helpers/web3';
+import { web3SetHttpProvider, web3Instance } from '../helpers/web3';
 import { notificationShow } from './_notification';
 import { labelHashToName } from '../helpers/contracts/registrar';
 import { getTokensOwned } from '../helpers/contracts/nifty';
@@ -95,17 +95,21 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
   getTokensOwned(getState().account.address, network)
     .then(async tokens => {
       if (tokens.length) {
-        tokens = tokens.map(token => ({ domain: '', labelHash: token }));
+        tokens = tokens.map(token => ({
+          domain: '',
+          labelHash: web3Instance.utils.toHex(token)
+        }));
         tokens = await Promise.all(
           tokens.map(async token => {
-            const name = await labelHashToName(token.labelHash);
-            if (name) {
-              token.domain = `${name}.eth`;
-              return token;
-            } else {
-              token.domain = getLocalDomainFromLabelHash(token);
+            token.domain = getLocalDomainFromLabelHash(token.labelHash);
+            if (!token.domain) {
+              const name = await labelHashToName(token.labelHash);
+              if (name) {
+                token.domain = `${name}.eth`;
+              }
               return token;
             }
+            return token;
           })
         );
       }
@@ -128,6 +132,7 @@ const INITIAL_STATE = {
   type: '',
   address: '',
   domains: [],
+  tokens: [],
   fetching: false
 };
 

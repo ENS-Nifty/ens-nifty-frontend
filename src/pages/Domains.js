@@ -5,8 +5,11 @@ import BaseLayout from '../layouts/base';
 import Loader from '../components/Loader';
 import Link from '../components/Link';
 import Button from '../components/Button';
+import AddButton from '../components/AddButton';
 import { untokenizeUpdateDomain } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
+import tokenImg from '../assets/token.png';
+import {mod} from '../helpers/bignumber.js'
 
 const StyledTitle = styled.h3`
   margin-bottom: 50px;
@@ -43,25 +46,63 @@ const StyledNoDomainsMessage = styled.p`
   opacity: 0.7;
 `;
 
+const StyledToken = styled.div`
+  width: 50px;
+  height: 50px;
+  margin-right: 12px;
+  background: url(${tokenImg}) no-repeat;
+  background-size: cover;
+  background-position: center;
+`;
+ const StyledCompomentToken = styled.div`
+
+ display: flex;
+ justify-content: space-around;
+ align-items: center;
+ margin: 5px;
+ `;
+
+ const StyledTokenWrapper = styled.div`
+ display: flex;
+ align-items: center;
+ `
+
+function hashToStyle(hash) {
+  const modulos = mod(hash, 360)
+  console.log(modulos)
+  return {filter: `hue-rotate(${modulos}DEG)`}
+}
+const StyledAddButtonWrapper = styled.div`
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center
+  width: 100%;
+  max-width: 600px;
+  height: 60px;
+`;
 class Domains extends Component {
   componentDidMount() {
     this.props.accountGetTokenizedDomains();
   }
 
   render() {
-    const { fetching, tokens } = this.props;
+    const { fetching, domains } = this.props;
     return (
       <BaseLayout>
         <StyledWrapper>
           <StyledTitle>{'Tokenized Domains'}</StyledTitle>
           <StyledDomains>
             {!fetching ? (
-              !!tokens.length ? (
+              !!domains.length ? (
                 <StyledDomainsList>
-                  {tokens.map(token => (
+                  {domains.map(token => (
                     <div>
-                      <div>
-                        <p>{token.domain || token.labelHash}</p>
+                      <StyledCompomentToken>
+                        <StyledTokenWrapper>
+                          <StyledToken style={hashToStyle(token)}></StyledToken>
+                          <p>{token.domain || token.labelHash}</p>
+                        </StyledTokenWrapper>
                         <Button
                           onClick={() =>
                             this.props.untokenizeUpdateDomain(
@@ -72,12 +113,12 @@ class Domains extends Component {
                         >
                           Untokenize
                         </Button>
-                      </div>
-                      {/* <div>
+                      </StyledCompomentToken>
+                      <StyledAddButtonWrapper>
                         <Link to="/tokenize-domain">
-                          <Button>Tokenize Domain</Button>
+                          <AddButton />
                         </Link>
-                      </div> */}
+                      </StyledAddButtonWrapper>
                     </div>
                   ))}
                 </StyledDomainsList>
@@ -103,7 +144,7 @@ class Domains extends Component {
 
 const reduxProps = ({ account }) => ({
   fetching: account.fetching,
-  tokens: account.tokens,
+  domains: account.domains,
   address: account.address
 });
 

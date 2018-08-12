@@ -51,7 +51,7 @@ class TokenizeENS extends Component {
     return (
       <BaseLayout>
         <StyledWrapper>
-          <h3>{'Untokenize ENS Domain'}</h3>
+          <h3>{'Un-tokenize ENS Domain'}</h3>
           <StyledSubHeader>
             <h1>{domain || labelHash}</h1>
             <Button onClick={this.props.untokenizeSubmitTransaction}>
