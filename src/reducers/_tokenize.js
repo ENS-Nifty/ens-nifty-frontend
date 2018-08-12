@@ -28,7 +28,7 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
   const domain = formatENSDomain(name);
   const label = domain.match(/(.*)\.eth/)[1];
   const labelHash = sha3(label);
-  updateLocal('domains', [{ domain, labelHash }]);
+  updateLocal('domains', [{ domain, label, labelHash }]);
   const step = await getNextTokenizeStep(labelHash);
   switch (step) {
     case 'transfer':
