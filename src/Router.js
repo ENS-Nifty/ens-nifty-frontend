@@ -25,7 +25,7 @@ class Router extends Component {
           exact
           path="/"
           render={routerProps => {
-            if (!address) {
+            if (address) {
               return <Redirect to="/domains" />;
             }
             return <Home {...routerProps} />;
