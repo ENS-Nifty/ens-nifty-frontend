@@ -55,13 +55,13 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
   switch (step) {
     case 'transfer':
       dispatch({ type: TRANSFER_NAME_STATUS, payload: 'pending' });
-      transferName(labelHash, () => {
+      transferName(labelHash, network, () => {
         dispatch({
           type: TRANSFER_NAME_STATUS,
           payload: 'success'
         });
         dispatch({ type: MINT_TOKEN_STATUS, payload: 'pending' });
-        mintToken(labelHash, () =>
+        mintToken(labelHash, network, () =>
           dispatch({
             type: MINT_TOKEN_STATUS,
             payload: 'success'
@@ -75,7 +75,7 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
         payload: 'success'
       });
       dispatch({ type: MINT_TOKEN_STATUS, payload: 'pending' });
-      mintToken(labelHash, () =>
+      mintToken(labelHash, network, () =>
         dispatch({
           type: MINT_TOKEN_STATUS,
           payload: 'success'
@@ -117,9 +117,10 @@ export const untokenizeSubmitTransaction = (labelHash = '') => async (
   dispatch,
   getState
 ) => {
+  const network = getState().account.network;
   labelHash = labelHash || getState().tokenize.labelHash;
   dispatch({ type: BURN_TOKEN_STATUS, payload: 'pending' });
-  unmintToken(labelHash, () =>
+  unmintToken(labelHash, network, () =>
     dispatch({
       type: BURN_TOKEN_STATUS,
       payload: 'success'

@@ -49,16 +49,16 @@ class Domains extends Component {
   }
 
   render() {
-    const { fetching, tokens } = this.props;
+    const { fetching, domains } = this.props;
     return (
       <BaseLayout>
         <StyledWrapper>
           <StyledTitle>{'Tokenized Domains'}</StyledTitle>
           <StyledDomains>
             {!fetching ? (
-              !!tokens.length ? (
+              !!domains.length ? (
                 <StyledDomainsList>
-                  {tokens.map(token => (
+                  {domains.map(token => (
                     <div>
                       <div>
                         <p>{token.domain || token.labelHash}</p>
@@ -103,7 +103,7 @@ class Domains extends Component {
 
 const reduxProps = ({ account }) => ({
   fetching: account.fetching,
-  tokens: account.tokens,
+  domains: account.domains,
   address: account.address
 });
 
