@@ -21,7 +21,16 @@ class Router extends Component {
     const address = this.props.address;
     return (
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route
+          exact
+          path="/"
+          render={routerProps => {
+            if (address) {
+              return <Redirect to="/domains" />;
+            }
+            return <Home {...routerProps} />;
+          }}
+        />
         <Route
           exact
           path="/domains"
