@@ -1,6 +1,6 @@
 import { apiGetTransaction } from '../helpers/api';
 import { parseError, getLocalDomainFromLabelHash } from '../helpers/utilities';
-import { web3SetHttpProvider, sha3 } from '../helpers/web3';
+import { web3SetHttpProvider, web3Instance } from '../helpers/web3';
 import { notificationShow } from './_notification';
 import { labelHashToName } from '../helpers/contracts/registrar';
 import { getTokensOwned } from '../helpers/contracts/nifty';
@@ -95,7 +95,10 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
   getTokensOwned(getState().account.address, network)
     .then(async tokens => {
       if (tokens.length) {
-        tokens = tokens.map(token => ({ domain: '', labelHash: sha3(token) }));
+        tokens = tokens.map(token => ({
+          domain: '',
+          labelHash: web3Instance.utils.toHex(token)
+        }));
         tokens = await Promise.all(
           tokens.map(async token => {
             token.domain = getLocalDomainFromLabelHash(token.labelHash);
