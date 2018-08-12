@@ -20,7 +20,8 @@ export const tokenizeUpdateInput = (input = '') => dispatch => {
   dispatch({ type: TOKENIZE_UPDATE_INPUT, payload: input });
 };
 
-export const tokenizeSubmitTransaction = name => async dispatch => {
+export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
+  const network = getState().account.network
   if (!name.trim()) return
   let hasEth = name.split('.').pop().toLowerCase() === 'eth'
   if (!hasEth) {
@@ -28,17 +29,17 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
     return
   }
   const label = formatENSDomain(name).match(/(.*)\.eth/)[1];
-  const step = await getNextTokenizeStep(Web3.utils.keccak256(label));
+  const step = await getNextTokenizeStep(Web3.utils.keccak256(label), network);
   switch (step) {
     case 'transfer':
       dispatch({ type: TRANSFER_NAME_STATUS, payload: 'pending' });
-      transferName(Web3.utils.keccak256(label), () => {
+      transferName(Web3.utils.keccak256(label), network, () => {
         dispatch({
           type: TRANSFER_NAME_STATUS,
           payload: 'success'
         });
         dispatch({ type: MINT_TOKEN_STATUS, payload: 'pending' });
-        mintToken(Web3.utils.keccak256(label), () =>
+        mintToken(Web3.utils.keccak256(label), network, () =>
           dispatch({
             type: MINT_TOKEN_STATUS,
             payload: 'success'
@@ -52,7 +53,7 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
         payload: 'success'
       });
       dispatch({ type: MINT_TOKEN_STATUS, payload: 'pending' });
-      mintToken(Web3.utils.keccak256(label), () =>
+      mintToken(Web3.utils.keccak256(label), network, () =>
         dispatch({
           type: MINT_TOKEN_STATUS,
           payload: 'success'
@@ -90,9 +91,10 @@ export const untokenizeUpdateInput = (labelHash = '') => dispatch => {
 
 export const untokenizeSubmitTransaction = (
   labelHash = ''
-) => async dispatch => {
+) => async (dispatch, getState) => {
+  const network = getState().account.network
   dispatch({ type: BURN_TOKEN_STATUS, payload: 'pending' });
-  unmintToken(Web3.utils.keccak256(labelHash), () =>
+  unmintToken(Web3.utils.keccak256(labelHash), network, () =>
     dispatch({
       type: BURN_TOKEN_STATUS,
       payload: 'success'
