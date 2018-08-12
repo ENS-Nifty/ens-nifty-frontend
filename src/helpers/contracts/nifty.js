@@ -42,7 +42,7 @@ export async function unmintToken(labelHash, network) {
   const gasLimit = await niftyContract.methods
     .burn(labelHash)
     .estimateGas({from: address, value: '0'});
-  web3MetamaskSendTransaction({
+  return web3MetamaskSendTransaction({
     from: address,
     to: addresses[network].nifty,
     data,

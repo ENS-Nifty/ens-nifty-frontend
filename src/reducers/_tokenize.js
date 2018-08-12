@@ -1,17 +1,15 @@
-import { sha3 } from '../helpers/web3';
-import { formatENSDomain } from '../helpers/utilities';
-import { updateLocal } from '../helpers/localstorage';
-import {
-  transferName,
-  addNameToLabelHash
-} from '../helpers/contracts/registrar';
+import {sha3} from '../helpers/web3';
+import {formatENSDomain} from '../helpers/utilities';
+import {updateLocal} from '../helpers/localstorage';
+import {transferName, addNameToLabelHash} from '../helpers/contracts/registrar';
 import {
   mintToken,
   getNextTokenizeStep,
-  unmintToken
+  unmintToken,
 } from '../helpers/contracts/nifty';
-import { notificationShow } from './_notification';
+import {notificationShow} from './_notification';
 import addresses from '../helpers/contracts/config/addresses';
+import Web3 from 'web3';
 // -- Constants ------------------------------------------------------------- //
 const TOKENIZE_UPDATE_DOMAIN = 'tokenize/TOKENIZE_UPDATE_DOMAIN';
 
@@ -25,7 +23,7 @@ const BURN_TOKEN_STATUS = 'tokenize/BURN_TOKEN_STATUS';
 
 // -- Actions --------------------------------------------------------------- //
 export const tokenizeUpdateDomain = (domain = '') => dispatch => {
-  dispatch({ type: TOKENIZE_UPDATE_DOMAIN, payload: domain });
+  dispatch({type: TOKENIZE_UPDATE_DOMAIN, payload: domain});
 };
 
 export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
@@ -42,14 +40,14 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
       .toLowerCase() === 'eth';
   if (!hasEth) {
     dispatch(
-      notificationShow("Sorry, only available for names ending in 'eth'", true)
+      notificationShow("Sorry, only available for names ending in 'eth'", true),
     );
     return;
   }
   const domain = formatENSDomain(name);
   const label = domain.match(/(.*)\.eth/)[1];
   const labelHash = sha3(label);
-  updateLocal('domains', [{ domain, label, labelHash }]);
+  updateLocal('domains', [{domain, label, labelHash}]);
   await addNameToLabelHash(label);
   const step = await getNextTokenizeStep(labelHash, network);
   switch (step) {
@@ -86,7 +84,7 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
     case 'mint':
       dispatch({
         type: TRANSFER_NAME_STATUS,
-        payload: 'success'
+        payload: 'success',
       });
       dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
       mintToken(labelHash, network)
@@ -101,9 +99,9 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
     case 'done':
       dispatch({
         type: TRANSFER_NAME_STATUS,
-        payload: 'success'
+        payload: 'success',
       });
-      dispatch({ type: MINT_TOKEN_STATUS, payload: 'success' });
+      dispatch({type: MINT_TOKEN_STATUS, payload: 'success'});
       break;
     case 'error-not-owned':
       dispatch(notificationShow("Looks like you don't own that domain.", true));
@@ -123,18 +121,20 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
 
 export const untokenizeUpdateDomain = (
   domain = '',
-  labelHash = ''
+  labelHash = '',
 ) => dispatch => {
-  dispatch({ type: UNTTOKENIZE_UPDATE_DOMAIN, payload: { labelHash, domain } });
+  dispatch({type: UNTTOKENIZE_UPDATE_DOMAIN, payload: {labelHash, domain}});
   window.browserHistory.push('/untokenize-domain');
 };
 
-export const untokenizeSubmitTransaction = (labelHash = '') => async (
+export const untokenizeSubmitTransaction = (labelHashOrDomain = '') => async (
   dispatch,
-  getState
+  getState,
 ) => {
   const network = getState().account.network;
-  labelHash = labelHash || getState().tokenize.labelHash;
+  const labelHash = labelHashOrDomain.startsWith('0x')
+    ? labelHashOrDomain
+    : Web3.utils.keccak256(labelHashOrDomain.replace('.eth', ''));
   dispatch({type: BURN_TOKEN_STATUS, payload: 'pending'});
   unmintToken(labelHash, network)
     .then(() => dispatch({type: BURN_TOKEN_STATUS, payload: 'success'}))
@@ -147,7 +147,7 @@ const INITIAL_STATE = {
   domain: '',
   transferNameStatus: '',
   mintTokenStatus: '',
-  burnTokenStatus: ''
+  burnTokenStatus: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -155,28 +155,28 @@ export default (state = INITIAL_STATE, action) => {
     case TOKENIZE_UPDATE_DOMAIN:
       return {
         ...state,
-        domain: action.payload
+        domain: action.payload,
       };
     case UNTTOKENIZE_UPDATE_DOMAIN:
       return {
         ...state,
         labelHash: action.payload.labelHash,
-        domain: action.payload.domain
+        domain: action.payload.domain,
       };
     case TRANSFER_NAME_STATUS:
       return {
         ...state,
-        transferNameStatus: action.payload
+        transferNameStatus: action.payload,
       };
     case MINT_TOKEN_STATUS:
       return {
         ...state,
-        mintTokenStatus: action.payload
+        mintTokenStatus: action.payload,
       };
     case BURN_TOKEN_STATUS:
       return {
         ...state,
-        burnTokenStatus: action.payload
+        burnTokenStatus: action.payload,
       };
     default:
       return state;
