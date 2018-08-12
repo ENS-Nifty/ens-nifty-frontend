@@ -52,19 +52,33 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
   switch (step) {
     case 'transfer':
       dispatch({type: TRANSFER_NAME_STATUS, payload: 'pending'});
-      transferName(labelHash, network, () => {
-        dispatch({
-          type: TRANSFER_NAME_STATUS,
-          payload: 'success',
-        });
-        dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
-        mintToken(labelHash, network, () =>
+      transferName(labelHash, network)
+        .then(() => {
           dispatch({
-            type: MINT_TOKEN_STATUS,
+            type: TRANSFER_NAME_STATUS,
             payload: 'success',
+          });
+          dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
+          mintToken(labelHash, network)
+            .then(() =>
+              dispatch({
+                type: MINT_TOKEN_STATUS,
+                payload: 'success',
+              }),
+            )
+            .catch(() =>
+              dispatch({
+                type: MINT_TOKEN_STATUS,
+                payload: '',
+              }),
+            );
+        })
+        .catch(() =>
+          dispatch({
+            type: TRANSFER_NAME_STATUS,
+            payload: '',
           }),
         );
-      });
       break;
     case 'mint':
       dispatch({
@@ -72,12 +86,14 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
         payload: 'success',
       });
       dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
-      mintToken(labelHash, network, () =>
-        dispatch({
-          type: MINT_TOKEN_STATUS,
-          payload: 'success',
-        }),
-      );
+      mintToken(labelHash, network)
+        .then(() =>
+          dispatch({
+            type: MINT_TOKEN_STATUS,
+            payload: 'success',
+          }),
+        )
+        .catch(() => dispatch({type: MINT_TOKEN_STATUS, payload: ''}));
       break;
     case 'done':
       dispatch({
@@ -117,12 +133,9 @@ export const untokenizeSubmitTransaction = (labelHash = '') => async (
   const network = getState().account.network;
   labelHash = labelHash || getState().tokenize.labelHash;
   dispatch({type: BURN_TOKEN_STATUS, payload: 'pending'});
-  unmintToken(labelHash, network, () =>
-    dispatch({
-      type: BURN_TOKEN_STATUS,
-      payload: 'success',
-    }),
-  );
+  unmintToken(labelHash, network)
+    .then(() => dispatch({type: BURN_TOKEN_STATUS, payload: 'success'}))
+    .catch(() => dispatch({type: BURN_TOKEN_STATUS, payload: ''}));
 };
 
 // -- Reducer --------------------------------------------------------------- //
