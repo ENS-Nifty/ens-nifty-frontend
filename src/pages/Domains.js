@@ -8,6 +8,8 @@ import Button from '../components/Button';
 import AddButton from '../components/AddButton';
 import { untokenizeUpdateDomain } from '../reducers/_tokenize';
 import { accountGetTokenizedDomains } from '../reducers/_account';
+import tokenImg from '../assets/token.png';
+import {mod} from '../helpers/bignumber.js'
 
 const StyledTitle = styled.h3`
   margin-bottom: 50px;
@@ -44,6 +46,20 @@ const StyledNoDomainsMessage = styled.p`
   opacity: 0.7;
 `;
 
+const StyledToken = styled.div`
+  width: 50px;
+  height: 50px;
+  background: url(${tokenImg}) no-repeat;
+  background-size: cover;
+  background-position: center;
+`;
+
+
+function hashToStyle(hash) {
+  const modulos = mod(hash, 360)
+  console.log(modulos)
+  return {filter: `hue-rotate(${modulos}DEG)`}
+}
 const StyledAddButtonWrapper = styled.div`
   margin: 20px auto;
   display: flex;
@@ -53,7 +69,6 @@ const StyledAddButtonWrapper = styled.div`
   max-width: 600px;
   height: 60px;
 `;
-
 class Domains extends Component {
   componentDidMount() {
     this.props.accountGetTokenizedDomains();
@@ -72,6 +87,7 @@ class Domains extends Component {
                   {domains.map(token => (
                     <div>
                       <div>
+                        <StyledToken style={hashToStyle(token)}></StyledToken>
                         <p>{token.domain || token.labelHash}</p>
                         <Button
                           onClick={() =>
