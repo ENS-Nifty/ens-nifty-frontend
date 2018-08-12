@@ -70,16 +70,16 @@ class TransferDomain extends Component {
           <StyledSubHeader>
             <StyledForm
               onSubmit={() =>
-                this.props.tokenizeSubmitTransaction(this.props.domain)
+                this.props.transferSubmitTransaction(this.props.domain)
               }
             >
               <Input
                 label=""
-                placeholder="ensdomain.eth"
+                placeholder="Recipient"
                 type="text"
-                value={this.props.domain}
+                value={this.props.recipient}
                 onChange={({ target }) =>
-                  this.props.tokenizeUpdateDomain(target.value)
+                  this.props.transferUpdateRecipient(target.value)
                 }
               />
               <StyledButton type="submit">Submit</StyledButton>
@@ -87,7 +87,7 @@ class TransferDomain extends Component {
           </StyledSubHeader>
           <StyledTransactionList>
             <StyledTransaction>
-              <TransactionStatus status={this.props.burnTokenStatus} />
+              <TransactionStatus status={this.props.transferTokenStatus} />
               <p>Transfer ENS Domain token</p>
             </StyledTransaction>
           </StyledTransactionList>
@@ -100,6 +100,7 @@ class TransferDomain extends Component {
 const reduxProps = ({ tokenize }) => ({
   labelHash: tokenize.labelHash,
   domain: tokenize.domain,
+  recipient: tokenize.recipient,
   burnTokenStatus: tokenize.burnTokenStatus
 });
 
