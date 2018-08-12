@@ -1,11 +1,8 @@
 import Web3 from 'web3';
 import { formatENSDomain } from '../helpers/utilities';
 import { transferName } from '../helpers/contracts/registrar';
-import {
-  mintToken,
-  getNextTokenizeStep,
-  unmintToken
-} from '../helpers/contracts/nifty';
+import { mintToken, getNextTokenizeStep, unmintToken } from '../helpers/contracts/nifty';
+import { notificationShow } from './_notification';
 
 // -- Constants ------------------------------------------------------------- //
 const TOKENIZE_UPDATE_INPUT = 'tokenize/TOKENIZE_UPDATE_INPUT';
@@ -24,6 +21,12 @@ export const tokenizeUpdateInput = (input = '') => dispatch => {
 };
 
 export const tokenizeSubmitTransaction = name => async dispatch => {
+  if (!name.trim()) return
+  let hasEth = name.split('.').pop().toLowerCase() === 'eth'
+  if (!hasEth) {
+    dispatch(notificationShow("Sorry, only available for names ending in 'eth'", true));
+    return
+  }
   const label = formatENSDomain(name).match(/(.*)\.eth/)[1];
   const step = await getNextTokenizeStep(Web3.utils.keccak256(label));
   switch (step) {
@@ -63,8 +66,19 @@ export const tokenizeSubmitTransaction = name => async dispatch => {
       });
       dispatch({ type: MINT_TOKEN_STATUS, payload: 'success' });
       break;
-    default:
+    case 'error-not-owned':
+      dispatch(notificationShow("Looks like you don't own that domain.", true));
       break;
+    case 'error-not-registered':
+      dispatch(notificationShow("Looks like no one owns that domain.", true));
+      break;
+    case 'error':
+      dispatch(notificationShow("Sorry, something's gone wrong", true));
+      break;
+    default:
+        dispatch(notificationShow("Sorry, something's gone wrong", true));
+        console.error(step)
+        break
   }
 };
 

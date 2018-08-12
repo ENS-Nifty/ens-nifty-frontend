@@ -67,25 +67,33 @@ export async function getTokensOwned(owner) {
 }
 
 export async function getNextTokenizeStep(labelHash) {
-  const deedAddress = (await registrarContract.methods
-    .entries(labelHash)
-    .call())[1];
-  deedContract.options.address = deedAddress;
-  const currentOwner = (await deedContract.methods
-    .owner()
-    .call()).toLowerCase();
-  const tokenExists = await niftyContract.methods.exists(labelHash).call();
-  if (
-    currentOwner === window.web3.eth.defaultAccount.toLowerCase() &&
-    !tokenExists
-  ) {
-    return 'transfer';
+  try {
+
+    const deedAddress = (await registrarContract.methods
+      .entries(labelHash)
+      .call())[1];
+    if (deedAddress == '0x' + '0'.repeat(40)) {
+      return 'error-not-registered'
+    }
+    deedContract.options.address = deedAddress;
+    const currentOwner = (await deedContract.methods
+      .owner()
+      .call()).toLowerCase();
+    const tokenExists = await niftyContract.methods.exists(labelHash).call();
+    if (
+      currentOwner === window.web3.eth.defaultAccount.toLowerCase() &&
+      !tokenExists
+    ) {
+      return 'transfer';
+    }
+    if (currentOwner === addresses.nifty.toLowerCase() && !tokenExists) {
+      return 'mint';
+    }
+    if (currentOwner === addresses.nifty.toLowerCase() && tokenExists) {
+      return 'done';
+    }
+    return 'error-not-owned';
+  } catch(error) {
+    return error.message;
   }
-  if (currentOwner === addresses.nifty.toLowerCase() && !tokenExists) {
-    return 'mint';
-  }
-  if (currentOwner === addresses.nifty.toLowerCase() && tokenExists) {
-    return 'done';
-  }
-  return 'error';
 }

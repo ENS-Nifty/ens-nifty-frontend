@@ -1,9 +1,8 @@
-import {apiGetTransaction} from '../helpers/api';
-import {parseError} from '../helpers/utilities';
-import {web3SetHttpProvider} from '../helpers/web3';
-import {notificationShow} from './_notification';
-import {getTokensOwned} from '../helpers/contracts/nifty';
-import {labelHashToName} from '../helpers/contracts/registrar';
+import { apiGetTransaction } from '../helpers/api';
+import { parseError } from '../helpers/utilities';
+import { web3SetHttpProvider } from '../helpers/web3';
+import { notificationShow } from './_notification';
+import { getTokensOwned } from '../helpers/contracts/nifty';
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -95,7 +94,7 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
     .then(async tokens => {
       if (tokens) {
         tokens = await Promise.all(
-          tokens.map(async token => labelHashToName(token)),
+          tokens.map(async token => token)
         );
         console.log(tokens);
       }
