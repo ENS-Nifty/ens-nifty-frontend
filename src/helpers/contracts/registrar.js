@@ -9,26 +9,27 @@ import Web3 from 'web3';
 import registrarJson from './abi/registrar.json';
 import resolverJson from './abi/resolver.json';
 import addresses from './config/addresses';
-import {getResolverAddress, supportsNameInterface} from './ens';
+// import {getResolverAddress, supportsNameInterface} from './ens';
 
-const registrarContract = new web3Instance.eth.Contract(
-  registrarJson,
-  addresses.registrar,
-);
+
 const resolverContract = new web3Instance.eth.Contract(resolverJson);
 
-export async function transferName(labelHash, cb) {
+export async function transferName(labelHash, network, cb) {
+  const registrarContract = new web3Instance.eth.Contract(
+    registrarJson,
+    addresses[network].registrar,
+  );
   const address = window.web3.eth.defaultAccount;
   const data = registrarContract.methods
-    .transfer(labelHash, addresses.nifty)
+    .transfer(labelHash, addresses[network].nifty)
     .encodeABI();
   const gasPrice = web3Instance.utils.toWei('10', 'gwei');
   const gasLimit = await registrarContract.methods
-    .transfer(labelHash, addresses.nifty)
+    .transfer(labelHash, addresses[network].nifty)
     .estimateGas({from: address, value: '0'});
   web3MetamaskSendTransaction({
     from: address,
-    to: addresses.registrar,
+    to: addresses[network].registrar,
     data,
     value: '0',
     gasPrice,

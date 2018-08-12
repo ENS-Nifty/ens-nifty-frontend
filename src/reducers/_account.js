@@ -89,8 +89,9 @@ export const accountClearState = () => dispatch => {
 };
 
 export const accountGetTokenizedDomains = () => (dispatch, getState) => {
-  dispatch({type: ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST});
-  getTokensOwned(getState().account.address)
+  const network = getState().account.network
+  dispatch({ type: ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST });
+  getTokensOwned(getState().account.address, network)
     .then(async tokens => {
       if (tokens) {
         tokens = await Promise.all(
