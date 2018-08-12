@@ -3,7 +3,7 @@ import { formatENSDomain } from '../helpers/utilities';
 import { transferName } from '../helpers/contracts/registrar';
 import {
   mintToken,
-  getNextRegisterStep,
+  getNextTokenizeStep,
   unmintToken
 } from '../helpers/contracts/nifty';
 
@@ -25,7 +25,7 @@ export const tokenizeUpdateInput = (input = '') => dispatch => {
 
 export const tokenizeSubmitTransaction = name => async dispatch => {
   const label = formatENSDomain(name).match(/(.*)\.eth/)[1];
-  const step = await getNextRegisterStep(Web3.utils.keccak256(label));
+  const step = await getNextTokenizeStep(Web3.utils.keccak256(label));
   switch (step) {
     case 'transfer':
       dispatch({ type: TRANSFER_NAME_STATUS, payload: 'pending' });
