@@ -8,12 +8,15 @@ const deedContract = new web3Instance.eth.Contract(deedJson);
 
 export async function mintToken(labelHash, network, cb) {
   if (!addresses[network]) {
-    throw new Error('bad-network')
+    throw new Error('bad-network');
   }
-  const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
+  const niftyContract = new web3Instance.eth.Contract(
+    niftyJson,
+    addresses[network].nifty
+  );
   const registrarContract = new web3Instance.eth.Contract(
     registrarJson,
-    addresses[network].registrar,
+    addresses[network].registrar
   );
 
   const address = window.web3.eth.defaultAccount;
@@ -37,10 +40,13 @@ export async function mintToken(labelHash, network, cb) {
 }
 
 export async function unmintToken(labelHash, network, cb) {
-  const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
+  const niftyContract = new web3Instance.eth.Contract(
+    niftyJson,
+    addresses[network].nifty
+  );
   const registrarContract = new web3Instance.eth.Contract(
     registrarJson,
-    addresses[network].registrar,
+    addresses[network].registrar
   );
   const address = window.web3.eth.defaultAccount;
   const data = niftyContract.methods.burn(labelHash).encodeABI();
@@ -63,10 +69,13 @@ export async function unmintToken(labelHash, network, cb) {
 }
 
 export async function getTokensOwned(owner, network) {
-  const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
+  const niftyContract = new web3Instance.eth.Contract(
+    niftyJson,
+    addresses[network].nifty
+  );
   const registrarContract = new web3Instance.eth.Contract(
     registrarJson,
-    addresses[network].registrar,
+    addresses[network].registrar
   );
   const tokens = [];
 
@@ -82,25 +91,21 @@ export async function getTokensOwned(owner, network) {
 
 export async function getNextTokenizeStep(labelHash, network) {
   try {
-<<<<<<< HEAD
-=======
-    const niftyContract = new web3Instance.eth.Contract(niftyJson, addresses[network].nifty);
+    const niftyContract = new web3Instance.eth.Contract(
+      niftyJson,
+      addresses[network].nifty
+    );
     const registrarContract = new web3Instance.eth.Contract(
       registrarJson,
-      addresses[network].registrar,
+      addresses[network].registrar
     );
->>>>>>> 5caf54d5425f041281481c1c26b4d3aa124922c5
     const deedAddress = (await registrarContract.methods
       .entries(labelHash)
       .call())[1];
     if (deedAddress === '0x' + '0'.repeat(40)) {
-<<<<<<< HEAD
       return 'error-not-registered';
-=======
-      return 'error-not-registered'
->>>>>>> 5caf54d5425f041281481c1c26b4d3aa124922c5
     }
-    console.log('deedAddress', deedAddress)
+    console.log('deedAddress', deedAddress);
     deedContract.options.address = deedAddress;
     const currentOwner = (await deedContract.methods
       .owner()
@@ -112,10 +117,16 @@ export async function getNextTokenizeStep(labelHash, network) {
     ) {
       return 'transfer';
     }
-    if (currentOwner === addresses[network].nifty.toLowerCase() && !tokenExists) {
+    if (
+      currentOwner === addresses[network].nifty.toLowerCase() &&
+      !tokenExists
+    ) {
       return 'mint';
     }
-    if (currentOwner === addresses[network].nifty.toLowerCase() && tokenExists) {
+    if (
+      currentOwner === addresses[network].nifty.toLowerCase() &&
+      tokenExists
+    ) {
       return 'done';
     }
     return 'error-not-owned';
