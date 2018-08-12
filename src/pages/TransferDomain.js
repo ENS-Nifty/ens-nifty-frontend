@@ -6,7 +6,10 @@ import TransactionStatus from '../components/TransactionStatus';
 import Form from '../components/Form';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { transferSubmitTransaction } from '../reducers/_tokenize';
+import {
+  transferSubmitTransaction,
+  transferUpdateRecipient
+} from '../reducers/_tokenize';
 
 const StyledForm = styled(Form)`
   width: 100%;
@@ -106,5 +109,5 @@ const reduxProps = ({ tokenize }) => ({
 
 export default connect(
   reduxProps,
-  { transferSubmitTransaction }
+  { transferSubmitTransaction, transferUpdateRecipient }
 )(TransferDomain);
