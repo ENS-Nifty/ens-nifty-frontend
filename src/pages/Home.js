@@ -6,7 +6,6 @@ import BaseLayout from '../layouts/base';
 import Button from '../components/Button';
 import {metamaskConnectInit} from '../reducers/_metamask';
 import {fonts} from '../styles';
-import {resolveNameOrAddr} from '../helpers/contracts/ens';
 
 const StyledLanding = styled.div`
   width: 100%;
@@ -36,8 +35,7 @@ class Home extends Component {
         <ConnectButton
           left
           color="orange"
-          onClick={() => resolveNameOrAddr('ryan-le.eth')}
-          // onClick={this.props.metamaskConnectInit}
+          onClick={this.props.metamaskConnectInit}
         >
           {'Connect to Metamask'}
         </ConnectButton>
