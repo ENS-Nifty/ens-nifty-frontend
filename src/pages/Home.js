@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import BaseLayout from '../layouts/base';
 import Button from '../components/Button';
 import {metamaskConnectInit} from '../reducers/_metamask';
+import {portisConnectInit} from '../reducers/_portis';
 import {fonts} from '../styles';
 
 const StyledLanding = styled.div`
@@ -39,6 +40,13 @@ class Home extends Component {
         >
           {'Connect to Metamask'}
         </ConnectButton>
+        <ConnectButton
+          left
+          color="orange"
+          onClick={this.props.portisConnectInit}
+        >
+          {'Connect to Portis'}
+        </ConnectButton>
       </StyledLanding>
     </BaseLayout>
   );
@@ -46,11 +54,13 @@ class Home extends Component {
 
 Home.propTypes = {
   metamaskConnectInit: PropTypes.func.isRequired,
+  portisConnectInit: PropTypes.func.isRequired,
 };
 
 export default connect(
   null,
   {
     metamaskConnectInit,
+    portisConnectInit,
   },
 )(Home);

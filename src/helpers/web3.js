@@ -207,11 +207,11 @@ export const web3SendSignedTransaction = signedTx =>
   });
 
 /**
- * @desc metamask send transaction
+ * @desc web3 send transaction
  * @param  {Object}  transaction { from, to, value, data, gasPrice}
  * @return {Promise}
  */
-export const web3MetamaskSendTransaction = transaction =>
+export const web3SendTransaction = (web3, transaction) =>
   new Promise((resolve, reject) => {
     const from =
       transaction.from.substr(0, 2) === '0x'
@@ -228,19 +228,18 @@ export const web3MetamaskSendTransaction = transaction =>
       to,
       data,
       value,
-      gasPrice: transaction.gasPrice,
       gasLimit: transaction.gasLimit,
     })
       .then(txDetails => {
-        if (typeof window.web3 !== 'undefined') {
-          window.web3.eth.sendTransaction(txDetails, (err, txHash) => {
+        if (typeof web3 !== 'undefined') {
+          web3.eth.sendTransaction(txDetails, (err, txHash) => {
             if (err) {
               reject(err);
             }
             resolve(txHash);
           });
         } else {
-          throw new Error(`Metamask is not present`);
+          throw new Error(`Web3 is not present`);
         }
       })
       .catch(error => reject(error));
@@ -289,10 +288,10 @@ export const web3SendTransactionMultiWallet = (transaction, accountType) => {
   }
   switch (accountType) {
     case 'METAMASK':
-      method = web3MetamaskSendTransaction;
+      method = web3SendTransaction;
       break;
     default:
-      method = web3MetamaskSendTransaction;
+      method = web3SendTransaction;
       break;
   }
   return method(transaction);

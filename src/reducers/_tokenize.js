@@ -56,23 +56,21 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
     );
     return;
   }
+  const web3 = getState().account.web3;
   const domain = formatENSDomain(name);
   const label = domain.match(/(.*)\.eth/)[1];
   const labelHash = sha3(label);
   updateLocal('domains', [{domain, label, labelHash}]);
   await addNameToLabelHash(label);
-  const step = await getNextTokenizeStep(labelHash, network);
+  const step = await getNextTokenizeStep(labelHash, network, web3);
   switch (step) {
     case 'transfer':
       dispatch({type: TRANSFER_NAME_STATUS, payload: 'pending'});
-      transferName(labelHash, network)
+      transferName(labelHash, network, web3)
         .then(() => {
-          dispatch({
-            type: TRANSFER_NAME_STATUS,
-            payload: 'success',
-          });
+          dispatch({type: TRANSFER_NAME_STATUS, payload: 'success'});
           dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
-          mintToken(labelHash, network)
+          mintToken(labelHash, network, web3)
             .then(() =>
               dispatch({
                 type: MINT_TOKEN_STATUS,
@@ -86,12 +84,7 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
               }),
             );
         })
-        .catch(() =>
-          dispatch({
-            type: TRANSFER_NAME_STATUS,
-            payload: '',
-          }),
-        );
+        .catch(() => dispatch({type: TRANSFER_NAME_STATUS, payload: ''}));
       break;
     case 'mint':
       dispatch({
@@ -99,7 +92,7 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
         payload: 'success',
       });
       dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
-      mintToken(labelHash, network)
+      mintToken(labelHash, network, web3)
         .then(() =>
           dispatch({
             type: MINT_TOKEN_STATUS,
@@ -144,11 +137,12 @@ export const untokenizeSubmitTransaction = (labelHashOrDomain = '') => async (
   getState,
 ) => {
   const network = getState().account.network;
+  const web3 = getState().account.web3;
   const labelHash = labelHashOrDomain.startsWith('0x')
     ? labelHashOrDomain
     : Web3.utils.keccak256(labelHashOrDomain.replace('.eth', ''));
   dispatch({type: BURN_TOKEN_STATUS, payload: 'pending'});
-  unmintToken(labelHash, network)
+  unmintToken(labelHash, network, web3)
     .then(() => dispatch({type: BURN_TOKEN_STATUS, payload: 'success'}))
     .catch(() => dispatch({type: BURN_TOKEN_STATUS, payload: ''}));
 };
@@ -168,22 +162,27 @@ export const transferUpdateRecipient = (recipient = '') => ({
 
 export const transferSubmitTransaction = (
   labelHashOrDomain = '',
+  nameOrAddr = '',
 ) => async (dispatch, getState) => {
-  if (labelHashOrDomain.startsWith('0x') && !isValidAddress(labelHashOrDomain)) {
+  if (
+    labelHashOrDomain.startsWith('0x') &&
+    !isValidAddress(labelHashOrDomain)
+  ) {
     dispatch(notificationShow(`Address is invalid`, true));
     return;
   }
+  const web3 = getState().account.web3;
   const network = getState().account.network;
   const labelHash = labelHashOrDomain.startsWith('0x')
     ? labelHashOrDomain
     : Web3.utils.keccak256(labelHashOrDomain.replace('.eth', ''));
-  const recipient = await resolveNameOrAddr(labelHashOrDomain, network);
+  const recipient = await resolveNameOrAddr(nameOrAddr, network);
   if (!recipient) {
     dispatch(notificationShow(`Couldn't resolve ENS domain`, true));
     return;
   }
   dispatch({type: TRANSFER_TOKEN_STATUS, payload: 'pending'});
-  transferToken(labelHash, recipient, network)
+  transferToken(labelHash, recipient, network, web3)
     .then(() => dispatch({type: TRANSFER_TOKEN_STATUS, payload: 'success'}))
     .catch(() => dispatch({type: TRANSFER_TOKEN_STATUS, payload: ''}));
 };
@@ -205,10 +204,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case TOKENIZE_UPDATE_DOMAIN:
-      return {
-        ...state,
-        domain: action.payload,
-      };
+      return {...state, domain: action.payload};
     case UNTTOKENIZE_UPDATE_DOMAIN:
       return {
         ...state,
@@ -222,30 +218,17 @@ export default (state = INITIAL_STATE, action) => {
         domain: action.payload.domain,
       };
     case TRANSFER_UPDATE_RECIPIENT:
-      return {
-        ...state,
-        recipient: action.payload,
-      };
+      return {...state, recipient: action.payload};
     case TRANSFER_NAME_STATUS:
-      return {
-        ...state,
-        transferNameStatus: action.payload,
-      };
+      return {...state, transferNameStatus: action.payload};
+    case TRANSFER_TOKEN_STATUS:
+      return {...state, transferTokenStatus: action.payload};
     case MINT_TOKEN_STATUS:
-      return {
-        ...state,
-        mintTokenStatus: action.payload,
-      };
+      return {...state, mintTokenStatus: action.payload};
     case BURN_TOKEN_STATUS:
-      return {
-        ...state,
-        burnTokenStatus: action.payload,
-      };
+      return {...state, burnTokenStatus: action.payload};
     case TOKENIZE_CLEAR_STATE:
-      return {
-        ...state,
-        ...INITIAL_STATE,
-      };
+      return {...state, ...INITIAL_STATE};
     default:
       return state;
   }
