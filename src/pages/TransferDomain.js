@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
 import BaseLayout from '../layouts/base';
 import TransactionStatus from '../components/TransactionStatus';
@@ -9,7 +9,7 @@ import Button from '../components/Button';
 import {
   tokenizeClearState,
   transferSubmitTransaction,
-  transferUpdateRecipient
+  transferUpdateRecipient,
 } from '../reducers/_tokenize';
 
 const StyledForm = styled(Form)`
@@ -69,7 +69,7 @@ class TransferDomain extends Component {
     this.props.tokenizeClearState();
   }
   render = () => {
-    const { domain, labelHash } = this.props;
+    const {domain, labelHash} = this.props;
     return (
       <BaseLayout>
         <StyledWrapper>
@@ -77,15 +77,18 @@ class TransferDomain extends Component {
           <StyledSubHeader>
             <StyledForm
               onSubmit={() =>
-                this.props.transferSubmitTransaction(this.props.domain)
-            }
+                this.props.transferSubmitTransaction(
+                  this.props.domain,
+                  this.props.recipient,
+                )
+              }
             >
               <Input
                 label=""
                 placeholder="Recipient"
                 type="text"
                 value={this.props.recipient}
-                onChange={({ target }) =>
+                onChange={({target}) =>
                   this.props.transferUpdateRecipient(target.value)
                 }
               />
@@ -104,14 +107,15 @@ class TransferDomain extends Component {
   };
 }
 
-const reduxProps = ({ tokenize }) => ({
+const reduxProps = ({tokenize}) => ({
   labelHash: tokenize.labelHash,
   domain: tokenize.domain,
   recipient: tokenize.recipient,
-  burnTokenStatus: tokenize.burnTokenStatus
+  burnTokenStatus: tokenize.burnTokenStatus,
+  transferTokenStatus: tokenize.transferTokenStatus,
 });
 
 export default connect(
   reduxProps,
-  { transferSubmitTransaction, transferUpdateRecipient, tokenizeClearState }
+  {transferSubmitTransaction, transferUpdateRecipient, tokenizeClearState},
 )(TransferDomain);
