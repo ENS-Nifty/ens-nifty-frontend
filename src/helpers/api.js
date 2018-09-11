@@ -23,6 +23,17 @@ export const apiGetMetamaskNetwork = () =>
   });
 
 /**
+ * @desc get portis selected network
+ * @return {Promise}
+ */
+export const apiGetPortisNetwork = web3 =>
+  new Promise((resolve, reject) => {
+    web3.eth.net
+      .getNetworkType()
+      .then(network => resolve(network === 'main' ? 'mainnet' : network));
+  });
+
+/**
  * Configuration for balance api
  * @type axios instance
  */
@@ -31,8 +42,8 @@ const api = axios.create({
   timeout: 30000, // 30 secs
   headers: {
     'Content-Type': 'application/json',
-    Accept: 'application/json'
-  }
+    Accept: 'application/json',
+  },
 });
 
 /**
@@ -45,7 +56,7 @@ const api = axios.create({
 export const apiGetTransactionData = (
   address = '',
   network = 'mainnet',
-  page = 1
+  page = 1,
 ) => api.get(`/get_transactions/${network}/${address}/${page}`);
 
 /**

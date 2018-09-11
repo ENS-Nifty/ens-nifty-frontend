@@ -1,13 +1,13 @@
-import {web3MetamaskSendTransaction, web3Instance} from '../web3';
+import {web3SendTransaction, web3Instance} from '../web3';
 import registrarJson from './abi/registrar.json';
 import addresses from './config/addresses';
 
-export async function transferName(labelHash, network) {
+export async function transferName(labelHash, network, web3) {
   const registrarContract = new web3Instance.eth.Contract(
     registrarJson,
     addresses[network].registrar,
   );
-  const address = window.web3.eth.defaultAccount;
+  const address = web3.eth.defaultAccount;
   const data = registrarContract.methods
     .transfer(labelHash, addresses[network].nifty)
     .encodeABI();
@@ -15,7 +15,7 @@ export async function transferName(labelHash, network) {
   const gasLimit = await registrarContract.methods
     .transfer(labelHash, addresses[network].nifty)
     .estimateGas({from: address, value: '0'});
-  return web3MetamaskSendTransaction({
+  return web3SendTransaction(web3, {
     from: address,
     to: addresses[network].registrar,
     data,

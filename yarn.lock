@@ -5795,6 +5795,10 @@ portfinder@^1.0.9:
     debug "^2.2.0"
     mkdirp "0.5.x"
 
+portis@^1.2.11:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/portis/-/portis-1.2.11.tgz#d2e2ebe33954df8441214be669d60f354f5dd0a2"
+
 posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
