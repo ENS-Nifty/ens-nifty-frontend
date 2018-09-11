@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import {connect} from 'react-redux';
-import BaseLayout from '../layouts/base';
-import Button from '../components/Button';
-import {metamaskConnectInit} from '../reducers/_metamask';
-import {portisConnectInit} from '../reducers/_portis';
-import {fonts} from '../styles';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { connect } from "react-redux";
+import BaseLayout from "../layouts/base";
+import Button from "../components/Button";
+import Column from "../components/Column";
+import { metamaskConnectInit } from "../reducers/_metamask";
+import { portisConnectInit } from "../reducers/_portis";
+import { fonts } from "../styles";
 
 const StyledLanding = styled.div`
   width: 100%;
@@ -17,11 +18,17 @@ const StyledLanding = styled.div`
   align-items: center;
 `;
 
-const ConnectButton = styled(Button)`
+const StyledButtonContainer = styled(Column)`
+  width: 200px;
+  margin: 50px 0;
+`;
+
+const StyledConnectButton = styled(Button)`
   border-radius: 8px;
   font-size: ${fonts.size.medium};
   height: 44px;
-  margin: 50px 0;
+  width: 100%;
+  margin: 12px 0;
 `;
 
 class Home extends Component {
@@ -33,20 +40,22 @@ class Home extends Component {
           <br />
           and trade it as an NFT
         </h1>
-        <ConnectButton
-          left
-          color="orange"
-          onClick={this.props.metamaskConnectInit}
-        >
-          {'Connect to Metamask'}
-        </ConnectButton>
-        <ConnectButton
-          left
-          color="orange"
-          onClick={this.props.portisConnectInit}
-        >
-          {'Connect to Portis'}
-        </ConnectButton>
+        <StyledButtonContainer>
+          <StyledConnectButton
+            left
+            color="orange"
+            onClick={this.props.metamaskConnectInit}
+          >
+            {"Connect to Metamask"}
+          </StyledConnectButton>
+          <StyledConnectButton
+            left
+            color="portis"
+            onClick={this.props.portisConnectInit}
+          >
+            {"Connect to Portis"}
+          </StyledConnectButton>
+        </StyledButtonContainer>
       </StyledLanding>
     </BaseLayout>
   );
@@ -54,13 +63,13 @@ class Home extends Component {
 
 Home.propTypes = {
   metamaskConnectInit: PropTypes.func.isRequired,
-  portisConnectInit: PropTypes.func.isRequired,
+  portisConnectInit: PropTypes.func.isRequired
 };
 
 export default connect(
   null,
   {
     metamaskConnectInit,
-    portisConnectInit,
-  },
+    portisConnectInit
+  }
 )(Home);
