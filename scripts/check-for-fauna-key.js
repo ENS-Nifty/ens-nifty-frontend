@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 var util = require('util');
 var exec = require('child_process').exec;
+require('dotenv').config()
 
 function clear() {
   exec('clear', function(error, stdout, stderr) {

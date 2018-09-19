@@ -1,5 +1,6 @@
 import web3Utils from 'web3-utils';
 import faunadb, {query as q} from 'faunadb';
+require('dotenv').config()
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_SECRET,
 });
@@ -25,5 +26,5 @@ exports.handler = (event, context, cb) => {
         body: 'OK',
       }),
     )
-    .catch(err => cb(null, {statusCode: 400, body: 'Failed to write label'}));
+    .catch(err => cb(null, {statusCode: 400, body: err.name + ':' + err.message}));
 };

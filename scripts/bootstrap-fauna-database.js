@@ -2,6 +2,8 @@
 const readline = require('readline');
 const faunadb = require('faunadb');
 const chalk = require('chalk');
+require('dotenv').config()
+
 const insideNetlify = insideNetlifyBuildContext();
 const q = faunadb.query;
 
@@ -11,6 +13,7 @@ console.log(chalk.cyan('Creating your FaunaDB Database...\n'));
 if (!process.env.FAUNADB_SECRET) {
   console.log(
     chalk.yellow('Required FAUNADB_SECRET enviroment variable not found.'),
+    process.exit(1);
   );
   if (insideNetlify) {
     console.log(
