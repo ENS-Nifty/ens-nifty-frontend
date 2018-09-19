@@ -57,7 +57,6 @@ export async function getTokensOwned(owner, network) {
     addresses[network].nifty,
   );
   const tokens = [];
-
   const nbTokens = await niftyContract.methods.balanceOf(owner).call();
   for (let i = 0; i < nbTokens; i++) {
     const tokenId = await niftyContract.methods

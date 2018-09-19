@@ -26,18 +26,14 @@ export async function transferName(labelHash, network, web3) {
 }
 
 export function labelHashToName(labelHash) {
-  return fetch(
-    `https://buyethdomains.com/api/reverse-lookup/label-to-name?label=${labelHash}`,
-  ).then(res => res.json());
+  return fetch(`/.netlify/functions/retrieve-label?hash=${labelHash}`)
+    .then(res => res.text())
+    .catch(e => '');
 }
 
-export function addNameToLabelHash(name) {
-  fetch(`https://buyethdomains.com/api/reverse-lookup/new`, {
+export function addlabelToDb(label) {
+  fetch(`/.netlify/functions/add-label`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    mode: 'cors',
-    body: JSON.stringify({name}),
-  });
+    body: JSON.stringify({label}),
+  }).catch(e => {});
 }

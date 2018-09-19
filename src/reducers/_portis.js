@@ -23,7 +23,6 @@ let accountInterval = null;
 
 export const updateAccountAddress = accountAddress => dispatch => {
   if (accountAddress) {
-    console.log('ACCOUNT ADDRESS', accountAddress);
     dispatch(accountUpdateAccountAddress(accountAddress, 'PORTIS'));
     window.browserHistory.push('/domains');
   }
