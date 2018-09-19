@@ -12,8 +12,7 @@ console.log(chalk.cyan('Creating your FaunaDB Database...\n'));
 // 1. Check for required enviroment variables
 if (!process.env.FAUNADB_SECRET) {
   console.log(
-    chalk.yellow('Required FAUNADB_SECRET enviroment variable not found.'),
-    process.exit(1);
+    chalk.yellow('Required FAUNADB_SECRET enviroment variable not found.')
   );
   if (insideNetlify) {
     console.log(
