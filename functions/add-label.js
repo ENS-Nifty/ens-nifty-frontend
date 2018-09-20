@@ -1,6 +1,8 @@
 import web3Utils from 'web3-utils';
 import faunadb, {query as q} from 'faunadb';
+
 require('dotenv').config()
+
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_SECRET,
 });

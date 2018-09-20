@@ -72,7 +72,6 @@ export async function transferToken(tokenId, to, network, web3) {
     niftyJson,
     addresses[network].nifty,
   );
-  console.log('asdfasdf');
   const address = web3.eth.defaultAccount;
   const data = niftyContract.methods
     .transferFrom(address, to, tokenId)
