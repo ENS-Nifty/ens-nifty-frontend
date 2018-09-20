@@ -2,7 +2,7 @@ export default {
   mainnet: {
     ens: '0x314159265dD8dbb310642f98f50C066173C1259b',
     registrar: '0x6090A6e47849629b7245Dfa1Ca21D94cd15878Ef',
-    nifty: '0xb52511f49f3ed76ad1f77998985ee452f29ba0fd',
+    nifty: '0xf290d6422c64222dabe98c5f4acd646acab6f81f',
   },
   ropsten: {
     ens: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
