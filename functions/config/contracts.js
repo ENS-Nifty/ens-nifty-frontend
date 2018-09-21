@@ -1,18 +1,19 @@
-import Web3 from 'web3';
+import ethers from 'ethers';
 import addresses from './addresses';
 import ensJson from '../abi/ens';
 import registrarJson from '../abi/registrar';
-import deedJson from '../abi/deed';
 import niftyJson from '../abi/nifty';
+const providers = require('ethers').providers;
 
-const web3 = new Web3(`https://mainnet.infura.io/mew`);
+const network = providers.networks.mainnet;
+const provider = new ethers.providers.InfuraProvider(network);
 
-const ensContract = new web3.eth.Contract(ensJson, addresses.ens);
-const registrarContract = new web3.eth.Contract(
-  registrarJson,
+const ensContract = new ethers.Contract(addresses.ens, ensJson, provider);
+const registrarContract = new ethers.Contract(
   addresses.registrar,
+  registrarJson,
+  provider,
 );
-const niftyContract = new web3.eth.Contract(niftyJson, addresses.nifty);
-const deedContract = new web3.eth.Contract(deedJson);
+const niftyContract = new ethers.Contract(addresses.nifty, niftyJson, provider);
 
-export {niftyContract, ensContract, registrarContract, deedContract};
+export {niftyContract, ensContract, registrarContract};

@@ -5,8 +5,4 @@ module.exports = {
   node: {
     __dirname: true,
   },
-  externals: {
-  electron: "electron",
-  scrypt: "scrypt"
-}
 };

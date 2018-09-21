@@ -1,4 +1,4 @@
-import Web3 from 'web3';
+import {utils as ethUtils} from 'ethers';
 
 export function namehash(name) {
   const labels = name.split('.');
@@ -13,9 +13,9 @@ export function namehash(name) {
     .reverse()
     .reduce(
       (a, v) =>
-        Web3.utils.keccak256(
+        ethUtils.id(
           Buffer.from(
-            a.replace('0x', '') + Web3.utils.keccak256(v).replace('0x', ''),
+            a.replace('0x', '') + ethUtils.id(v).replace('0x', ''),
             'hex',
           ),
         ),
@@ -25,7 +25,7 @@ export function namehash(name) {
 
 export function subnodeHash(...labels) {
   return labels.reduce((a, v) =>
-    Web3.utils.keccak256(
+    ethUtils.id(
       Buffer.from(a.replace('0x', '') + v.replace('0x', ''), 'hex'),
     ),
   );
