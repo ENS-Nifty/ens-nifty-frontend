@@ -1,2 +1,3 @@
 [build]
   functions = "functions-build"
+  AWS_LAMBDA_JS_RUNTIME = "nodejs9.11"
