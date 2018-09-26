@@ -2,7 +2,7 @@
 const readline = require('readline');
 const faunadb = require('faunadb');
 const chalk = require('chalk');
-require('dotenv').config()
+require('dotenv').config();
 
 const insideNetlify = insideNetlifyBuildContext();
 const q = faunadb.query;
@@ -12,7 +12,7 @@ console.log(chalk.cyan('Creating your FaunaDB Database...\n'));
 // 1. Check for required enviroment variables
 if (!process.env.FAUNADB_SECRET) {
   console.log(
-    chalk.yellow('Required FAUNADB_SECRET enviroment variable not found.')
+    chalk.yellow('Required FAUNADB_SECRET enviroment variable not found.'),
   );
   if (insideNetlify) {
     console.log(
@@ -69,7 +69,9 @@ function createFaunaDB(key) {
             name: 'domain_by_label_hash',
             source: q.Class('domains'),
             terms: [{field: ['data', 'hash']}],
-            values: [{field: ['data', 'label']}],
+            values: [
+              {field: ['data', 'label', 'lockedEther', 'dateRegistered']},
+            ],
           });
         });
     })

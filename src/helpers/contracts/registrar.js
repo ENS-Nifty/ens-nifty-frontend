@@ -31,8 +31,15 @@ export function labelHashToName(labelHash) {
     .catch(e => '');
 }
 
-export function addlabelToDb(label) {
+export function addLabelToDb(label) {
   fetch(`/.netlify/functions/add-label`, {
+    method: 'POST',
+    body: JSON.stringify({label}),
+  }).catch(e => {});
+}
+
+export function addMetadataToDb(label) {
+  fetch(`/.netlify/functions/add-metadata`, {
     method: 'POST',
     body: JSON.stringify({label}),
   }).catch(e => {});

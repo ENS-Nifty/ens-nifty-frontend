@@ -1,6 +1,8 @@
-import web3Utils from 'web3-utils';
+import {utils as ethUtils} from 'ethers';
 import faunadb, {query as q} from 'faunadb';
-require('dotenv').config()
+
+require('dotenv').config();
+
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_SECRET,
 });
@@ -13,7 +15,7 @@ exports.handler = (event, context, cb) => {
     });
   }
   const label = JSON.parse(event.body).label;
-  const hash = web3Utils.soliditySha3(label);
+  const hash = ethUtils.id(label);
   return client
     .query(
       q.Create(q.Class('domains'), {
@@ -26,5 +28,7 @@ exports.handler = (event, context, cb) => {
         body: 'OK',
       }),
     )
-    .catch(err => cb(null, {statusCode: 400, body: err.name + ':' + err.message}));
+    .catch(err =>
+      cb(null, {statusCode: 400, body: err.name + ':' + err.message}),
+    );
 };

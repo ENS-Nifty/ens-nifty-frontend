@@ -2,7 +2,11 @@ import {sha3} from '../helpers/web3';
 import {formatENSDomain} from '../helpers/utilities';
 import {updateLocal} from '../helpers/localstorage';
 import {isValidAddress} from '../helpers/validators';
-import {transferName, addlabelToDb} from '../helpers/contracts/registrar';
+import {
+  transferName,
+  addLabelToDb,
+  addMetadataToDb,
+} from '../helpers/contracts/registrar';
 import {
   mintToken,
   getNextTokenizeStep,
@@ -61,7 +65,8 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
   const label = domain.match(/(.*)\.eth/)[1];
   const labelHash = sha3(label);
   updateLocal('domains', [{domain, label, labelHash}]);
-  addlabelToDb(label);
+  addLabelToDb(label);
+  addMetadataToDb(label);
   const step = await getNextTokenizeStep(labelHash, network, web3);
   switch (step) {
     case 'transfer':
