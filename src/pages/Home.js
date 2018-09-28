@@ -7,7 +7,7 @@ import Button from "../components/Button";
 import Column from "../components/Column";
 import { metamaskConnectInit } from "../reducers/_metamask";
 import { portisConnectInit } from "../reducers/_portis";
-import { walletconnectInit } from "../reducers/_walletconnect";
+import { walletconnectConnectInit } from "../reducers/_walletconnect";
 import { fonts } from "../styles";
 
 const StyledLanding = styled.div`
@@ -59,7 +59,7 @@ class Home extends Component {
           <StyledConnectButton
             left
             color="walletconnect"
-            onClick={this.props.walletconnectInit}
+            onClick={this.props.walletconnectConnectInit}
           >
             {"Connect to WalletConnect"}
           </StyledConnectButton>
@@ -72,7 +72,7 @@ class Home extends Component {
 Home.propTypes = {
   metamaskConnectInit: PropTypes.func.isRequired,
   portisConnectInit: PropTypes.func.isRequired,
-  walletconnectInit: PropTypes.func.isRequired
+  walletconnectConnectInit: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -80,6 +80,6 @@ export default connect(
   {
     metamaskConnectInit,
     portisConnectInit,
-    walletconnectInit
+    walletconnectConnectInit
   }
 )(Home);
