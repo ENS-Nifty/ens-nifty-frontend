@@ -28,7 +28,10 @@
     "redux-thunk": "^2.3.0",
     "scrypt": "^6.0.3",
     "styled-components": "^3.4.2",
-    "web3": "1.0.0-beta.36",
+    "walletconnect-qrcode-modal": "^0.7.0",
+    "walletconnect-web3-subprovider": "^0.7.0",
+    "web3": "^1.0.0-beta.36",
+    "web3-provider-engine": "^14.0.6",
     "web3-utils": "^1.0.0-beta.36"
   },
   "scripts": {

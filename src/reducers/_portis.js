@@ -19,8 +19,6 @@ const PORTIS_UPDATE_PORTIS_ACCOUNT = 'portis/PORTIS_UPDATE_PORTIS_ACCOUNT';
 
 // -- Actions --------------------------------------------------------------- //
 
-let accountInterval = null;
-
 export const updateAccountAddress = accountAddress => dispatch => {
   if (accountAddress) {
     dispatch(accountUpdateAccountAddress(accountAddress, 'PORTIS'));
@@ -75,10 +73,6 @@ export const portisConnectInit = () => (dispatch, getState) => {
       dispatch(notificationShow('Failed To Connect To Portis', true));
       dispatch({type: PORTIS_CONNECT_FAILURE});
     });
-};
-
-export const portisClearIntervals = () => dispatch => {
-  clearInterval(accountInterval);
 };
 
 // -- Reducer --------------------------------------------------------------- //
