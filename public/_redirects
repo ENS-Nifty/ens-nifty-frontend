@@ -1,3 +1,3 @@
-/metadata /.netlify/functions/metadata 200
-/retrieve-label /.netlify/functions/retrieve-label 200
+/metadata/:hash /.netlify/functions/metadata?hash=:hash 200
+/retrieve-label/:hash /.netlify/functions/retrieve-label?hash=:hash 200
 /*    /index.html   200
