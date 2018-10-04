@@ -1,16 +1,2 @@
 [build]
   functions = "functions-build"
-  
-[[redirects]]
-from = "/metadata"
-query = {hash = ":hash"}
-to = "/.netlify/functions/metadata?hash=:hash"
-status = 301
-force = false
-
-[[redirects]]
-from = "/retrieve-label"
-query = {hash = ":hash"}
-to = "/.netlify/functions/retrieve-label?hash=:hash"
-status = 301
-force = false
