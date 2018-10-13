@@ -42,8 +42,8 @@ const api = axios.create({
   timeout: 30000, // 30 secs
   headers: {
     'Content-Type': 'application/json',
-    Accept: 'application/json',
-  },
+    Accept: 'application/json'
+  }
 });
 
 /**
@@ -56,7 +56,7 @@ const api = axios.create({
 export const apiGetTransactionData = (
   address = '',
   network = 'mainnet',
-  page = 1,
+  page = 1
 ) => api.get(`/get_transactions/${network}/${address}/${page}`);
 
 /**
@@ -72,4 +72,4 @@ export const apiGetTransaction = (txnHash = '', network = 'mainnet') =>
  * @desc get ethereum gas prices
  * @return {Promise}
  */
-export const apiGetGasPrices = () => api.get(`/get_eth_gas_prices`);
+export const apiGetGasPrices = () => api.get('/get_eth_gas_prices');

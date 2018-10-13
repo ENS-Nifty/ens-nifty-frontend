@@ -1,11 +1,11 @@
-import {web3SendTransaction, web3Instance} from '../web3';
+import { web3SendTransaction, web3Instance } from '../web3';
 import registrarJson from './abi/registrar.json';
 import addresses from './config/addresses';
 
 export async function transferName(labelHash, network, web3) {
   const registrarContract = new web3Instance.eth.Contract(
     registrarJson,
-    addresses[network].registrar,
+    addresses[network].registrar
   );
   const address = web3.eth.defaultAccount;
   const data = registrarContract.methods
@@ -14,14 +14,14 @@ export async function transferName(labelHash, network, web3) {
   const gasPrice = web3Instance.utils.toWei('10', 'gwei');
   const gasLimit = await registrarContract.methods
     .transfer(labelHash, addresses[network].nifty)
-    .estimateGas({from: address, value: '0'});
+    .estimateGas({ from: address, value: '0' });
   return web3SendTransaction(web3, {
     from: address,
     to: addresses[network].registrar,
     data,
     value: '0',
     gasPrice,
-    gasLimit,
+    gasLimit
   }).then(txHash => web3Instance.eth.getTransactionReceiptMined(txHash));
 }
 
@@ -32,15 +32,15 @@ export function labelHashToName(labelHash) {
 }
 
 export function addLabelToDb(label) {
-  fetch(`/.netlify/functions/add-label`, {
+  fetch('/.netlify/functions/add-label', {
     method: 'POST',
-    body: JSON.stringify({label}),
+    body: JSON.stringify({ label })
   }).catch(e => {});
 }
 
 export function addMetadataToDb(label) {
-  fetch(`/.netlify/functions/add-metadata`, {
+  fetch('/.netlify/functions/add-metadata', {
     method: 'POST',
-    body: JSON.stringify({label}),
+    body: JSON.stringify({ label })
   }).catch(e => {});
 }

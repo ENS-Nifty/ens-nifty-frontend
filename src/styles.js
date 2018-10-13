@@ -1,52 +1,52 @@
 export const colors = {
-  white: "255, 255, 255",
-  whiteTransparent: "255, 255, 255, 0.8",
-  purpleText: "50, 50, 93",
-  purpleTextTransparent: "50, 50, 93, 0.7",
-  black: "0, 0, 0",
-  dark: "12, 12, 13",
-  darkGrey: "113, 119, 138",
-  mediumGrey: "161, 165, 179",
-  headerTitle: "170, 175, 189",
-  grey: "169, 169, 188",
-  brightGreen: "18, 184, 120",
-  brightGreenHover: "21, 193, 127",
-  lightGrey: "247, 248, 252",
-  blue: "101, 127, 230",
-  blueHover: "108, 135, 245",
-  blueActive: "90, 113, 204",
-  lightBlue: "197, 242, 255",
-  fadedBlue: "103, 129, 230",
-  gold: "250, 188, 45",
-  orange: "246, 133, 27",
-  green: "0, 153, 77",
-  lightGreen: "84, 209, 146",
-  red: "214, 75, 71",
-  ethplorer: "80, 102, 133",
-  etherscan: "2, 92, 144",
-  walletconnect: "64, 153, 255",
-  ledger: "47, 49, 55",
-  bodyBackground: "44,47,56",
-  darkText: "43,45,51",
-  rowDivider: "224,224,224,0.24",
-  background: "25, 45, 74",
-  portis: "15, 172, 243"
+  white: '255, 255, 255',
+  whiteTransparent: '255, 255, 255, 0.8',
+  purpleText: '50, 50, 93',
+  purpleTextTransparent: '50, 50, 93, 0.7',
+  black: '0, 0, 0',
+  dark: '12, 12, 13',
+  darkGrey: '113, 119, 138',
+  mediumGrey: '161, 165, 179',
+  headerTitle: '170, 175, 189',
+  grey: '169, 169, 188',
+  brightGreen: '18, 184, 120',
+  brightGreenHover: '21, 193, 127',
+  lightGrey: '247, 248, 252',
+  blue: '101, 127, 230',
+  blueHover: '108, 135, 245',
+  blueActive: '90, 113, 204',
+  lightBlue: '197, 242, 255',
+  fadedBlue: '103, 129, 230',
+  gold: '250, 188, 45',
+  orange: '246, 133, 27',
+  green: '0, 153, 77',
+  lightGreen: '84, 209, 146',
+  red: '214, 75, 71',
+  ethplorer: '80, 102, 133',
+  etherscan: '2, 92, 144',
+  walletconnect: '64, 153, 255',
+  ledger: '47, 49, 55',
+  bodyBackground: '44,47,56',
+  darkText: '43,45,51',
+  rowDivider: '224,224,224,0.24',
+  background: '25, 45, 74',
+  portis: '15, 172, 243'
 };
 
 export const fonts = {
   size: {
-    tiny: "10px",
-    small: "12px",
-    smedium: "14px",
-    medium: "15px",
-    large: "18px",
-    big: "22px",
-    h1: "42px",
-    h2: "32px",
-    h3: "24px",
-    h4: "20px",
-    h5: "17px",
-    h6: "14px"
+    tiny: '10px',
+    small: '12px',
+    smedium: '14px',
+    medium: '15px',
+    large: '18px',
+    big: '22px',
+    h1: '42px',
+    h2: '32px',
+    h3: '24px',
+    h4: '20px',
+    h5: '17px',
+    h6: '14px'
   },
   weight: {
     normal: 400,
@@ -65,43 +65,43 @@ export const fonts = {
 
 export const shadows = {
   soft:
-    "0 4px 6px 0 rgba(50, 50, 93, 0.11), 0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)",
+    '0 4px 6px 0 rgba(50, 50, 93, 0.11), 0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)',
   medium:
-    "0 3px 6px 0 rgba(0, 0, 0, 0.06), 0 0 1px 0 rgba(50, 50, 93, 0.02), 0 5px 10px 0 rgba(59, 59, 92, 0.08)",
+    '0 3px 6px 0 rgba(0, 0, 0, 0.06), 0 0 1px 0 rgba(50, 50, 93, 0.02), 0 5px 10px 0 rgba(59, 59, 92, 0.08)',
   big:
-    "0 15px 35px 0 rgba(50, 50, 93, 0.06), 0 5px 15px 0 rgba(50, 50, 93, 0.15)",
+    '0 15px 35px 0 rgba(50, 50, 93, 0.06), 0 5px 15px 0 rgba(50, 50, 93, 0.15)',
   hover:
-    "0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)"
+    '0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)'
 };
 
 export const transitions = {
-  short: "all 0.1s ease-in-out",
-  base: "all 0.2s ease-in-out",
-  long: "all 0.3s ease-in-out",
-  button: "0.15s ease",
-  buttonPress: "0.15s ease"
+  short: 'all 0.1s ease-in-out',
+  base: 'all 0.2s ease-in-out',
+  long: 'all 0.3s ease-in-out',
+  button: '0.15s ease',
+  buttonPress: '0.15s ease'
 };
 
 export const responsive = {
   short: {
-    min: "min-height: 479px",
-    max: "max-height: 480px"
+    min: 'min-height: 479px',
+    max: 'max-height: 480px'
   },
   xs: {
-    min: "min-width: 479px",
-    max: "max-width: 480px"
+    min: 'min-width: 479px',
+    max: 'max-width: 480px'
   },
   sm: {
-    min: "min-width: 639px",
-    max: "max-width: 640px"
+    min: 'min-width: 639px',
+    max: 'max-width: 640px'
   },
   md: {
-    min: "min-width: 959px",
-    max: "max-width: 960px"
+    min: 'min-width: 959px',
+    max: 'max-width: 960px'
   },
   lg: {
-    min: "min-width: 1023px",
-    max: "max-width: 1024px"
+    min: 'min-width: 1023px',
+    max: 'max-width: 1024px'
   }
 };
 

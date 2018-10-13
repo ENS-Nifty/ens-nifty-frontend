@@ -21,7 +21,7 @@ const StyledFirstLine = styled.div`
   position: absolute;
   width: 60%;
   border: 1px solid rgb(${colors.black});
-  transition: ${transitions.base}
+  transition: ${transitions.base};
 `;
 
 const StyledSecondLine = styled.div`

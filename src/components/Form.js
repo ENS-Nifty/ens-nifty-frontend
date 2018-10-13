@@ -12,7 +12,7 @@ class Form extends Component {
     document.activeElement.blur();
   }
 
-  onSubmitForm = (event) => {
+  onSubmitForm = event => {
     event.preventDefault();
     this.props.onSubmit(event);
   };
@@ -24,7 +24,7 @@ class Form extends Component {
         {children}
       </StyledForm>
     );
-  }
+  };
 }
 
 Form.propTypes = {

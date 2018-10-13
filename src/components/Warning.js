@@ -76,15 +76,15 @@ class Warning extends Component {
 
 Warning.propTypes = {
   show: PropTypes.bool.isRequired,
-  active: PropTypes.array.isRequired,
+  active: PropTypes.array.isRequired
 };
 
 const reduxProps = ({ warning }) => ({
   show: warning.show,
-  active: warning.active,
+  active: warning.active
 });
 
 export default connect(
   reduxProps,
-  null,
+  null
 )(Warning);

@@ -40,16 +40,16 @@ const Notification = ({ show, error, message, ...props }) => (
 Notification.propTypes = {
   show: PropTypes.bool.isRequired,
   error: PropTypes.bool.isRequired,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired
 };
 
 const reduxProps = ({ notification }) => ({
   error: notification.error,
   show: notification.show,
-  message: notification.message,
+  message: notification.message
 });
 
 export default connect(
   reduxProps,
-  null,
+  null
 )(Notification);

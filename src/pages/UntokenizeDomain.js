@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import BaseLayout from '../layouts/base';
 import TransactionStatus from '../components/TransactionStatus';
 import Button from '../components/Button';
 import {
   untokenizeSubmitTransaction,
-  tokenizeClearState,
+  tokenizeClearState
 } from '../reducers/_tokenize';
 
 const StyledSubHeader = styled.div`
@@ -54,7 +54,7 @@ class TokenizeENS extends Component {
   }
 
   render = () => {
-    const {domain, labelHash} = this.props;
+    const { domain, labelHash } = this.props;
     return (
       <BaseLayout>
         <StyledWrapper>
@@ -83,13 +83,13 @@ class TokenizeENS extends Component {
   };
 }
 
-const reduxProps = ({tokenize}) => ({
+const reduxProps = ({ tokenize }) => ({
   labelHash: tokenize.labelHash,
   domain: tokenize.domain,
-  burnTokenStatus: tokenize.burnTokenStatus,
+  burnTokenStatus: tokenize.burnTokenStatus
 });
 
 export default connect(
   reduxProps,
-  {untokenizeSubmitTransaction, tokenizeClearState},
+  { untokenizeSubmitTransaction, tokenizeClearState }
 )(TokenizeENS);

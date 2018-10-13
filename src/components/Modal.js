@@ -16,16 +16,16 @@ const StyledModal = styled.div`
   z-index: 2;
   will-change: opacity;
   background-color: rgba(${colors.black}, 0.7);
-  opacity: ${({ show }) => show ? 1 : 0};
-  visibility: ${({ show }) => show ? 'visible' : 'hidden'};
-  pointer-events: ${({ show }) => show ? 'auto' : 'none'};
+  opacity: ${({ show }) => (show ? 1 : 0)};
+  visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
+  pointer-events: ${({ show }) => (show ? 'auto' : 'none')};
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 const StyledCard = styled.div`
-  position:relative;
+  position: relative;
   width: 100%;
   max-width: 500px;
   padding: 15px;

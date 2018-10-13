@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { connect } from "react-redux";
-import BaseLayout from "../layouts/base";
-import Button from "../components/Button";
-import Column from "../components/Column";
-import { metamaskConnectInit } from "../reducers/_metamask";
-import { portisConnectInit } from "../reducers/_portis";
-import { walletconnectConnectInit } from "../reducers/_walletconnect";
-import { fonts } from "../styles";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { connect } from 'react-redux';
+import BaseLayout from '../layouts/base';
+import Button from '../components/Button';
+import Column from '../components/Column';
+import { metamaskConnectInit } from '../reducers/_metamask';
+import { portisConnectInit } from '../reducers/_portis';
+import { walletconnectConnectInit } from '../reducers/_walletconnect';
+import { fonts } from '../styles';
 
 const StyledLanding = styled.div`
   width: 100%;
@@ -47,21 +47,21 @@ class Home extends Component {
             color="orange"
             onClick={this.props.metamaskConnectInit}
           >
-            {"Connect to Metamask"}
+            {'Connect to Metamask'}
           </StyledConnectButton>
           <StyledConnectButton
             left
             color="portis"
             onClick={this.props.portisConnectInit}
           >
-            {"Connect to Portis"}
+            {'Connect to Portis'}
           </StyledConnectButton>
           <StyledConnectButton
             left
             color="walletconnect"
             onClick={this.props.walletconnectConnectInit}
           >
-            {"Connect to WalletConnect"}
+            {'Connect to WalletConnect'}
           </StyledConnectButton>
         </StyledButtonContainer>
       </StyledLanding>
