@@ -1,11 +1,14 @@
-import {parseError} from "../helpers/utilities";
-import {getWalletConnectWeb3, createWalletConnectSession} from '../helpers/walletconnect'
+import { parseError } from "../helpers/utilities";
+import {
+  walletConnectGetWeb3,
+  walletConnectCreateSession
+} from "../helpers/walletconnect";
 import {
   accountUpdateAccountAddress,
   accountUpdateNetwork,
   accountUpdateWeb3
 } from "./_account";
-import {notificationShow} from "./_notification";
+import { notificationShow } from "./_notification";
 
 // -- Constants ------------------------------------------------------------- //
 const WALLETCONNECT_CONNECT_REQUEST =
@@ -42,9 +45,9 @@ export const walletconnectUpdateWalletConnectAccount = address => (
   }
 };
 
-export const walletconnectConnectInit = () => (dispatch, getState) => {
+export const walletconnectConnectInit = () => async (dispatch, getState) => {
   const network = "mainnet";
-  const web3 = getWalletConnectWeb3(network)
+  const web3 = await walletConnectGetWeb3(network);
 
   const handleAccounts = accounts => {
     const accountAddress = accounts[0];
@@ -53,31 +56,31 @@ export const walletconnectConnectInit = () => (dispatch, getState) => {
     dispatch(accountUpdateNetwork(network));
     dispatch(accountUpdateWeb3(window.web3));
     dispatch(walletconnectUpdateWalletConnectAccount());
-  }
+  };
 
   dispatch({ type: WALLETCONNECT_CONNECT_REQUEST });
   web3.eth
     .getAccounts()
-    .then((err, accounts) => {
-      if (!accounts && !accounts.length) {
-        createWalletConnectSession()
-        .then(accounts => {
-          handleAccounts(accounts)
-        })
-        .catch((error) => {
-          const message = parseError(error);
-          dispatch(notificationShow(message, true));
-          dispatch({type: WALLETCONNECT_CONNECT_FAILURE});
-        })
-     } else {
-        handleAccounts(accounts)
+    .then(accounts => {
+      if (!accounts || !accounts.length) {
+        walletConnectCreateSession()
+          .then(accounts => {
+            handleAccounts(accounts);
+          })
+          .catch(error => {
+            const message = parseError(error);
+            dispatch(notificationShow(message, true));
+            dispatch({ type: WALLETCONNECT_CONNECT_FAILURE });
+          });
+      } else {
+        handleAccounts(accounts);
       }
     })
-    .catch((error) => {
+    .catch(error => {
       const message = parseError(error);
       dispatch(notificationShow(message, true));
-      dispatch({type: WALLETCONNECT_CONNECT_FAILURE});
-    })
+      dispatch({ type: WALLETCONNECT_CONNECT_FAILURE });
+    });
 };
 
 // -- Reducer --------------------------------------------------------------- //
