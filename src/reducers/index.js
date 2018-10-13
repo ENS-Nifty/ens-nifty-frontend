@@ -1,11 +1,11 @@
-import {combineReducers} from "redux";
-import account from "./_account";
-import metamask from "./_metamask";
-import walletconnect from "./_walletconnect";
-import portis from "./_portis";
-import notification from "./_notification";
-import tokenize from "./_tokenize";
-import warning from "./_warning";
+import { combineReducers } from 'redux';
+import account from './_account';
+import metamask from './_metamask';
+import walletconnect from './_walletconnect';
+import portis from './_portis';
+import notification from './_notification';
+import tokenize from './_tokenize';
+import warning from './_warning';
 
 export default combineReducers({
   account,

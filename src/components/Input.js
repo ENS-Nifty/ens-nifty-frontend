@@ -35,7 +35,7 @@ const StyledInput = styled.input`
   border: none;
   border-style: none;
   font-family: ${({ monospace }) =>
-    monospace ? `${fonts.family.SFMono}` : `inherit`};
+    monospace ? `${fonts.family.SFMono}` : 'inherit'};
   font-size: ${fonts.size.h6};
   font-weight: ${fonts.weight.semibold};
   font-style: normal;

@@ -1,19 +1,19 @@
-import Web3 from "web3";
-import WalletConnectProvider from "walletconnect-web3-provider";
-import WalletConnectQRCodeModal from "walletconnect-qrcode-modal";
+import Web3 from 'web3';
+import WalletConnectProvider from 'walletconnect-web3-provider';
+import WalletConnectQRCodeModal from 'walletconnect-qrcode-modal';
 
 let web3WalletConnect = null;
 
-export async function walletConnectGetWeb3(network = "mainnet") {
+export async function walletConnectGetWeb3(network = 'mainnet') {
   const provider = new WalletConnectProvider({
-    bridgeUrl: "https://test-bridge.walletconnect.org",
-    dappName: "ENS Nifty",
+    bridgeUrl: 'https://test-bridge.walletconnect.org',
+    dappName: 'ENS Nifty',
     rpcUrl: `https://${network}.infura.io/`
   });
 
   web3WalletConnect = new Web3(provider);
 
-  await web3WalletConnect.currentProvider.walletconnect.initSession()
+  await web3WalletConnect.currentProvider.walletconnect.initSession();
 
   return web3WalletConnect;
 }

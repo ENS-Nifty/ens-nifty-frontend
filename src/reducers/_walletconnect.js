@@ -1,34 +1,34 @@
-import { parseError } from "../helpers/utilities";
+import { parseError } from '../helpers/utilities';
 import {
   walletConnectGetWeb3,
   walletConnectCreateSession
-} from "../helpers/walletconnect";
+} from '../helpers/walletconnect';
 import {
   accountUpdateAccountAddress,
   accountUpdateNetwork,
   accountUpdateWeb3
-} from "./_account";
-import { notificationShow } from "./_notification";
+} from './_account';
+import { notificationShow } from './_notification';
 
 // -- Constants ------------------------------------------------------------- //
 const WALLETCONNECT_CONNECT_REQUEST =
-  "walletconnect/WALLETCONNECT_CONNECT_REQUEST";
+  'walletconnect/WALLETCONNECT_CONNECT_REQUEST';
 const WALLETCONNECT_CONNECT_SUCCESS =
-  "walletconnect/WALLETCONNECT_CONNECT_SUCCESS";
+  'walletconnect/WALLETCONNECT_CONNECT_SUCCESS';
 const WALLETCONNECT_CONNECT_FAILURE =
-  "walletconnect/WALLETCONNECT_CONNECT_FAILURE";
+  'walletconnect/WALLETCONNECT_CONNECT_FAILURE';
 
-const WALLETCONNECT_NOT_AVAILABLE = "walletconnect/WALLETCONNECT_NOT_AVAILABLE";
+const WALLETCONNECT_NOT_AVAILABLE = 'walletconnect/WALLETCONNECT_NOT_AVAILABLE';
 
 const WALLETCONNECT_UPDATE_WALLETCONNECT_ACCOUNT =
-  "walletconnect/WALLETCONNECT_UPDATE_WALLETCONNECT_ACCOUNT";
+  'walletconnect/WALLETCONNECT_UPDATE_WALLETCONNECT_ACCOUNT';
 
 // -- Actions --------------------------------------------------------------- //
 
 export const updateAccountAddress = accountAddress => dispatch => {
   if (accountAddress) {
-    dispatch(accountUpdateAccountAddress(accountAddress, "WALLETCONNECT"));
-    window.browserHistory.push("/domains");
+    dispatch(accountUpdateAccountAddress(accountAddress, 'WALLETCONNECT'));
+    window.browserHistory.push('/domains');
   }
 };
 
@@ -46,7 +46,7 @@ export const walletconnectUpdateWalletConnectAccount = address => (
 };
 
 export const walletconnectConnectInit = () => async (dispatch, getState) => {
-  const network = "mainnet";
+  const network = 'mainnet';
   const web3 = await walletConnectGetWeb3(network);
 
   const handleAccounts = accounts => {
@@ -86,9 +86,9 @@ export const walletconnectConnectInit = () => async (dispatch, getState) => {
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
   fetching: false,
-  accountAddress: "",
+  accountAddress: '',
   web3Available: false,
-  network: "mainnet"
+  network: 'mainnet'
 };
 
 export default (state = INITIAL_STATE, action) => {
