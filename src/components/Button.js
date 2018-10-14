@@ -118,7 +118,7 @@ const Button = ({
     <StyledHoverLayer />
     <StyledIcon />
     {fetching ? (
-      <Loader size={20} color='white' background={color} />
+      <Loader size={20} color="white" background={color} />
     ) : (
       children
     )}

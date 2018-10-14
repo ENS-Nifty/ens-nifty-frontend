@@ -43,10 +43,9 @@ const StyledDomainsList = styled.div`
   align-items: center;
 `;
 
-
 const StyledDomainsItem = styled.div`
-  max-width:600px;
-  margin:auto;
+  max-width: 600px;
+  margin: auto;
 `;
 
 const StyledNoDomainsMessage = styled.p`

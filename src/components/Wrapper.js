@@ -18,7 +18,7 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: ${({ center }) => (center ? `center` : `flex-start`)};
+  align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
 `;
 
 const Wrapper = ({ children, center, ...props }) => (
@@ -29,11 +29,11 @@ const Wrapper = ({ children, center, ...props }) => (
 
 Wrapper.propTypes = {
   children: PropTypes.node.isRequired,
-  center: PropTypes.bool,
+  center: PropTypes.bool
 };
 
 Wrapper.defaultProps = {
-  center: false,
+  center: false
 };
 
 export default Wrapper;
