@@ -145,7 +145,7 @@ const BaseLayout = ({
             rel="noreferrer noopener"
           >
             <Icon icon={ethereum}/>
-            <p>{`Verified Contract`}</p>
+            <p>{`Contract`}</p>
           </StyledLink>
 
         </StyledFooter>
