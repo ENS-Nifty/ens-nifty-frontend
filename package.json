@@ -55,7 +55,31 @@
     "eslint-plugin-react": "^7.10.0"
   },
   "proxy": {
-    "/.netlify/functions": {
+    "/retrieve-label": {
+      "target": "http://localhost:9000",
+      "pathRewrite": {
+        "^/\\.netlify/functions": ""
+      }
+    },
+    "/retrieve-hash": {
+      "target": "http://localhost:9000",
+      "pathRewrite": {
+        "^/\\.netlify/functions": ""
+      }
+    },
+    "/add-label": {
+      "target": "http://localhost:9000",
+      "pathRewrite": {
+        "^/\\.netlify/functions": ""
+      }
+    },
+    "/add-metadata": {
+      "target": "http://localhost:9000",
+      "pathRewrite": {
+        "^/\\.netlify/functions": ""
+      }
+    },
+    "/metadata": {
       "target": "http://localhost:9000",
       "pathRewrite": {
         "^/\\.netlify/functions": ""
