@@ -26,21 +26,32 @@ export async function transferName(labelHash, network, web3) {
 }
 
 export function labelHashToName(labelHash) {
-  return fetch(`/.netlify/functions/retrieve-label?hash=${labelHash}`)
+  return fetch(`/retrieve-label/${labelHash}`, {
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    }
+  })
     .then(res => res.text())
     .catch(e => '');
 }
 
 export function addLabelToDb(label) {
-  fetch(`/.netlify/functions/add-label`, {
+  fetch(`/add-label`, {
     method: 'POST',
     body: JSON.stringify({label}),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    }
   }).catch(e => {});
 }
 
 export function addMetadataToDb(label) {
-  fetch(`/.netlify/functions/add-metadata`, {
+  fetch(`/add-metadata`, {
     method: 'POST',
     body: JSON.stringify({label}),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    }
   }).catch(e => {});
 }

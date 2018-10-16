@@ -17,5 +17,5 @@ exports.handler = (event, context, cb) => {
   return client
     .query(q.Get(q.Match(q.Index('domain_by_label_hash'), hash)))
     .then(ret => cb(null, {statusCode: 200, body: ret.data.label}))
-    .catch(err => cb(null, {statusCode: 200, body: ''}));
+    .catch(err => cb(null, {statusCode: 400, body: err.name + ':' + err.message}));
 };
