@@ -21,7 +21,7 @@ function rarebitsFormat(imageUrl, homeUrl, dateRegistered, lockedEther) {
     image_url: imageUrl,
     home_url: homeUrl,
     properties: [
-      {key: 'locked-ether', value: lockedEther, type: 'integer'},
+      {key: 'locked-ether', value: parseFloat(lockedEther), type: 'integer'},
       {key: 'date-registered', value: dateRegistered, type: 'string'},
     ],
   };
@@ -32,7 +32,7 @@ function openseaFormat(imageUrl, homeUrl, dateRegistered, lockedEther) {
     image: imageUrl,
     external_url: homeUrl,
     background_color: 'FFFFFF',
-    attributes: {lockedEther, dateRegistered},
+    attributes: {lockedEther: parseFloat(lockedEther), dateRegistered},
   };
 }
 
