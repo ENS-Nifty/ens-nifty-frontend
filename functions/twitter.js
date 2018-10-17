@@ -1,6 +1,8 @@
 import {utils as ethUtils} from 'ethers';
 import {niftyContract} from './config/contracts';
+import addresses from './config/addresses';
 import faunadb, {query as q} from 'faunadb';
+import BigNumber from 'bignumber.js';
 
 require('dotenv').config();
 
@@ -53,9 +55,14 @@ const dbUpdateTweeted = label => {
 
 const tweet = label => {
   return new Promise((resolve, reject) => {
+    const labelHash = ethUtils.id(label);
+    const tokenId = BigNumber(labelHash).toString(10);
+    const link = `https://opensea.io/assets/${addresses.nifty}/${tokenId}`;
     twit.post(
       'statuses/update',
-      {status: `${label}.eth has just been tokenized!`},
+      {
+        status: `${label}.eth has just been tokenized! ${link}`,
+      },
       (err, data, response) => {
         if (err) {
           reject(err);
@@ -96,6 +103,6 @@ exports.handler = (event, context, cb) => {
       });
     })
     .catch(err =>
-      cb(null, {statusCode: 400, body: err.name + ':' + err.message}),
+      cb(null, {statusCode: 400, body: err.name + ': ' + err.message}),
     );
 };
