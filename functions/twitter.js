@@ -61,7 +61,7 @@ const tweet = label => {
     twit.post(
       'statuses/update',
       {
-        status: `${label}.eth has just been tokenized! ${link}`,
+        status: `${label}.eth has just been tokenized!\n\n${link}`,
       },
       (err, data, response) => {
         if (err) {
