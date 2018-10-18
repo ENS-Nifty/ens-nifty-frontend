@@ -64,7 +64,28 @@ exports.handler = (event, context, cb) => {
         }),
       });
     })
-    .catch(err =>
-      cb(null, {statusCode: 400, body: err.name + ':' + err.message}),
-    );
+    .catch(err => {
+      if (err.name === 'NotFound' && err.message === 'instance not found') {
+        const labelHash = event.queryStringParameters.hash.toLowerCase();
+        const hue = mod(labelHash, 360);
+        const tokenID = BigNumber(labelHash).toString(10);
+        const homeUrl = `https://etherscan.io/token/${
+          addresses.nifty
+        }?a=${tokenID}`;
+        const imageUrl = `https://res.cloudinary.com/dszcbwdrl/image/upload/e_hue:${hue}/v1537475886/token.png`;
+        const dateRegistered = '?';
+        const lockedEther = '?';
+        cb(null, {
+          statusCode: 200,
+          body: JSON.stringify({
+            name: 'Unknown',
+            description: 'The name of this hash is unknown',
+            ...rarebitsFormat(imageUrl, homeUrl, dateRegistered, lockedEther),
+            ...openseaFormat(imageUrl, homeUrl, dateRegistered, lockedEther),
+          }),
+        });
+      } else {
+        cb(null, {statusCode: 400, body: err.name + ':' + err.message});
+      }
+    });
 };
