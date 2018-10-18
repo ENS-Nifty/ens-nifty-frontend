@@ -29,11 +29,21 @@ export function labelHashToName(labelHash) {
   return fetch(`/retrieve-label/${labelHash}`, {
     method: 'GET',
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    }
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   })
     .then(res => res.text())
     .catch(e => '');
+}
+
+export function tweetTokenizedDomain(label) {
+  fetch(`/twitter`, {
+    method: 'POST',
+    body: JSON.stringify({label}),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  }).catch(e => {});
 }
 
 export function addLabelToDb(label) {
@@ -41,8 +51,8 @@ export function addLabelToDb(label) {
     method: 'POST',
     body: JSON.stringify({label}),
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    }
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   }).catch(e => {});
 }
 
@@ -51,7 +61,7 @@ export function addMetadataToDb(label) {
     method: 'POST',
     body: JSON.stringify({label}),
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    }
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   }).catch(e => {});
 }
