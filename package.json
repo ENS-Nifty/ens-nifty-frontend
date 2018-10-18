@@ -28,6 +28,7 @@
     "redux-thunk": "^2.3.0",
     "scrypt": "^6.0.3",
     "styled-components": "^3.4.2",
+    "twit": "^2.2.11",
     "web3": "1.0.0-beta.36",
     "web3-utils": "^1.0.0-beta.36"
   },
@@ -80,6 +81,12 @@
       }
     },
     "/metadata": {
+      "target": "http://localhost:9000",
+      "pathRewrite": {
+        "^/\\.netlify/functions": ""
+      }
+    },
+    "/twitter": {
       "target": "http://localhost:9000",
       "pathRewrite": {
         "^/\\.netlify/functions": ""

@@ -5,6 +5,7 @@ import {isValidAddress} from '../helpers/validators';
 import {
   transferName,
   addLabelToDb,
+  tweetTokenizedDomain,
   addMetadataToDb,
 } from '../helpers/contracts/registrar';
 import {
@@ -98,12 +99,13 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
       });
       dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
       mintToken(labelHash, network, web3)
-        .then(() =>
-          dispatch({
+        .then(() => {
+          setTimeout(() => tweetTokenizedDomain(label), 10000);
+          return dispatch({
             type: MINT_TOKEN_STATUS,
             payload: 'success',
-          }),
-        )
+          });
+        })
         .catch(() => dispatch({type: MINT_TOKEN_STATUS, payload: ''}));
       break;
     case 'done':
