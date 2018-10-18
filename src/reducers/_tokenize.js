@@ -100,7 +100,7 @@ export const tokenizeSubmitTransaction = name => async (dispatch, getState) => {
       dispatch({type: MINT_TOKEN_STATUS, payload: 'pending'});
       mintToken(labelHash, network, web3)
         .then(() => {
-          tweetTokenizedDomain(label);
+          setTimeout(() => tweetTokenizedDomain(label), 10000);
           return dispatch({
             type: MINT_TOKEN_STATUS,
             payload: 'success',
