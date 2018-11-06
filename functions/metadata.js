@@ -45,6 +45,12 @@ exports.handler = (event, context, cb) => {
   if (!event.queryStringParameters || !event.queryStringParameters.hash) {
     return cb(null, {statusCode: 500, body: 'Hash not provided'});
   }
+
+  if (event.queryStringParameters.hash.toLowerCase().substr(0, 2) !== '0x') {
+    let foo = new BigNumber(event.queryStringParameters.hash)
+    event.queryStringParameters.hash = '0x' + foo.toString(16)
+  }
+
   const labelHash = event.queryStringParameters.hash.toLowerCase();
   return client
     .query(q.Get(q.Match(q.Index('domain_by_label_hash'), labelHash)))
