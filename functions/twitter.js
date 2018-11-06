@@ -95,8 +95,8 @@ exports.handler = (event, context, cb) => {
           message: `${label}.eth has been tweeted already`,
         };
       }
-      await tweet(label);
       await dbUpdateTweeted(label);
+      await tweet(label);
       cb(null, {
         statusCode: 200,
         body: 'OK',

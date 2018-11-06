@@ -37,6 +37,11 @@ function openseaFormat(imageUrl, homeUrl, dateRegistered, lockedEther) {
 }
 
 exports.handler = (event, context, cb) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers':
+      'Origin, X-Requested-With, Content-Type, Accept',
+  };
   if (!event.queryStringParameters || !event.queryStringParameters.hash) {
     return cb(null, {statusCode: 500, body: 'Hash not provided'});
   }
@@ -56,6 +61,7 @@ exports.handler = (event, context, cb) => {
       const imageUrl = `https://res.cloudinary.com/dszcbwdrl/image/upload/e_hue:${hue}/v1537475886/token.png`;
       cb(null, {
         statusCode: 200,
+        headers,
         body: JSON.stringify({
           name: label + '.eth',
           description: `ENS domain bought on ${dateRegistered} for ${lockedEther} ether. The owner of the '${label}.eth' token may untokenize the name for use at ensnifty.com`,
@@ -77,6 +83,7 @@ exports.handler = (event, context, cb) => {
         const lockedEther = '?';
         cb(null, {
           statusCode: 200,
+          headers,
           body: JSON.stringify({
             name: 'Unknown',
             description: 'The name of this hash is unknown',
