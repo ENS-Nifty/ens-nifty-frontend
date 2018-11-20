@@ -47,8 +47,8 @@ exports.handler = (event, context, cb) => {
   }
 
   if (event.queryStringParameters.hash.toLowerCase().substr(0, 2) !== '0x') {
-    let foo = new BigNumber(event.queryStringParameters.hash);
-    event.queryStringParameters.hash = '0x' + foo.toString(16);
+    let foo = new BigNumber(event.queryStringParameters.hash)
+    event.queryStringParameters.hash = '0x' + foo.toString(16)
   }
   event.queryStringParameters.hash =
     '0x' +
