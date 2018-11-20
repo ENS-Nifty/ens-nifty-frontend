@@ -50,14 +50,12 @@ exports.handler = (event, context, cb) => {
     let foo = new BigNumber(event.queryStringParameters.hash);
     event.queryStringParameters.hash = '0x' + foo.toString(16);
   }
-  if (event.queryStringParameters.hash.toLowerCase().substr(0, 2) === '0x') {
-    event.queryStringParameters.hash =
-      '0x' +
-      event.queryStringParameters.hash
-        .toLowerCase()
-        .replace('0x', '')
-        .padStart(64, '0');
-  }
+  event.queryStringParameters.hash =
+    '0x' +
+    event.queryStringParameters.hash
+      .toLowerCase()
+      .replace('0x', '')
+      .padStart(64, '0');
 
   const labelHash = event.queryStringParameters.hash.toLowerCase();
   return client
