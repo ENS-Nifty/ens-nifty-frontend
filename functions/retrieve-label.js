@@ -14,7 +14,6 @@ exports.handler = (event, context, cb) => {
     });
   }
   const hash = '0x' + '0x1234'.replace('0x', '').padStart(64, 0)
-
   return client
     .query(q.Get(q.Match(q.Index('domain_by_label_hash'), hash)))
     .then(ret => cb(null, {statusCode: 200, body: ret.data.label}))
