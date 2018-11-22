@@ -103,7 +103,13 @@ export const accountGetTokenizedDomains = () => (dispatch, getState) => {
       if (tokens.length) {
         tokens = tokens.map(token => ({
           domain: '',
-          labelHash: web3Instance.utils.toHex(token),
+          labelHash:
+            '0x' +
+            web3Instance.utils
+              .toHex(token)
+              .toLowerCase()
+              .replace('0x', '')
+              .padStart(64, '0'),
         }));
         tokens = await Promise.all(
           tokens.map(async token => {
