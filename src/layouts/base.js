@@ -1,20 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
-import Link from '../components/Link';
-import Wrapper from '../components/Wrapper';
-import Column from '../components/Column';
-import Notification from '../components/Notification';
-import Blockie from '../components/Blockie';
-import Icon from '../components/Icon';
-import Warning from '../components/Warning';
-import { ellipseAddress } from '../helpers/utilities';
-import branding from '../assets/ens-nifty-branding.png';
-import github from '../assets/github.svg';
-import twitter from '../assets/twitter.svg';
-import ethereum from '../assets/ethereum.svg';
-import { colors, fonts, transitions } from '../styles';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { connect } from "react-redux";
+import Link from "../components/Link";
+import Wrapper from "../components/Wrapper";
+import Column from "../components/Column";
+import Notification from "../components/Notification";
+import Blockie from "../components/Blockie";
+import Icon from "../components/Icon";
+import Warning from "../components/Warning";
+import { ellipseAddress } from "../helpers/utilities";
+import branding from "../assets/ens-nifty-branding.png";
+import github from "../assets/github.svg";
+import twitter from "../assets/twitter.svg";
+import ethereum from "../assets/ethereum.svg";
+import { accountClearState } from "../reducers/_account";
+import { colors, fonts, transitions } from "../styles";
 
 const StyledLayout = styled.div`
   position: relative;
@@ -62,8 +63,33 @@ const StyledActiveAccount = styled.div`
   font-weight: 500;
 `;
 
+const StyledAddress = styled.p`
+  transition: ${transitions.base};
+  font-weight: bold;
+  margin: ${({ connected }) => (connected ? "-2px auto 0.7em" : "0")};
+`;
 
-const StyledFooter = styled.footer `
+const StyledDisconnect = styled.div`
+  transition: ${transitions.button};
+  font-size: 12px;
+  font-family: monospace;
+  position: absolute;
+  right: 0;
+  top: 20px;
+  opacity: 0.7;
+  cursor: pointer;
+
+  opacity: ${({ connected }) => (connected ? 1 : 0)};
+  visibility: ${({ connected }) => (connected ? "visible" : "hidden")};
+  pointer-events: ${({ connected }) => (connected ? "auto" : "none")};
+
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.5;
+  }
+`;
+
+const StyledFooter = styled.footer`
   width: 100%;
   margin: 0 auto;
   height: 80px;
@@ -73,7 +99,7 @@ const StyledFooter = styled.footer `
   justify-content: center;
 `;
 
-const StyledLink = styled.a `
+const StyledLink = styled.a`
   transition: ${transitions.short};
   width: 150px;
   display: flex;
@@ -97,6 +123,7 @@ const BaseLayout = ({
   metamaskFetching,
   accountType,
   accountAddress,
+  accountClearState,
   network,
   web3Available,
   online,
@@ -116,7 +143,15 @@ const BaseLayout = ({
             <Link to="/domains">
               <StyledActiveAccount>
                 <Blockie seed={accountAddress} />
-                <p>{ellipseAddress(accountAddress)}</p>
+                <StyledAddress connected={!!accountAddress}>
+                  {ellipseAddress(accountAddress)}
+                </StyledAddress>
+                <StyledDisconnect
+                  connected={!!accountAddress}
+                  onClick={accountClearState}
+                >
+                  {"Disconnect"}
+                </StyledDisconnect>
               </StyledActiveAccount>
             </Link>
           )}
@@ -128,7 +163,7 @@ const BaseLayout = ({
             target="blank"
             rel="noreferrer noopener"
           >
-            <Icon icon={github}/>
+            <Icon icon={github} />
             <p>{`Github`}</p>
           </StyledLink>
           <StyledLink
@@ -136,7 +171,7 @@ const BaseLayout = ({
             target="blank"
             rel="noreferrer noopener"
           >
-            <Icon icon={twitter}/>
+            <Icon icon={twitter} />
             <p>{`Twitter`}</p>
           </StyledLink>
           <StyledLink
@@ -144,10 +179,9 @@ const BaseLayout = ({
             target="blank"
             rel="noreferrer noopener"
           >
-            <Icon icon={ethereum}/>
+            <Icon icon={ethereum} />
             <p>{`Contract`}</p>
           </StyledLink>
-
         </StyledFooter>
       </Column>
       <Notification />
@@ -158,6 +192,7 @@ const BaseLayout = ({
 
 BaseLayout.propTypes = {
   children: PropTypes.node.isRequired,
+  accountClearState: PropTypes.func.isRequired,
   metamaskFetching: PropTypes.bool.isRequired,
   accountType: PropTypes.string.isRequired,
   accountAddress: PropTypes.string.isRequired,
@@ -178,5 +213,5 @@ const reduxProps = ({ account, metamask, warning }) => ({
 
 export default connect(
   reduxProps,
-  null
+  { accountClearState }
 )(BaseLayout);
