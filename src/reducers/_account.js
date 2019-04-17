@@ -43,8 +43,7 @@ export const accountCheckTransactionStatus = (txHash, network) => (
   const network = getState().account.network;
 
   apiGetTransaction(txHash, network)
-    .then(response => {
-      const data = response.data;
+    .then(({ data }) => {
       if (
         data &&
         data.result &&

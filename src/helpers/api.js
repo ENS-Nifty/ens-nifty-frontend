@@ -52,6 +52,6 @@ export async function apiGetTransaction(txHash, network) {
   const module = "transaction";
   const action = "gettxinfo";
   const url = `/${chain}/${network}/api?module=${module}&action=${action}&txhash=${txHash}`;
-  const result = await api.get(url);
-  return result;
+  const response = await api.get(url);
+  return response;
 }
