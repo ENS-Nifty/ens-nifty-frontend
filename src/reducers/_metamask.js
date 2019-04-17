@@ -17,6 +17,8 @@ const METAMASK_NOT_AVAILABLE = "metamask/METAMASK_NOT_AVAILABLE";
 const METAMASK_UPDATE_METAMASK_ACCOUNT =
   "metamask/METAMASK_UPDATE_METAMASK_ACCOUNT";
 
+const METAMASK_CLEAR_STATE = "metamask/METAMASK_CLEAR_STATE";
+
 // -- Actions --------------------------------------------------------------- //
 
 let accountInterval = null;
@@ -86,6 +88,11 @@ export const metamaskClearIntervals = () => dispatch => {
   clearInterval(accountInterval);
 };
 
+export const metamaskClearState = () => dispatch => {
+  dispatch(metamaskClearIntervals());
+  dispatch({ type: METAMASK_CLEAR_STATE });
+};
+
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
   fetching: false,
@@ -125,6 +132,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         accountAddress: action.payload
+      };
+    case METAMASK_CLEAR_STATE:
+      return {
+        ...state,
+        ...INITIAL_STATE
       };
     default:
       return state;
