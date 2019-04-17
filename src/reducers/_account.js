@@ -47,9 +47,12 @@ export const accountCheckTransactionStatus = (txHash, network) => (
       const data = response.data;
       if (
         data &&
-        !data.error &&
-        (data.input === "0x" ||
-          (data.input !== "0x" && data.operations && data.operations.length))
+        data.result &&
+        data.result.success &&
+        (data.result.input === "0x" ||
+          (data.result.input !== "0x" &&
+            data.result.logs &&
+            data.result.logs.length))
       ) {
         dispatch({
           type: ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS
