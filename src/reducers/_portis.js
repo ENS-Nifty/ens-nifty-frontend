@@ -6,7 +6,7 @@ import {
   accountUpdateWeb3
 } from "./_account";
 import { notificationShow } from "./_notification";
-import { PortisProvider } from "portis";
+import Portis from "@portis/web3";
 import Web3 from "web3";
 // -- Constants ------------------------------------------------------------- //
 const PORTIS_CONNECT_REQUEST = "portis/PORTIS_CONNECT_REQUEST";
@@ -40,40 +40,37 @@ export const portisUpdatePortisAccount = address => (dispatch, getState) => {
   }
 };
 
-export const portisConnectInit = () => (dispatch, getState) => {
-  const web3 = new Web3(
-    new PortisProvider({
-      apiKey: "1cd61de82681d63b30620c48339f7c97"
-    })
-  );
+export const portisConnectInit = () => async (dispatch, getState) => {
+  const { network } = getState().portis;
+
+  const portis = new Portis(process.env.REACT_APP_PORTIS_DAPP_ID, "mainnet");
+
+  const web3 = new Web3(portis.provider);
+
+  dispatch({ type: PORTIS_CONNECT_REQUEST });
   web3.eth
-    .getAccounts((err, accounts) => {
-      if (err) {
+    .getAccounts((error, accounts) => {
+      if (error) {
+        const message = parseError(error);
+        dispatch(notificationShow(message, true));
+        dispatch({ type: PORTIS_CONNECT_FAILURE });
         return;
       }
       const accountAddress = accounts[0];
       web3.eth.defaultAccount = accountAddress;
       if (web3.currentProvider.isPortis) {
         dispatch(updateAccountAddress(accountAddress));
-        dispatch({ type: PORTIS_CONNECT_REQUEST });
-        apiGetPortisNetwork(web3)
-          .then(network => {
-            dispatch({ type: PORTIS_CONNECT_SUCCESS, payload: network });
-            dispatch(accountUpdateNetwork(network));
-            dispatch(accountUpdateWeb3(web3));
-            dispatch(portisUpdatePortisAccount(accountAddress));
-          })
-          .catch(error => {
-            const message = parseError(error);
-            dispatch(notificationShow(message, true));
-            dispatch({ type: PORTIS_CONNECT_FAILURE });
-          });
+        dispatch({ type: PORTIS_CONNECT_SUCCESS, payload: network });
+        dispatch(accountUpdateNetwork(network));
+        dispatch(accountUpdateWeb3(web3));
+        dispatch(portisUpdatePortisAccount(accountAddress));
       } else {
         dispatch(notificationShow("Install Portis first", false));
         dispatch({ type: PORTIS_NOT_AVAILABLE });
       }
     })
-    .catch(err => {
+    .catch(error => {
+      console.error(error);
       dispatch(notificationShow("Failed To Connect To Portis", true));
       dispatch({ type: PORTIS_CONNECT_FAILURE });
     });
