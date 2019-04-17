@@ -1,4 +1,3 @@
-import { apiGetPortisNetwork } from "../helpers/api";
 import { parseError } from "../helpers/utilities";
 import {
   accountUpdateAccountAddress,
