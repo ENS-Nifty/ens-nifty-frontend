@@ -21,8 +21,6 @@ const PORTIS_CLEAR_STATE = "portis/PORTIS_CLEAR_STATE";
 
 // -- Actions --------------------------------------------------------------- //
 
-let accountInterval = null;
-
 export const updateAccountAddress = accountAddress => dispatch => {
   if (accountAddress) {
     dispatch(accountUpdateAccountAddress(accountAddress, "PORTIS"));
@@ -79,12 +77,7 @@ export const portisConnectInit = () => (dispatch, getState) => {
     });
 };
 
-export const portisClearIntervals = () => dispatch => {
-  clearInterval(accountInterval);
-};
-
 export const portisClearState = () => dispatch => {
-  dispatch(portisClearIntervals());
   dispatch({ type: PORTIS_CLEAR_STATE });
 };
 

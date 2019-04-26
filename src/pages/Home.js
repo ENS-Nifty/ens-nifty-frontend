@@ -7,6 +7,7 @@ import Button from "../components/Button";
 import Column from "../components/Column";
 import { metamaskConnectInit } from "../reducers/_metamask";
 import { portisConnectInit } from "../reducers/_portis";
+import { walletconnectConnectInit } from "../reducers/_walletconnect";
 import { fonts } from "../styles";
 
 const StyledLanding = styled.div`
@@ -55,6 +56,13 @@ class Home extends Component {
           >
             {"Connect to Portis"}
           </StyledConnectButton>
+          <StyledConnectButton
+            left
+            color="walletconnect"
+            onClick={this.props.walletconnectConnectInit}
+          >
+            {"Connect to WalletConnect"}
+          </StyledConnectButton>
         </StyledButtonContainer>
       </StyledLanding>
     </BaseLayout>
@@ -63,13 +71,15 @@ class Home extends Component {
 
 Home.propTypes = {
   metamaskConnectInit: PropTypes.func.isRequired,
-  portisConnectInit: PropTypes.func.isRequired
+  portisConnectInit: PropTypes.func.isRequired,
+  walletconnectConnectInit: PropTypes.func.isRequired
 };
 
 export default connect(
   null,
   {
     metamaskConnectInit,
-    portisConnectInit
+    portisConnectInit,
+    walletconnectConnectInit
   }
 )(Home);

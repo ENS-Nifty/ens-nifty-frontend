@@ -6,6 +6,7 @@ import { labelHashToName } from "../helpers/contracts/registrar";
 import { getTokensOwned } from "../helpers/contracts/nifty";
 import { metamaskClearState } from "./_metamask";
 import { portisClearState } from "./_portis";
+import { walletconnectClearState } from "./_walletconnect";
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -102,6 +103,9 @@ export const accountClearState = () => (dispatch, getState) => {
         break;
       case "PORTIS":
         dispatch(portisClearState());
+        break;
+      case "WALLETCONNECT":
+        dispatch(walletconnectClearState());
         break;
       default:
         break;
