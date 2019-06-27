@@ -1,3 +1,4 @@
+import Web3 from "web3";
 import { apiGetTransaction } from "../helpers/api";
 import { parseError, getLocalDomainFromLabelHash } from "../helpers/utilities";
 import { web3SetHttpProvider, web3Instance } from "../helpers/web3";
@@ -70,6 +71,24 @@ export const accountCheckTransactionStatus = (txHash, network) => (
       const message = parseError(error);
       dispatch(notificationShow(message, true));
     });
+};
+
+export const accountInit = provider => dispatch => {
+  console.log("[accountInit] provider", provider);
+  const web3 = new Web3(provider);
+  const network = "mainnet";
+  web3.eth.getAccounts((err, accounts) => {
+    if (err) {
+      return;
+    }
+    const accountAddress = accounts[0];
+    console.log("[getAccounts] accounts", accounts);
+    web3.eth.defaultAccount = accountAddress;
+    dispatch(accountUpdateWeb3(web3));
+    dispatch(accountUpdateAccountAddress(accountAddress, "WEB3CONNECT"));
+    dispatch(accountUpdateNetwork(network));
+    window.browserHistory.push("/domains");
+  });
 };
 
 export const accountUpdateNetwork = network => dispatch => {
@@ -165,6 +184,13 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
+  if (process.env.NODE_ENV === "development") {
+    console.log("\n------------------------------------"); // tslint:disable-line
+    console.log("action.type", action.type); // tslint:disable-line
+    console.log("action.payload", action.payload); // tslint:disable-line
+    console.log("------------------------------------\n"); // tslint:disable-line
+  }
+
   switch (action.type) {
     case ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST:
       return { ...state, fetching: true };
