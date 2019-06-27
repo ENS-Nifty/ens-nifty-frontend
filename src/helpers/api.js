@@ -1,43 +1,26 @@
 import axios from "axios";
-import networks from "../ref/networks.json";
+import { payloadId } from "./utilities";
 
 /**
- * Configuration for balance api
+ * Configuration for Ethereum api
  * @type axios instance
  */
 const api = axios.create({
-  baseURL: "https://indexer.balance.io",
+  baseURL: "https://ethereum-api.xyz",
   timeout: 30000, // 30 secs
   headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json"
+    Accept: "application/json",
+    "Content-Type": "application/json"
   }
 });
 
-/**
- * @desc get transaction data
- * @param  {String}   [address = '']
- * @param  {String}   [network = 'mainnet']
- * @param  {Number}   [page = 1]
- * @return {Promise}
- */
-export const apiGetTransactionData = (
-  address = "",
-  network = "mainnet",
-  page = 1
-) => api.get(`/get_transactions/${network}/${address}/${page}`);
-
-/**
- * @desc get transaction
- * @param  {String}   [txnHash = '']
- * @param  {String}   [network = 'mainnet']
- * @return {Promise}
- */
-export const apiGetTransaction = (txnHash = "", network = "mainnet") =>
-  api.get(`/get_transaction/${network}/${txnHash}`);
-
-/**
- * @desc get ethereum gas prices
- * @return {Promise}
- */
-export const apiGetGasPrices = () => api.get(`/get_eth_gas_prices`);
+export const apiGetTransactionReceipt = async (txHash, chainId) => {
+  const response = await api.post(`/custom-request?chainId=${chainId}`, {
+    id: payloadId(),
+    jsonrpc: "2.0",
+    method: "eth_getTransactionReceipt",
+    params: [txHash]
+  });
+  const { result } = response.data;
+  return result;
+};

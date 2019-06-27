@@ -206,3 +206,23 @@ export const getNetworkString = networkId => {
   });
   return networkIdList[Number(networkId)] || "";
 };
+
+/**
+ * @desc get network id
+ * @param   {String} network
+ * @return  {Number}
+ */
+export const getNetworkId = network => {
+  return networks[network].id;
+};
+
+/**
+ * @desc generate payload id
+ * @return  {String}
+ */
+export function payloadId() {
+  const datePart = new Date().getTime() * Math.pow(10, 3);
+  const extraPart = Math.floor(Math.random() * Math.pow(10, 3));
+  const id = datePart + extraPart;
+  return id;
+}

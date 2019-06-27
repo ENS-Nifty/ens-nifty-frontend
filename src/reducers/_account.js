@@ -1,12 +1,14 @@
 import Web3 from "web3";
-import { apiGetTransaction } from "../helpers/api";
-import { parseError, getLocalDomainFromLabelHash } from "../helpers/utilities";
+import { apiGetTransactionReceipt } from "../helpers/api";
+import {
+  parseError,
+  getLocalDomainFromLabelHash,
+  getNetworkId
+} from "../helpers/utilities";
 import { web3SetHttpProvider, web3Instance } from "../helpers/web3";
 import { notificationShow } from "./_notification";
 import { labelHashToName } from "../helpers/contracts/registrar";
 import { getTokensOwned } from "../helpers/contracts/nifty";
-import { metamaskClearState } from "./_metamask";
-import { portisClearState } from "./_portis";
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -36,22 +38,16 @@ const ACCOUNT_CLEAR_STATE = "account/ACCOUNT_CLEAR_STATE";
 
 // -- Actions --------------------------------------------------------------- //
 
-export const accountCheckTransactionStatus = (txHash, network) => (
+export const accountCheckTransactionStatus = async (txHash, network) => (
   dispatch,
   getState
 ) => {
   dispatch({ type: ACCOUNT_CHECK_TRANSACTION_STATUS_REQUEST });
   const network = getState().account.network;
-
-  apiGetTransaction(txHash, network)
-    .then(response => {
-      const data = response.data;
-      if (
-        data &&
-        !data.error &&
-        (data.input === "0x" ||
-          (data.input !== "0x" && data.operations && data.operations.length))
-      ) {
+  const chainId = getNetworkId(network);
+  apiGetTransactionReceipt(txHash, chainId)
+    .then(result => {
+      if (result && result.status !== "0x0") {
         dispatch({
           type: ACCOUNT_CHECK_TRANSACTION_STATUS_SUCCESS
         });
@@ -113,19 +109,6 @@ export const accountUpdateAccountAddress = (address, type) => (
 };
 
 export const accountClearState = () => (dispatch, getState) => {
-  const { type } = getState().account;
-  if (type) {
-    switch (type) {
-      case "METAMASK":
-        dispatch(metamaskClearState());
-        break;
-      case "PORTIS":
-        dispatch(portisClearState());
-        break;
-      default:
-        break;
-    }
-  }
   dispatch({ type: ACCOUNT_CLEAR_STATE });
 };
 
@@ -184,13 +167,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  if (process.env.NODE_ENV === "development") {
-    console.log("\n------------------------------------"); // tslint:disable-line
-    console.log("action.type", action.type); // tslint:disable-line
-    console.log("action.payload", action.payload); // tslint:disable-line
-    console.log("------------------------------------\n"); // tslint:disable-line
-  }
-
   switch (action.type) {
     case ACCOUNT_GET_TOKENIZED_DOMAINS_REQUEST:
       return { ...state, fetching: true };
