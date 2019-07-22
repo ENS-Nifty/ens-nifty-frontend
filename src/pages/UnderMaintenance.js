@@ -1,7 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import BaseLayout from '../layouts/base';
-import Link from '../components/Link';
+import React from "react";
+import styled from "styled-components";
+import BaseLayout from "../layouts/base";
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -14,13 +13,11 @@ const StyledWrapper = styled.div`
   height: 100%;
 `;
 
-const NotFound = () => (
+const UnderMaintenance = () => (
   <BaseLayout>
     <StyledWrapper>
-      <Link to="/">
-        <h3>{'Not Found'}</h3>
-      </Link>
+      <h3>{"Under Maintenance"}</h3>
     </StyledWrapper>
   </BaseLayout>
 );
-export default NotFound;
+export default UnderMaintenance;

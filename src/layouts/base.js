@@ -1,20 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
-import { connect } from "react-redux";
-import Link from "../components/Link";
 import Wrapper from "../components/Wrapper";
 import Column from "../components/Column";
-import Notification from "../components/Notification";
-import Blockie from "../components/Blockie";
 import Icon from "../components/Icon";
-import Warning from "../components/Warning";
-import { ellipseAddress } from "../helpers/utilities";
 import branding from "../assets/ens-nifty-branding.png";
 import github from "../assets/github.svg";
 import twitter from "../assets/twitter.svg";
 import ethereum from "../assets/ethereum.svg";
-import { accountClearState } from "../reducers/_account";
 import { colors, fonts, transitions } from "../styles";
 
 const StyledLayout = styled.div`
@@ -56,39 +48,6 @@ const StyledBranding = styled.div`
   background-position: center;
 `;
 
-const StyledActiveAccount = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-  font-weight: 500;
-`;
-
-const StyledAddress = styled.p`
-  transition: ${transitions.base};
-  font-weight: bold;
-  margin: ${({ connected }) => (connected ? "-2px auto 0.7em" : "0")};
-`;
-
-const StyledDisconnect = styled.div`
-  transition: ${transitions.button};
-  font-size: 12px;
-  font-family: monospace;
-  position: absolute;
-  right: 0;
-  top: 20px;
-  opacity: 0.7;
-  cursor: pointer;
-
-  opacity: ${({ connected }) => (connected ? 1 : 0)};
-  visibility: ${({ connected }) => (connected ? "visible" : "hidden")};
-  pointer-events: ${({ connected }) => (connected ? "auto" : "none")};
-
-  &:hover {
-    transform: translateY(-1px);
-    opacity: 0.5;
-  }
-`;
-
 const StyledFooter = styled.footer`
   width: 100%;
   margin: 0 auto;
@@ -118,43 +77,14 @@ const StyledLink = styled.a`
   }
 `;
 
-const BaseLayout = ({
-  children,
-  metamaskFetching,
-  accountType,
-  accountAddress,
-  accountClearState,
-  network,
-  web3Available,
-  online,
-  modalOpen,
-  ...props
-}) => {
+const BaseLayout = ({ children, ...props }) => {
   return (
     <StyledLayout>
       <Column maxWidth={1000} spanHeight>
         <StyledHeader>
-          <Link to="/">
-            <StyledBrandingWrapper>
-              <StyledBranding alt="ENS Nifty" />
-            </StyledBrandingWrapper>
-          </Link>
-          {accountAddress && (
-            <Link to="/domains">
-              <StyledActiveAccount>
-                <Blockie seed={accountAddress} />
-                <StyledAddress connected={!!accountAddress}>
-                  {ellipseAddress(accountAddress)}
-                </StyledAddress>
-                <StyledDisconnect
-                  connected={!!accountAddress}
-                  onClick={accountClearState}
-                >
-                  {"Disconnect"}
-                </StyledDisconnect>
-              </StyledActiveAccount>
-            </Link>
-          )}
+          <StyledBrandingWrapper>
+            <StyledBranding alt="ENS Nifty" />
+          </StyledBrandingWrapper>
         </StyledHeader>
         <StyledContent>{children}</StyledContent>
         <StyledFooter {...props}>
@@ -184,34 +114,8 @@ const BaseLayout = ({
           </StyledLink>
         </StyledFooter>
       </Column>
-      <Notification />
-      <Warning />
     </StyledLayout>
   );
 };
 
-BaseLayout.propTypes = {
-  children: PropTypes.node.isRequired,
-  accountClearState: PropTypes.func.isRequired,
-  metamaskFetching: PropTypes.bool.isRequired,
-  accountType: PropTypes.string.isRequired,
-  accountAddress: PropTypes.string.isRequired,
-  network: PropTypes.string.isRequired,
-  web3Available: PropTypes.bool.isRequired,
-  online: PropTypes.bool.isRequired
-};
-
-const reduxProps = ({ account, metamask, warning }) => ({
-  accountType: account.type,
-  accountAddress: account.address,
-  nativeCurrency: account.nativeCurrency,
-  metamaskFetching: metamask.fetching,
-  network: account.network,
-  web3Available: metamask.web3Available,
-  online: warning.online
-});
-
-export default connect(
-  reduxProps,
-  { accountClearState }
-)(BaseLayout);
+export default BaseLayout;
