@@ -26,14 +26,17 @@ export async function transferName(labelHash, network, web3) {
 }
 
 export function labelHashToName(labelHash) {
-  return fetch(`/retrieve-label/${labelHash}`, {
+  return fetch(`/retrieve-label/?hash=${labelHash}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   })
-    .then(res => res.text())
-    .catch(e => '');
+  .then(async res => {
+    let text = await res.text()
+    return (text === 'Hash not provided') ? false : text
+  })
+  .catch(e => '');
 }
 
 export function tweetTokenizedDomain(label) {
