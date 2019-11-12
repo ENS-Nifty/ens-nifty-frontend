@@ -26,7 +26,7 @@ export async function transferName(labelHash, network, web3) {
 }
 
 export function labelHashToName(labelHash) {
-  return fetch(`/retrieve-label/?hash=${labelHash}`, {
+  return fetch(`/.netlify/functions/retrieve-label?hash=${labelHash}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
