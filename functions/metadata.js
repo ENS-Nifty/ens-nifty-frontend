@@ -64,23 +64,24 @@ exports.handler = (event, context, cb) => {
   if (labelHash.toLowerCase() == timdaub.toLowerCase()) {
     let imageUrl = 'https://picsum.photos/200'
     let homeUrl = 'https://google.com'
-    return res
-        .status(200)
-        .set(headers)
-        .send({
-          name: 'foo bar',
-          description: `foo baz`,
-          image: imageUrl,
-          external_url: homeUrl,
-          // background_color: 'FFFFFF',
-          // attributes: { lockedEther: parseFloat(lockedEther), dateRegistered }
-          image_url: imageUrl,
-          home_url: homeUrl,
-          // properties: [
-          //   { key: 'locked-ether', value: parseFloat(lockedEther), type: 'integer' },
-          //   { key: 'date-registered', value: dateRegistered, type: 'string' }
-          // ]
-        })
+    cb(null, {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        name: 'foo bar',
+        description: `foo baz`,
+        image: imageUrl,
+        external_url: homeUrl,
+        // background_color: 'FFFFFF',
+        // attributes: { lockedEther: parseFloat(lockedEther), dateRegistered }
+        image_url: imageUrl,
+        home_url: homeUrl,
+        // properties: [
+        //   { key: 'locked-ether', value: parseFloat(lockedEther), type: 'integer' },
+        //   { key: 'date-registered', value: dateRegistered, type: 'string' }
+        // ]
+      }),
+    });
   }
   
   return client
