@@ -3,7 +3,7 @@
   
 [[redirects]]
   from = "/metadata/*"
-  to = "/.netlify/functions/metadata?hash=:splat"
+  to = "/.netlify/functions/metadata/:splat"
   status = 200
 
 [[redirects]]
