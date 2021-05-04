@@ -1,2 +1,37 @@
 [build]
   functions = "functions-build"
+  
+[[redirects]]
+  from = "/metadata/:hash"
+  to = "/.netlify/functions/metadata?hash=:hash"
+  status = 200
+
+[[redirects]]
+  from = "/retrieve-label/:hash"
+  to = "/.netlify/functions/retrieve-label?hash=:hash"
+  status = 200
+  
+[[redirects]]
+  from = "/retrieve-hash/:label"
+  to = "/.netlify/functions/retrieve-hash?label=:label"
+  status = 200
+
+[[redirects]]
+  from = "/twitter"
+  to = "/.netlify/functions/twitter"
+  status = 200
+  
+[[redirects]]
+  from = "/add-metadata"
+  to = "/.netlify/functions/add-metadata"
+  status = 200
+  
+[[redirects]]
+  from = "/add-label"
+  to = "/.netlify/functions/add-label"
+  status = 200
+  
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
