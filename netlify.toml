@@ -2,18 +2,18 @@
   functions = "functions-build"
   
 [[redirects]]
-  from = "/metadata/:hash"
-  to = "/.netlify/functions/metadata?hash=:hash"
+  from = "/metadata/*"
+  to = "/.netlify/functions/metadata?hash=:splat"
   status = 200
 
 [[redirects]]
-  from = "/retrieve-label/:hash"
-  to = "/.netlify/functions/retrieve-label?hash=:hash"
+  from = "/retrieve-label/*"
+  to = "/.netlify/functions/retrieve-label?hash=:splat"
   status = 200
   
 [[redirects]]
-  from = "/retrieve-hash/:label"
-  to = "/.netlify/functions/retrieve-hash?label=:label"
+  from = "/retrieve-hash/*"
+  to = "/.netlify/functions/retrieve-hash?label=:splat"
   status = 200
 
 [[redirects]]
