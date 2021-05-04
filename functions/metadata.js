@@ -43,7 +43,7 @@ exports.handler = (event, context, cb) => {
       'Origin, X-Requested-With, Content-Type, Accept',
   };
 
-  const hash = event.path.substr(event.path.lastIndexOf('/') + 1) // hash
+  let hash = event.path.substr(event.path.lastIndexOf('/') + 1) // hash
 
   if (!hash) {
     return cb(null, {statusCode: 500, body: 'Hash not provided'});
