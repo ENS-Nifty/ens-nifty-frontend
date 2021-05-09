@@ -65,7 +65,7 @@ exports.handler = (event, context, cb) => {
   // timdaub.eth
   let timdaub = '0x3bf87c5c609b6a0e5b0daa400c18c396b1db1c927e55a0e1d61405b756e2b0b8'
   if (labelHash == timdaub.toLowerCase()) {
-    let imageUrl = 'https://gateway.pinata.cloud/ipfs/QmSQZ191DA3ysDCHpKaVxZsRKQgEE3PBCAJaH6nHnbtPb1'
+    let imageUrl = 'https://gateway.pinata.cloud/ipfs/QmSQZ191DA3ysDCHpKaVxZsRKQgEE3PBCAJaH6nHnbtPb1/Simon%20Denny%20Backdated%20NFT:%20Ethereum%20stamp%20%282016-2018-2021%29.jpg'
     let homeUrl = 'https://simondenny.net/'
     cb(null, {
       statusCode: 200,
