@@ -65,14 +65,17 @@ exports.handler = (event, context, cb) => {
   // timdaub.eth
   let timdaub = '0x3bf87c5c609b6a0e5b0daa400c18c396b1db1c927e55a0e1d61405b756e2b0b8'
   if (labelHash == timdaub.toLowerCase()) {
-    let imageUrl = 'https://picsum.photos/200'
-    let homeUrl = 'https://google.com'
+    let imageUrl = 'https://gateway.pinata.cloud/ipfs/QmSQZ191DA3ysDCHpKaVxZsRKQgEE3PBCAJaH6nHnbtPb1'
+    let homeUrl = 'https://simondenny.net/'
     cb(null, {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        name: 'foo bar',
-        description: `foo baz`,
+        name: 'Backdated NFT/ Ethereum stamp',
+        description: `Artist: Simon Denny
+Title: Backdated NFT/ Ethereum stamp (2016-2018-2021)
+
+"Backdated NFT/ Ethereum stamp (2016-2018-2021)" is an NFT minted in the past. A paper portrait-as-postage-stamp of Vitalik Buterin from 2016 is rubber stamped with the details of a token issued with a different digital asset in 2018. The original digital asset is replaced with an image of this stamped portrait, performing the impossible.`,
         image: imageUrl,
         external_url: homeUrl,
         // background_color: 'FFFFFF',
