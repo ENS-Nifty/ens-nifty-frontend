@@ -42,22 +42,54 @@ exports.handler = (event, context, cb) => {
     'Access-Control-Allow-Headers':
       'Origin, X-Requested-With, Content-Type, Accept',
   };
-  if (!event.queryStringParameters || !event.queryStringParameters.hash) {
+
+  let hash = event.path.substr(event.path.lastIndexOf('/') + 1) // hash
+
+  if (!hash) {
     return cb(null, {statusCode: 500, body: 'Hash not provided'});
   }
 
-  if (event.queryStringParameters.hash.toLowerCase().substr(0, 2) !== '0x') {
-    let foo = new BigNumber(event.queryStringParameters.hash)
-    event.queryStringParameters.hash = '0x' + foo.toString(16)
+  if (hash.toLowerCase().substr(0, 2) !== '0x') {
+    let foo = new BigNumber(hash)
+    hash = '0x' + foo.toString(16)
   }
-  event.queryStringParameters.hash =
+  hash =
     '0x' +
-    event.queryStringParameters.hash
+    hash
       .toLowerCase()
       .replace('0x', '')
       .padStart(64, '0');
 
-  const labelHash = event.queryStringParameters.hash.toLowerCase();
+  const labelHash = hash.toLowerCase();
+
+  // timdaub.eth
+  let timdaub = '0x3bf87c5c609b6a0e5b0daa400c18c396b1db1c927e55a0e1d61405b756e2b0b8'
+  if (labelHash == timdaub.toLowerCase()) {
+    let imageUrl = 'https://gateway.pinata.cloud/ipfs/QmSQZ191DA3ysDCHpKaVxZsRKQgEE3PBCAJaH6nHnbtPb1'
+    let homeUrl = 'https://simondenny.net/'
+    cb(null, {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        name: 'Backdated NFT/ Ethereum stamp',
+        description: `Artist: Simon Denny
+Title: Backdated NFT/ Ethereum stamp (2016-2018-2021)
+
+"Backdated NFT/ Ethereum stamp (2016-2018-2021)" is an NFT minted in the past. A paper portrait-as-postage-stamp of Vitalik Buterin from 2016 is rubber stamped with the details of a token issued with a different digital asset in 2018. The original digital asset is replaced with an image of this stamped portrait, performing the impossible.`,
+        image: imageUrl,
+        external_url: homeUrl,
+        // background_color: 'FFFFFF',
+        // attributes: { lockedEther: parseFloat(lockedEther), dateRegistered }
+        image_url: imageUrl,
+        home_url: homeUrl,
+        // properties: [
+        //   { key: 'locked-ether', value: parseFloat(lockedEther), type: 'integer' },
+        //   { key: 'date-registered', value: dateRegistered, type: 'string' }
+        // ]
+      }),
+    });
+  }
+  
   return client
     .query(q.Get(q.Match(q.Index('domain_by_label_hash'), labelHash)))
     .then(ret => ret.data)
@@ -84,7 +116,7 @@ exports.handler = (event, context, cb) => {
     })
     .catch(err => {
       if (err.name === 'NotFound' && err.message === 'instance not found') {
-        const labelHash = event.queryStringParameters.hash.toLowerCase();
+        const labelHash = hash.toLowerCase();
         const hue = mod(labelHash, 360);
         const tokenID = BigNumber(labelHash).toString(10);
         const homeUrl = `https://etherscan.io/token/${
