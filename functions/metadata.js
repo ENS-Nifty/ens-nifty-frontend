@@ -89,7 +89,7 @@ Title: Backdated NFT/ Ethereum stamp (2016-2018-2021)
         // ]
       }),
     });
-  } else if (labelHash == timbaub.toLowerCase()) {
+  } else if (labelHash == hodlinghard.toLowerCase()) {
     let imageUrl = 'https://gateway.pinata.cloud/ipfs/QmWvgU2T2Xd8noydjisaYsuaZHVM7YJwVPnPWEUKugrkac/Backdated%20NFT%20Cryptokitty%20Display%20Hardware%20Wallet%20Replica%20%282018-2019-2021%29.jpg'
     let homeUrl = 'https://simondenny.net'
     cb(null, {
