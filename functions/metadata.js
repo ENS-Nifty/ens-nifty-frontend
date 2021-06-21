@@ -64,6 +64,7 @@ exports.handler = (event, context, cb) => {
 
   // timdaub.eth
   let timdaub = '0x3bf87c5c609b6a0e5b0daa400c18c396b1db1c927e55a0e1d61405b756e2b0b8'
+  let hodlinghard = '0x3bb488a88408612ef53465a9f10776788bffdfd42c0463ba5ae1ea1b2e9898ba'
   if (labelHash == timdaub.toLowerCase()) {
     let imageUrl = 'https://gateway.pinata.cloud/ipfs/QmSQZ191DA3ysDCHpKaVxZsRKQgEE3PBCAJaH6nHnbtPb1/Simon%20Denny%20Backdated%20NFT:%20Ethereum%20stamp%20%282016-2018-2021%29.jpg'
     let homeUrl = 'https://simondenny.net/'
@@ -88,6 +89,32 @@ Title: Backdated NFT/ Ethereum stamp (2016-2018-2021)
         // ]
       }),
     });
+  } else if (labelHash == timbaub.toLowerCase()) {
+    let imageUrl = 'https://gateway.pinata.cloud/ipfs/QmWvgU2T2Xd8noydjisaYsuaZHVM7YJwVPnPWEUKugrkac/Backdated%20NFT%20Cryptokitty%20Display%20Hardware%20Wallet%20Replica%20%282018-2019-2021%29.jpg'
+    let homeUrl = 'https://simondenny.net'
+    cb(null, {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        name: 'Backdated NFT/ Cryptokitty Display Hardware Wallet Replica (Celestial Cyber Dimension)',
+        description: `Artist: Simon Denny
+
+Title: Backdated NFT / Cryptokitty Display Hardware Wallet Replica (Celestial Cyber Dimension)
+(2018-2019-2021)
+
+"Backdated NFT/ Ethereum stamp (2016-2018-2021)" is an NFT minted in the past. A paper portrait-as-postage-stamp of Vitalik Buterin from 2016 is rubber stamped with the details of a token issued with a different digital asset in 2018. The original digital asset is replaced with an image of this stamped portrait, performing the impossible.`,
+        image: imageUrl,
+        external_url: homeUrl,
+        // background_color: 'FFFFFF',
+        // attributes: { lockedEther: parseFloat(lockedEther), dateRegistered }
+        image_url: imageUrl,
+        home_url: homeUrl,
+        // properties: [
+        //   { key: 'locked-ether', value: parseFloat(lockedEther), type: 'integer' },
+        //   { key: 'date-registered', value: dateRegistered, type: 'string' }
+        // ]
+      }),
+    })
   }
   
   return client
